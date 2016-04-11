@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/icon_search"
+        android:layout_marginTop="35dp"
+        android:src="@android:drawable/ic_menu_search"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/search_firend_box"
+        android:layout_toStartOf="@+id/search_firend_box" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/search_box_text"
+        android:id="@+id/search_firend_box"
+        android:layout_alignBottom="@+id/icon_search"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:id="@+id/list_item_thumbnail"
+        android:src="@drawable/boy"
+        android:layout_below="@+id/icon_search"
+        android:layout_toLeftOf="@+id/icon_search"
+        android:layout_toStartOf="@+id/icon_search" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_friend_btn"
+        android:id="@+id/btn"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_toRightOf="@+id/textView4"
+        android:layout_toEndOf="@+id/textView4" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/friend_name_1"
+        android:id="@+id/textView"
+        android:layout_alignBottom="@+id/list_item_thumbnail"
+        android:layout_toRightOf="@+id/icon_search"
+        android:layout_toEndOf="@+id/icon_search" />
+
+    <ImageView
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:id="@+id/imageView3"
+        android:src="@drawable/boy"
+        android:layout_alignBottom="@+id/textView4"
+        android:layout_alignLeft="@+id/list_item_thumbnail"
+        android:layout_alignStart="@+id/list_item_thumbnail" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/friend_name_2"
+        android:id="@+id/textView4"
+        android:layout_alignBottom="@+id/btn_add_friend_add"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_friend_btn"
+        android:id="@+id/btn_add_friend_add"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/button4"
+        android:layout_alignStart="@+id/button4" />
+
+    <ImageView
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:id="@+id/imageView4"
+        android:src="@drawable/boy"
+        android:layout_marginTop="70dp"
+        android:layout_below="@+id/imageView3"
+        android:layout_alignLeft="@+id/imageView3"
+        android:layout_alignStart="@+id/imageView3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/friend_name_3"
+        android:id="@+id/textView5"
+        android:layout_alignBottom="@+id/imageView4"
+        android:layout_alignLeft="@+id/textView4"
+        android:layout_alignStart="@+id/textView4" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_friend_btn"
+        android:id="@+id/button4"
+        android:layout_alignBottom="@+id/textView5"
+        android:layout_toRightOf="@+id/search_firend_box"
+        android:layout_toEndOf="@+id/search_firend_box" />
+</RelativeLayout>

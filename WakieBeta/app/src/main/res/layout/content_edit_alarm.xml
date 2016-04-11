@@ -1,0 +1,79 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="70dp">
+    <!--tools:showIn="@layout/activity_main">-->
+
+    <TextView
+        android:id="@+id/wakeup_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:text="How do you want to wake up your buddy?" />
+
+    <ImageView
+        android:id="@+id/boy_img"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/wakeup_message"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:src="@drawable/boy" />
+
+
+    <TextView
+        android:id="@+id/boy_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wakeup_message"
+        android:layout_toRightOf="@+id/boy_img"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:text="@string/name_boy" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+
+        <Button android:id="@+id/option1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Default"
+            android:onClick="goDefault"/>
+
+        <Button android:id="@+id/option2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/option1"
+            android:text="Quiz"
+            android:onClick="goQuiz"/>
+
+        <Button android:id="@+id/option3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/option1"
+            android:text="Video"
+            android:onClick="goVideo"/>
+
+        <Button android:id="@+id/option4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/option3"
+            android:layout_below="@+id/option1"
+            android:text="Shake"
+            android:onClick="goShake"/>
+
+    </RelativeLayout>
+
+
+
+
+
+
+
+
+</RelativeLayout>

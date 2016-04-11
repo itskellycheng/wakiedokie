@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Wakie Beta</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="name_boy">Victor</string>
+    <string name="name_girl">Kelly</string>
+    <string name="status_boy">is still struggling</string>
+    <string name="status_girl">is awake!</string>
+
+
+    <!-- activity_add_friend -->
+    <string name="search_box_text">Search for firends</string>
+    <string name="friend_name_1">Victor Chao</string>
+    <string name="friend_name_2">LeBron James</string>
+    <string name="friend_name_3">Kobe Bryant</string>
+    <string name="add_friend_btn">Add Friend</string>
+
+
+    <!-- activity_edit_alarm -->
+    <string name="title_edit_alarm">Edit Alarm</string>
+    <string name="btn_to_link_buddy">Select a wakie buddy</string>
+    <string name="btn_save">Save</string>
+
+    <!-- activity_choose_wakie_buddy-->
+    <string name="title_choose_buddy">Choose Wakie Buddy</string>
+    <string name="text_chosen_buddy_name">Victor Chao</string>
+    <string name="text_note">Write a note...</string>
+    <string name="btn_send_request">Send Request</string>
+
+    <!-- fragment_choose_wakie_buddy_confirm-->
+    <string name="title_confirm_buddy">You are about to set an alarm with</string>
+    <string name="text_confirm_at">at</string>
+    <string name="text_confirm_note">Note: Meeting tomorrow!</string>
+    <string name="btn_confirm_confirm">Confirm</string>
+</resources>
