@@ -12,7 +12,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.wakiedokie.waikiedokie.R;
+import com.wakiedokie.waikiedokie.util.CustomJSONObjectRequest;
+import com.wakiedokie.waikiedokie.util.CustomVolleyRequestQueue;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -20,11 +26,19 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by chaovictorshin-deh on 4/12/16.
  */
 
-public class DoubleMeActivity extends AppCompatActivity implements View.OnClickListener {
+public class DoubleMeActivity extends AppCompatActivity implements View.OnClickListener, Response.Listener,
+        Response.ErrorListener {
+    public static final String REQUEST_TAG = "MainVolleyActivity";
+    private static final String SERVER_URL = "http://128.237.221.10:8080/AndroidAppServlet/DoubleMeServlet";
+    private RequestQueue mQueue;
 
     EditText inputValue = null;
     Integer doubledValue = 0;
@@ -49,6 +63,38 @@ public class DoubleMeActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
+                .getRequestQueue();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mQueue != null) {
+            mQueue.cancelAll(REQUEST_TAG);
+        }
+    }
+
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        inputValue.setText(error.getMessage());
+    }
+
+    @Override
+    public void onResponse(Object response) {
+        inputValue.setText("Response is: " + response);
+        try {
+            inputValue.setText(inputValue.getText() + "\n\n" + ((JSONObject) response).getString
+                    ("name"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -69,50 +115,21 @@ public class DoubleMeActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.doubleme:
 
-                new Thread(new Runnable() {
-                    public void run() {
+                JSONObject mJSONObject = new JSONObject();
 
-                        try {
-                            URL url = new URL("http://10.0.0.25:8080/AndroidAppServlet/DoubleMeServlet");
-                            URLConnection connection = url.openConnection();
+                try {
+                    mJSONObject.put("username", "my username");
+                    mJSONObject.put("password", "my password");
+                    System.out.println("Clicked!");
 
-                            String inputString = inputValue.getText().toString();
-                            //inputString = URLEncoder.encode(inputString, "UTF-8");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                            Log.d("inputString", inputString);
-
-                            connection.setDoOutput(true);
-                            OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-                            out.write(inputString);
-                            out.close();
-
-                            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-                            String returnString = "";
-                            doubledValue = 0;
-
-                            while ((returnString = in.readLine()) != null) {
-                                doubledValue = Integer.parseInt(returnString);
-                            }
-                            in.close();
-
-
-                            runOnUiThread(new Runnable() {
-                                public void run() {
-
-                                    inputValue.setText(doubledValue.toString());
-
-                                }
-                            });
-
-                        } catch (Exception e) {
-                            Log.d("Exception", e.toString());
-                        }
-
-                    }
-                }).start();
-
-                break;
+                final CustomJSONObjectRequest jsonRequest = new CustomJSONObjectRequest(Request.Method.POST, SERVER_URL,
+                        mJSONObject, this, this);
+                jsonRequest.setTag(REQUEST_TAG);
+                mQueue.add(jsonRequest);
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.wakiedokie.waikiedokie;
 
-import com.wakiedokie.waikiedokie.model.User;
+
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -20,9 +20,6 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.wakiedokie.waikiedokie.ui.DoubleMeActivity;
 
-import com.wakiedokie.waikiedokie.util.CustomJSONObjectRequest;
-import com.wakiedokie.waikiedokie.util.CustomVolleyRequestQueue;
-
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -37,15 +34,10 @@ public class MainActivityFragment extends Fragment {
             AccessToken accessToken = loginResult.getAccessToken();
             Profile profile = Profile.getCurrentProfile();
             displayProfile(profile);
-            User currentUser = new User(profile.getId(), profile.getFirstName(), profile.getLastName());
-
             Intent nextActivity = new Intent(getActivity(), DoubleMeActivity.class);
             startActivity(nextActivity);
 
         }
-
-
-
 
         @Override
         public void onCancel() {
@@ -99,7 +91,7 @@ public class MainActivityFragment extends Fragment {
 
     public void displayProfile(Profile profile) {
         if (profile != null) {
-            Toast.makeText(getActivity(), profile.getId() + " has just logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), profile.getName() + " has just logged in", Toast.LENGTH_SHORT).show();
         }
     }
 }

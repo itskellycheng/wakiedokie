@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.wakiedokie.waikiedokie.util.CustomVolleyRequestQueue;
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -36,10 +34,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
