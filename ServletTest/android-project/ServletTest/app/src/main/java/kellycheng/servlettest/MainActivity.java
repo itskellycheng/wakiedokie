@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void run() {
 
                         try{
-                            URL url = new URL("http://10.0.2.2:5005/ServletTest/DoubleMeServlet");
+                            URL url = new URL("http://10.0.2.2:8080/AndroidAppServlet/DoubleMeServlet");
                             URLConnection connection = url.openConnection();
 
                             String inputString = inputValue.getText().toString();
