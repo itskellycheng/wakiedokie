@@ -5,24 +5,33 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import kellycheng.servlettest.util.CustomJSONObjectRequest;
+import kellycheng.servlettest.util.CustomVolleyRequestQueue;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, Response.Listener,
+        Response.ErrorListener{
+
+    public static final String REQUEST_TAG = "MainVolleyActivity";
+    private RequestQueue mQueue;
+    String url = "http://10.0.2.2:5005/ServletTest/DoubleMeServlet";
 
     EditText inputValue=null;
     Integer doubledValue =0;
-    Button doubleMe;
+    Button doubleMeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         inputValue = (EditText) findViewById(R.id.inputNum);
-        doubleMe = (Button) findViewById(R.id.doubleme);
+        doubleMeBtn = (Button) findViewById(R.id.doubleme);
 
-        doubleMe.setOnClickListener(this);
+        doubleMeBtn.setOnClickListener(this);
     }
 
     @Override
@@ -69,55 +78,116 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
+                .getRequestQueue();
+//        String url = "http://10.0.2.2:5005/ServletTest/DoubleMeServlet";
+//        final CustomJSONObjectRequest jsonRequest = new CustomJSONObjectRequest(Request.Method.GET, url,
+//                new JSONObject(), this, this);
+//        jsonRequest.setTag(REQUEST_TAG);
+//
+//        doubleMeBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mQueue.add(jsonRequest);
+//            }
+//        });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mQueue != null) {
+            mQueue.cancelAll(REQUEST_TAG);
+        }
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        inputValue.setText(error.getMessage());
+    }
+
+    @Override
+    public void onResponse(Object response) {
+        inputValue.setText("Response is: " + response);
+        try {
+            inputValue.setText(inputValue.getText() + "\n\n" + ((JSONObject) response).getString
+                    ("name"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
     public void onClick(View v) {
 
         switch (v.getId()){
             case R.id.doubleme:
 
-                new Thread(new Runnable() {
-                    public void run() {
+                JSONObject mJSONObject = new JSONObject();
 
-                        try{
-                            URL url = new URL("http://10.0.2.2:5005/ServletTest/DoubleMeServlet");
-                            URLConnection connection = url.openConnection();
+                try {
+                    mJSONObject.put("username", "my username");
+                    mJSONObject.put("password", "my password");
 
-                            String inputString = inputValue.getText().toString();
-                            //inputString = URLEncoder.encode(inputString, "UTF-8");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                            Log.d("inputString", inputString);
-
-                            connection.setDoOutput(true);
-                            OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-                            out.write(inputString);
-                            out.close();
-
-                            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-                            String returnString="";
-                            doubledValue =0;
-
-                            while ((returnString = in.readLine()) != null)
-                            {
-                                doubledValue= Integer.parseInt(returnString);
-                            }
-                            in.close();
+                final CustomJSONObjectRequest jsonRequest = new CustomJSONObjectRequest(Request.Method.POST, url,
+                        mJSONObject, this, this);
+                jsonRequest.setTag(REQUEST_TAG);
+                mQueue.add(jsonRequest);
 
 
-                            runOnUiThread(new Runnable() {
-                                public void run() {
 
-                                    inputValue.setText(doubledValue.toString());
 
-                                }
-                            });
-
-                        }catch(Exception e)
-                        {
-                            Log.d("Exception",e.toString());
-                        }
-
-                    }
-                }).start();
+//                new Thread(new Runnable() {
+//                    public void run() {
+//
+//                        try{
+//                            URL url = new URL("http://10.0.2.2:5005/ServletTest/DoubleMeServlet");
+//                            URLConnection connection = url.openConnection();
+//
+//                            String inputString = inputValue.getText().toString();
+//                            //inputString = URLEncoder.encode(inputString, "UTF-8");
+//
+//                            Log.d("inputString", inputString);
+//
+//                            connection.setDoOutput(true);
+//                            OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
+//                            out.write(inputString);
+//                            out.close();
+//
+//                            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//
+//                            String returnString="";
+//                            doubledValue =0;
+//
+//                            while ((returnString = in.readLine()) != null)
+//                            {
+//                                doubledValue= Integer.parseInt(returnString);
+//                            }
+//                            in.close();
+//
+//
+//                            runOnUiThread(new Runnable() {
+//                                public void run() {
+//
+//                                    inputValue.setText(doubledValue.toString());
+//
+//                                }
+//                            });
+//
+//                        }catch(Exception e)
+//                        {
+//                            Log.d("Exception",e.toString());
+//                        }
+//
+//                    }
+//                }).start();
 
                 break;
         }
