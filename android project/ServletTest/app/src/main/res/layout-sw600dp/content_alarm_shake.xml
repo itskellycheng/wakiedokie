@@ -8,52 +8,49 @@
     android:paddingTop="70dp">
     <!--tools:showIn="@layout/activity_main">-->
 
+    <TextView
+        android:id="@+id/wakeup_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:text="@string/wakeup_message" />
 
     <ImageView
         android:id="@+id/boy_img"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_below="@+id/wakeup_message"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:src="@drawable/boy" />
 
-    <TextView
-        android:id="@+id/boy_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/boy_img"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:text="request from: Victor" />
 
     <TextView
-        android:id="@+id/boy_message"
+        android:id="@+id/boy_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/boy_name"
+        android:layout_below="@+id/wakeup_message"
         android:layout_toRightOf="@+id/boy_img"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:text="Message:Wake up with me" />
+        android:text="@string/name_boy" />
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/question_intro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/boy_img"
-        android:layout_centerHorizontal="true">
+        android:layout_below="@+id/boy_img"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:text="@string/question_intro" />
 
-        <Button
-            android:id="@+id/button_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Confirm"
-            android:onClick="confirmRequest"/>
+    <TextView
+        android:id="@+id/shake_intro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/question_intro"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:text="@string/shake_intro" />
 
-        <Button
-            android:id="@+id/button_decline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/button_confirm"
-            android:text="Decline"
-            android:onClick="declineRequest"/>
-    </RelativeLayout>
+
+
 
 
 

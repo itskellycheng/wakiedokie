@@ -1,4 +1,4 @@
-package com.wakiedokie.waikiedokie;
+package com.wakiedokie.waikiedokie.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.util.CustomVolleyRequestQueue;
 
 public class MainActivity extends AppCompatActivity {

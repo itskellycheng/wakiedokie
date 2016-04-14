@@ -11,18 +11,18 @@ import com.wakiedokie.waikiedokie.R;
 /**
  * Created by chaovictorshin-deh on 4/14/16.
  */
-public class ShakeActivity extends Activity {
+public class RingVideoActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alarm_shake);
+        setContentView(R.layout.activity_ring_video);
 
 
         Button btn = (Button) findViewById(R.id.btn_confirm);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ShakeActivity.this, AlarmMainActivity.class);
+                Intent intent = new Intent(RingVideoActivity.this, AlarmStatusActivity.class);
                 startActivity(intent);
             }
         });
