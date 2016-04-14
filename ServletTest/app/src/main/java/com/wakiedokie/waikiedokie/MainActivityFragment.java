@@ -23,6 +23,8 @@ import com.wakiedokie.waikiedokie.ui.DoubleMeActivity;
 import com.wakiedokie.waikiedokie.util.CustomJSONObjectRequest;
 import com.wakiedokie.waikiedokie.util.CustomVolleyRequestQueue;
 
+import java.io.Serializable;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -39,8 +41,11 @@ public class MainActivityFragment extends Fragment {
             displayProfile(profile);
             User currentUser = new User(profile.getId(), profile.getFirstName(), profile.getLastName());
 
-            Intent nextActivity = new Intent(getActivity(), DoubleMeActivity.class);
-            startActivity(nextActivity);
+            Intent intent = new Intent(getActivity(), DoubleMeActivity.class);
+            intent.putExtra("current_user_facebook_id", (profile.getId()));
+            intent.putExtra("current_user_first_name", (profile.getFirstName()));
+            intent.putExtra("current_user_last_name", (profile.getLastName()));
+            startActivity(intent);
 
         }
 

@@ -43,7 +43,9 @@ public class DoubleMeActivity extends AppCompatActivity implements View.OnClickL
     EditText inputValue = null;
     Integer doubledValue = 0;
     Button doubleMe;
-
+    String current_user_facebook_id;
+    String current_user_first_name;
+    String current_user_last_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +55,20 @@ public class DoubleMeActivity extends AppCompatActivity implements View.OnClickL
         doubleMe = (Button) findViewById(R.id.doubleme);
 
         doubleMe.setOnClickListener(this);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            current_user_facebook_id = extras.getString("current_user_facebook_id");
+            current_user_first_name = extras.getString("current_user_first_name");
+            current_user_last_name = extras.getString("current_user_last_name");
+            System.out.println("extra is not null");
+            System.out.println(extras.toString());
+            System.out.println(current_user_facebook_id);
+            System.out.println(current_user_first_name);
+            System.out.println(current_user_last_name);
+        } else {
+            System.out.println("Extra is null");
+        }
     }
 
     @Override
@@ -118,9 +134,11 @@ public class DoubleMeActivity extends AppCompatActivity implements View.OnClickL
                 JSONObject mJSONObject = new JSONObject();
 
                 try {
-                    mJSONObject.put("username", "my username");
-                    mJSONObject.put("password", "my password");
-                    System.out.println("Clicked!");
+                    mJSONObject.put("facebook_id", current_user_facebook_id);
+                    mJSONObject.put("first_name", current_user_first_name);
+                    mJSONObject.put("last_name", current_user_last_name);
+                    System.out.println(current_user_facebook_id);
+                    System.out.println("JSON object ready to be sent");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
