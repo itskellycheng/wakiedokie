@@ -37,7 +37,7 @@ import org.json.JSONObject;
 public class DoubleMeActivity extends AppCompatActivity implements View.OnClickListener, Response.Listener,
         Response.ErrorListener {
     public static final String REQUEST_TAG = "MainVolleyActivity";
-    private static final String SERVER_URL = "http://128.237.221.10:8080/AndroidAppServlet/DoubleMeServlet";
+    private static final String SERVER_URL = "http://128.237.221.10:8080/AndroidAppServlet/UserServlet";
     private RequestQueue mQueue;
 
     EditText inputValue = null;
