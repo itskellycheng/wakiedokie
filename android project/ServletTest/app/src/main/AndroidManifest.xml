@@ -24,6 +24,45 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.AlarmMainActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+        <activity
+            android:name=".ui.AlarmEditTimeActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+        <activity
+            android:name=".ui.AlarmSelectBuddyActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+        <activity
+            android:name=".ui.AlarmConfirmActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+        <activity
+            android:name=".ui.AlarmEditTypeActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+        <activity
+            android:name=".ui.TakeVideoActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+        <activity
+            android:name=".ui.ConfirmVideoActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+        <activity
+            android:name=".ui.SetQuizActivity"
+            android:label="@string/app_name" >
+        </activity>
 
         <activity
             android:name=".ui.DoubleMeActivity"

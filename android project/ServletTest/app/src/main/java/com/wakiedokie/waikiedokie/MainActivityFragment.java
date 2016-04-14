@@ -18,6 +18,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.wakiedokie.waikiedokie.ui.AlarmMainActivity;
 import com.wakiedokie.waikiedokie.ui.DoubleMeActivity;
 
 import com.wakiedokie.waikiedokie.util.CustomJSONObjectRequest;
@@ -41,7 +42,7 @@ public class MainActivityFragment extends Fragment {
             displayProfile(profile);
             User currentUser = new User(profile.getId(), profile.getFirstName(), profile.getLastName());
 
-            Intent intent = new Intent(getActivity(), DoubleMeActivity.class);
+            Intent intent = new Intent(getActivity(), AlarmMainActivity.class);
             intent.putExtra("current_user_facebook_id", (profile.getId()));
             intent.putExtra("current_user_first_name", (profile.getFirstName()));
             intent.putExtra("current_user_last_name", (profile.getLastName()));
@@ -93,6 +94,9 @@ public class MainActivityFragment extends Fragment {
         super.onResume();
         Profile profile = Profile.getCurrentProfile();
         displayProfile(profile);
+
+        Intent intent = new Intent(getActivity(), AlarmMainActivity.class);
+        startActivity(intent);
 
     }
 
