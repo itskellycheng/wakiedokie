@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/boy_img"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:text="@string/request" />
+        android:text="request from: Victor" />
 
     <TextView
         android:id="@+id/boy_message"
@@ -31,7 +31,7 @@
         android:layout_below="@+id/boy_name"
         android:layout_toRightOf="@+id/boy_img"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:text="@string/request_message" />
+        android:text="Message:Wake up with me" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
