@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="80dp"
+    tools:context=".ui.MainActivity">
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/mainpage_down_linearlayout"
+        android:weightSum="1">
+
+        <TableRow android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:weightSum="1">
+            <TextView
+                android:id="@+id/mainpage_name_Textview"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:text="@string/music_title"
+                android:layout_gravity="center"
+                android:layout_span="100"
+                android:textStyle="bold"
+                android:textSize="28sp"
+                android:textAlignment="center"
+                android:layout_weight="3.42" />
+        </TableRow>
+
+        <TableRow android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:layout_marginBottom="30dp"
+            android:layout_weight="0.04">
+
+            <Button android:id="@+id/play_btn1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Play"
+                android:layout_column="0" />
+            <Button android:id="@+id/stop_btn1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stop"
+                android:layout_column="1" />
+            <!--<Button android:id="@+id/pause_btn1"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Pause"-->
+                <!--android:layout_column="2" />-->
+
+        </TableRow>
+
+        <TableRow android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:weightSum="1"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:layout_weight="0.13">
+
+            <Button android:id="@+id/play_btn2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Play"
+                android:layout_column="0" />
+            <Button android:id="@+id/stop_btn2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stop"
+                android:layout_column="1" />
+            <!--<Button android:id="@+id/pause_btn2"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Pause"-->
+                <!--android:layout_column="2" />-->
+
+        </TableRow>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

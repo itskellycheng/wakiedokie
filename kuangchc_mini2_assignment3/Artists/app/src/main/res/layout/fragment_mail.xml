@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="80dp"
+    tools:context=".ui.MainActivity">
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/mainpage_down_linearlayout"
+        android:weightSum="1">
+
+        <TableRow android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:weightSum="1">
+            <TextView
+                android:id="@+id/mail_title"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:text="Add me to mailing list"
+                android:layout_gravity="center"
+                android:layout_span="100"
+                android:textStyle="bold"
+                android:textSize="28sp"
+                android:textAlignment="center"
+                android:layout_weight="3.42" />
+        </TableRow>
+
+        <EditText android:id="@+id/mail_name"
+            android:layout_width="596dp"
+            android:layout_height="50dp"
+            android:imeOptions="actionNext"
+            android:hint="@string/fan_name"
+            android:inputType="text"
+            android:maxLength="20"
+            android:maxLines="1">
+        </EditText>
+
+        <EditText android:id="@+id/mail_email"
+            android:layout_width="596dp"
+            android:layout_height="50dp"
+            android:imeOptions="actionNext"
+            android:hint="@string/email"
+            android:inputType="text"
+            android:maxLength="30">
+        </EditText>
+
+        <EditText android:id="@+id/mail_subject"
+            android:layout_width="596dp"
+            android:layout_height="50dp"
+            android:imeOptions="actionNext"
+            android:hint="@string/subject"
+            android:inputType="text"
+            android:maxLength="30">
+        </EditText>
+
+
+        <Button android:id="@+id/mail_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:layout_column="0" />
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,109 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="80dp"
+    android:orientation="vertical"
+    tools:context=".ui.MainActivityFragment">
+    tools:showIn="@layout_height/activity_main">
+
+    <TableRow android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:weightSum="1">
+        <TextView
+            android:id="@+id/mainpage_name_Textview"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:text="@string/artist_name"
+            android:layout_gravity="center"
+            android:layout_span="100"
+            android:textStyle="bold"
+            android:textSize="28sp"
+            android:textAlignment="center"
+            android:layout_weight="3.42" />
+    </TableRow>
+
+    <TableRow android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:weightSum="1">
+        <TextView
+            android:id="@+id/mainpage_bday_Textview"
+            android:layout_width="fill_parent"
+            android:layout_height="20dp"
+            android:text="@string/artist_birthday"
+            android:layout_gravity="center"
+            android:layout_span="100"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:layout_weight="3.42" />
+    </TableRow>
+
+    <TableRow android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:weightSum="1">
+        <TextView
+            android:id="@+id/mainpage_email_Textview"
+            android:layout_width="fill_parent"
+            android:layout_height="20dp"
+            android:text="@string/artist_email"
+            android:layout_gravity="center"
+            android:layout_span="100"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:layout_weight="3.42" />
+    </TableRow>
+
+    <TableRow android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:weightSum="1">
+        <TextView
+            android:id="@+id/mainpage_phone_Textview"
+            android:layout_width="fill_parent"
+            android:layout_height="20dp"
+            android:text="@string/artist_phone"
+            android:layout_gravity="center"
+            android:layout_span="100"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:layout_weight="3.42" />
+    </TableRow>
+
+    <TableRow android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:weightSum="1">
+        <TextView
+            android:id="@+id/mainpage_site_Textview"
+            android:layout_width="fill_parent"
+            android:layout_height="20dp"
+            android:text="@string/artist_site"
+            android:layout_gravity="center"
+            android:layout_span="100"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:layout_weight="3.42" />
+    </TableRow>
+
+    <TableRow android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:weightSum="1">
+        <TextView
+            android:id="@+id/mainpage_twitter_Textview"
+            android:layout_width="fill_parent"
+            android:layout_height="20dp"
+            android:text="@string/artist_twitter"
+            android:layout_gravity="center"
+            android:layout_span="100"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:layout_weight="3.42" />
+    </TableRow>
+
+</LinearLayout>
