@@ -3,7 +3,6 @@ package com.wakiedokie.waikiedokie.ui;
 import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.model.User;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,18 +18,11 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.wakiedokie.waikiedokie.ui.AlarmMainActivity;
-import com.wakiedokie.waikiedokie.ui.DoubleMeActivity;
-
-import com.wakiedokie.waikiedokie.util.CustomJSONObjectRequest;
-import com.wakiedokie.waikiedokie.util.CustomVolleyRequestQueue;
-
-import java.io.Serializable;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class LoginActivityFragment extends Fragment {
 
 
     private CallbackManager mCallbackManager;
@@ -65,7 +57,7 @@ public class MainActivityFragment extends Fragment {
         }
     };
 
-    public MainActivityFragment() {
+    public LoginActivityFragment() {
     }
 
     @Override
@@ -78,7 +70,7 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
     @Override

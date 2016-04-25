@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.util.CustomVolleyRequestQueue;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
