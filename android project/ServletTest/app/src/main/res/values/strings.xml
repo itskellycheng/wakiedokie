@@ -15,7 +15,7 @@
     <string name="friend_name_3">Kobe Bryant</string>
     <string name="add_friend_btn">Add Friend</string>
 
-    <!-- activity_edit_alarm -->
+    <!-- activity_edit_alarm_time -->
     <string name="title_edit_alarm">Edit Alarm</string>
     <string name="btn_to_link_buddy">Select a wakie buddy</string>
     <string name="btn_save">Save</string>
