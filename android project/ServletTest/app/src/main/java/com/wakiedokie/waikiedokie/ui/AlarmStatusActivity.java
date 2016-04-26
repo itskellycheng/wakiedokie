@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import java.io.IOException;
  */
 public class AlarmStatusActivity extends Activity {
     private MediaPlayer mMediaPlayer;
+    private Ringtone mRingtone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,8 @@ public class AlarmStatusActivity extends Activity {
         btn_turn_off.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mMediaPlayer.stop();
+//                mMediaPlayer.stop();
+                mRingtone.stop();
                 Intent intent = new Intent(AlarmStatusActivity.this, AlarmMainActivity.class);
                 startActivity(intent);
             }
@@ -41,19 +44,29 @@ public class AlarmStatusActivity extends Activity {
     }
 
     private void playSound(Context context, Uri alert) {
-        mMediaPlayer = new MediaPlayer();
-        try {
-            mMediaPlayer.setDataSource(context, alert);
-            final AudioManager audioManager = (AudioManager) context
-                    .getSystemService(Context.AUDIO_SERVICE);
-            if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                mMediaPlayer.prepare();
-                mMediaPlayer.start();
-            }
-        } catch (IOException e) {
-            System.out.println("OOPS");
-        }
+        System.out.println("In playSound");
+        mRingtone = RingtoneManager.getRingtone(context, alert);
+        mRingtone.play();
+//        mMediaPlayer = new MediaPlayer();
+//        try {
+//            mMediaPlayer.setDataSource(context, alert);
+//            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//            final AudioManager audioManager = (AudioManager) context
+//                    .getSystemService(Context.AUDIO_SERVICE);
+//            if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+//                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+//                mMediaPlayer.prepare();
+//                mMediaPlayer.start();
+//                if (mMediaPlayer.isPlaying()) {
+//                    System.out.println("Playing");
+//                }
+//                else {
+//                    System.out.println("Not Playing");
+//                }
+//            }
+//        } catch (IOException e) {
+//            System.out.println("OOPS");
+//        }
     }
 
     //Get an alarm sound. Try for an alarm. If none set, try notification,
@@ -69,6 +82,8 @@ public class AlarmStatusActivity extends Activity {
                         .getDefaultUri(RingtoneManager.TYPE_RINGTONE);
             }
         }
+        System.out.println("alert!!!");
+        System.out.println(alert);
         return alert;
     }
 
