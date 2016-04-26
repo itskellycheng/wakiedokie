@@ -33,8 +33,8 @@ public class AlarmStatusActivity extends Activity {
         btn_turn_off.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                mMediaPlayer.stop();
-                mRingtone.stop();
+                mMediaPlayer.stop();
+//                mRingtone.stop();
                 Intent intent = new Intent(AlarmStatusActivity.this, AlarmMainActivity.class);
                 startActivity(intent);
             }
@@ -45,8 +45,18 @@ public class AlarmStatusActivity extends Activity {
 
     private void playSound(Context context, Uri alert) {
         System.out.println("In playSound");
-        mRingtone = RingtoneManager.getRingtone(context, alert);
-        mRingtone.play();
+//        mRingtone = RingtoneManager.getRingtone(context, alert);
+//        mRingtone.play();
+        mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mMediaPlayer.setDataSource(getApplicationContext(), alert);
+            mMediaPlayer.prepare();
+            mMediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 //        mMediaPlayer = new MediaPlayer();
 //        try {
 //            mMediaPlayer.setDataSource(context, alert);
