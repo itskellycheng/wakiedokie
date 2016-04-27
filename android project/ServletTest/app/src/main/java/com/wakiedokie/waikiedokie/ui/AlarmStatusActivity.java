@@ -35,6 +35,12 @@ public class AlarmStatusActivity extends Activity {
             public void onClick(View view) {
                 mMediaPlayer.stop();
 //                mRingtone.stop();
+                if (mMediaPlayer.isPlaying()) {
+                    System.out.println("Playing");
+                }
+                else {
+                    System.out.println("Not Playing");
+                }
                 Intent intent = new Intent(AlarmStatusActivity.this, AlarmMainActivity.class);
                 startActivity(intent);
             }
@@ -48,11 +54,22 @@ public class AlarmStatusActivity extends Activity {
 //        mRingtone = RingtoneManager.getRingtone(context, alert);
 //        mRingtone.play();
         mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+        mMediaPlayer.setLooping(true);
+        AudioManager mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+        mAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
         try {
             mMediaPlayer.setDataSource(getApplicationContext(), alert);
+            System.out.println(alert);
             mMediaPlayer.prepare();
             mMediaPlayer.start();
+            if (mMediaPlayer.isPlaying()) {
+                    System.out.println("Playing");
+            }
+            else {
+                System.out.println("Not Playing");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
