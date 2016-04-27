@@ -29,13 +29,6 @@ public class AlarmEditTimeActivity extends Activity {
 
         alarmTimePicker = (TimePicker) findViewById(R.id.alarmTimePicker);
 
-        // Create an offset from the current time in which the alarm will go off
-
-
-//        cal.add(Calendar.SECOND, 5);
-
-
-
         Button btn_select_buddy = (Button) findViewById(R.id.btn_to_select_buddy);
         btn_select_buddy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,16 +53,16 @@ public class AlarmEditTimeActivity extends Activity {
                     cal.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
                 }
 
-                Intent mainIntent = new Intent(AlarmEditTimeActivity.this, AlarmMainActivity.class);
                 Intent alarmRingIntent = new Intent(AlarmEditTimeActivity.this, AlarmStatusActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(AlarmEditTimeActivity.this,
                         12345, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                 AlarmManager am =
                         (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
                 am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-                        pendingIntent);a
+                        pendingIntent);
                 Log.d(TAG, "Alarm is set");
 
+                Intent mainIntent = new Intent(AlarmEditTimeActivity.this, AlarmMainActivity.class);
                 startActivity(mainIntent);
             }
         });
