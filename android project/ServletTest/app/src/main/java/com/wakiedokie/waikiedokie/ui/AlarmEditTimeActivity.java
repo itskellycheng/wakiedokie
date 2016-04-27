@@ -67,7 +67,7 @@ public class AlarmEditTimeActivity extends Activity {
                 AlarmManager am =
                         (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
                 am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-                        pendingIntent);
+                        pendingIntent);a
                 Log.d(TAG, "Alarm is set");
 
                 startActivity(mainIntent);

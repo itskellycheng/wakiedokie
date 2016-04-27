@@ -10,14 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.wakiedokie.waikiedokie.R;
-import com.wakiedokie.waikiedokie.util.CustomVolleyRequestQueue;
 
 public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
