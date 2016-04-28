@@ -17,8 +17,11 @@ import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.util.database.DBHelper;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 /**
+ * AlarmEditTimeActivity - Page to edit alarm time
+ *
  * Created by chaovictorshin-deh on 4/14/16.
  */
 public class AlarmEditTimeActivity extends Activity {
@@ -72,6 +75,7 @@ public class AlarmEditTimeActivity extends Activity {
             @Override
             public void onClick(View view) {
 
+                Calendar now = Calendar.getInstance();
                 Calendar cal = Calendar.getInstance();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     cal.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
@@ -82,13 +86,28 @@ public class AlarmEditTimeActivity extends Activity {
                     cal.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
                 }
 
+                // Set alarm for next day if time is before current time
+                if (cal.before(now)) {
+                    cal.add(Calendar.DATE, 1);
+                }
+
                 int requestCode = PENDING_CODE_OFFSET + alarmID;
                 Intent alarmRingIntent = new Intent(AlarmEditTimeActivity.this, AlarmStatusActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(AlarmEditTimeActivity.this,
                         requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                 am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
                         pendingIntent);
+
+                // Logging stuff
                 Log.d(TAG, "Alarm is set");
+                Long hours = TimeUnit.MILLISECONDS.toHours(
+                        cal.getTimeInMillis()-now.getTimeInMillis());
+                Long minutes = TimeUnit.MILLISECONDS.toMinutes(
+                        cal.getTimeInMillis() - now.getTimeInMillis() - TimeUnit.HOURS.toMillis(hours));
+                String hoursStr = Long.toString(hours);
+                String minutesStr = Long.toString(minutes);
+                String toastStr = "Alarm will go off in " + hoursStr + " hrs " + minutesStr + " mins";
+                Toast.makeText(getApplicationContext(), toastStr, Toast.LENGTH_SHORT).show();
 
                 if (alarmID != -1) {
                     dbHelper.updateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), "", 1);
@@ -98,7 +117,8 @@ public class AlarmEditTimeActivity extends Activity {
                     dbHelper.addAlarm(Long.toString(cal.getTimeInMillis()), "", 1);
 
                 }
-                // debugging checks
+
+                // debugging logs
                 Cursor cursor = dbHelper.getAllAlarms();
                 cursor.moveToFirst();
                 String alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
