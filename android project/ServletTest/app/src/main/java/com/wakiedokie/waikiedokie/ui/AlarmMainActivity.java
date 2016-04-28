@@ -85,6 +85,18 @@ public class AlarmMainActivity extends Activity {
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             paramsSwitch.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             mSwitch.setLayoutParams(paramsSwitch);
+            if (alarmIsActive(alarmID)) {
+                mSwitch.setChecked(true);
+            }
+            else {
+                mSwitch.setChecked(false);
+            }
+            mSwitch.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View view) {
+                    toggleAlarm(alarmID);
+                 }
+            });
 
             alarmRL.addView(timeTV);
             alarmRL.addView(mSwitch);
@@ -108,5 +120,29 @@ public class AlarmMainActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void toggleAlarm(int id) {
+        Cursor c = dbHelper.getAlarm(id);
+        c.moveToFirst();
+        int isActive = c.getInt(c.getColumnIndex("is_active"));
+        if (isActive == 0) {
+            dbHelper.setAlarmToActive(id);
+        }
+        else {
+            dbHelper.setAlarmToInactive(id);
+        }
+    }
+
+    private boolean alarmIsActive(int id) {
+        Cursor c = dbHelper.getAlarm(id);
+        c.moveToFirst();
+        int isActive = c.getInt(c.getColumnIndex("is_active"));
+        if (isActive == 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 }

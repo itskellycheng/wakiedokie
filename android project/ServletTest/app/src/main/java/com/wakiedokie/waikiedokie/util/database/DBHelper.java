@@ -104,6 +104,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    /* setAlarmToActive - with alarm id, set alarm active column to active (1) */
+    public void setAlarmToActive(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("UPDATE " + ALARM_TABLE_NAME +
+                " SET IS_ACTIVE = 1 WHERE ID = " + id);
+    }
+
+    /* setAlarmToActive - set alarm active column to inactive (0) */
+    public void setAlarmToInactive(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("UPDATE " + ALARM_TABLE_NAME +
+                " SET IS_ACTIVE = 0 WHERE ID = " + id);
+    }
+
+
 //    public boolean updateContact (Integer id, String name, String phone, String email, String street,String place)
 //    {
 //        SQLiteDatabase db = this.getWritableDatabase();

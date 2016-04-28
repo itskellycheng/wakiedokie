@@ -32,7 +32,7 @@ public class AlarmEditTimeActivity extends Activity {
         dbHelper = new DBHelper(AlarmEditTimeActivity.this);
 
         Intent thisIntent = getIntent();
-        int alarmID = thisIntent.getIntExtra("alarmID", 1);closeContextMenu();
+        final int alarmID = thisIntent.getIntExtra("alarmID", 1);closeContextMenu();
 
         Cursor cursor = dbHelper.getAlarm(alarmID);
         cursor.moveToFirst();
@@ -98,6 +98,8 @@ public class AlarmEditTimeActivity extends Activity {
                     Log.d(TAG, "Minute : " + calCheck.get(Calendar.MINUTE));
                     Log.d(TAG, "AM PM : " + calCheck.get(Calendar.AM_PM));
                 }
+
+                dbHelper.setAlarmToActive(alarmID);
 
                 Intent mainIntent = new Intent(AlarmEditTimeActivity.this, AlarmMainActivity.class);
                 startActivity(mainIntent);
