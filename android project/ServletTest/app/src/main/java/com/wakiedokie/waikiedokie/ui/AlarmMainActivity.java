@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.app.ActionBar.LayoutParams;
 
@@ -33,7 +35,7 @@ public class AlarmMainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_main);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+        LinearLayout.LayoutParams paramsAlarmLL = new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
         timeContainer = (LinearLayout) findViewById(R.id.time_container);
@@ -55,11 +57,21 @@ public class AlarmMainActivity extends Activity {
                 amPm = "PM";
             String timeStr = hour + ":" + minute + " " + amPm;
 
-            TextView alarmTV = new TextView(this);
-            alarmTV.setText(timeStr);
-            alarmTV.setLayoutParams(params);
+            TextView timeTV = new TextView(this);
+            timeTV.setText(timeStr);
+            timeTV.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 40f);
+//            timeTV.setLayoutParams(paramsTime);
 
-            timeContainer.addView(alarmTV);
+            LinearLayout alarmLL = new LinearLayout(this);
+            alarmLL.setOrientation(LinearLayout.HORIZONTAL);
+            alarmLL.setLayoutParams(paramsAlarmLL);
+            alarmLL.setPadding(10, 10, 10, 10);
+
+            Switch mSwitch = new Switch(AlarmMainActivity.this);
+
+            alarmLL.addView(timeTV);
+            alarmLL.addView(mSwitch);
+            timeContainer.addView(alarmLL);
         }
 
         ImageButton imgBtn = (ImageButton) findViewById(R.id.btn_main_add_alarm);

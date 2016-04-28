@@ -24,32 +24,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="58dp" />
 
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/switch1"
-            android:layout_alignBottom="@+id/textClock2"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:paddingBottom="20dp" />
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/switch2"
-            android:paddingBottom="20dp"
-            android:layout_alignBottom="@+id/textClock3"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/switch3"
-            android:paddingBottom="20dp"
-            android:layout_above="@+id/btn_main_add_alarm"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
