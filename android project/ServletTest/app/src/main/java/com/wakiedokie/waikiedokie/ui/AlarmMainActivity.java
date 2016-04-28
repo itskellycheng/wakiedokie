@@ -35,6 +35,7 @@ import java.util.Calendar;
 public class AlarmMainActivity extends Activity {
     private DBHelper dbHelper;
     private LinearLayout timeContainer;
+    private final int PENDING_CODE_OFFSET = 990000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,18 +137,22 @@ public class AlarmMainActivity extends Activity {
         if (isActive == 0) {
             dbHelper.setAlarmToActive(id);
 
+            int requestCode = PENDING_CODE_OFFSET + id;
+
             Intent alarmRingIntent = new Intent(AlarmMainActivity.this, AlarmStatusActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(AlarmMainActivity.this,
-                    id, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
                     pendingIntent);
         }
         else {
             dbHelper.setAlarmToInactive(id);
 
+            int requestCode = PENDING_CODE_OFFSET + id;
+
             Intent alarmRingIntent = new Intent(AlarmMainActivity.this, AlarmStatusActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(AlarmMainActivity.this,
-                    id, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             PendingIntent pendingIntent2 = PendingIntent.getActivity(AlarmMainActivity.this,
                     12345, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             pendingIntent.cancel();

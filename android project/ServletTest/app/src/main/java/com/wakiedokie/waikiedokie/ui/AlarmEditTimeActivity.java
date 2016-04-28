@@ -22,6 +22,7 @@ import java.util.Calendar;
  */
 public class AlarmEditTimeActivity extends Activity {
     private static final String TAG = "AlarmEditActivity";
+    private static final int PENDING_CODE_OFFSET = 990000;
     private TimePicker alarmTimePicker;
     private DBHelper dbHelper;
 
@@ -77,9 +78,10 @@ public class AlarmEditTimeActivity extends Activity {
                     cal.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
                 }
 
+                int requestCode = PENDING_CODE_OFFSET + alarmID;
                 Intent alarmRingIntent = new Intent(AlarmEditTimeActivity.this, AlarmStatusActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(AlarmEditTimeActivity.this,
-                        alarmID, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                        requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                 AlarmManager am =
                         (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
                 am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
