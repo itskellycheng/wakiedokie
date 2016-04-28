@@ -130,6 +130,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 " SET IS_ACTIVE = 0 WHERE ID = " + id);
     }
 
+    /* deleteAlarm - deletes row in alarm table with alarm id */
+    public void deleteAlarm(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = "id=" + Integer.toString(id);
+        db.delete(ALARM_TABLE_NAME, whereClause, null);
+    }
+
 
 //    public boolean updateContact (Integer id, String name, String phone, String email, String street,String place)
 //    {

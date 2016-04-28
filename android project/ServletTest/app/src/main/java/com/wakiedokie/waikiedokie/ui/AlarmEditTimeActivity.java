@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.util.database.DBHelper;
@@ -25,15 +26,18 @@ public class AlarmEditTimeActivity extends Activity {
     private static final int PENDING_CODE_OFFSET = 990000;
     private TimePicker alarmTimePicker;
     private DBHelper dbHelper;
+    private int alarmID;
+    private AlarmManager am;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_alarm_time);
         dbHelper = new DBHelper(AlarmEditTimeActivity.this);
+        am = (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
 
         Intent thisIntent = getIntent();
-        final int alarmID = thisIntent.getIntExtra("alarmID", -1);closeContextMenu();
+        alarmID = thisIntent.getIntExtra("alarmID", -1);closeContextMenu();
 
 
         Calendar cal = Calendar.getInstance();
@@ -82,8 +86,6 @@ public class AlarmEditTimeActivity extends Activity {
                 Intent alarmRingIntent = new Intent(AlarmEditTimeActivity.this, AlarmStatusActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(AlarmEditTimeActivity.this,
                         requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                AlarmManager am =
-                        (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
                 am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
                         pendingIntent);
                 Log.d(TAG, "Alarm is set");
@@ -111,7 +113,25 @@ public class AlarmEditTimeActivity extends Activity {
                     Log.d(TAG, "AM PM : " + calCheck.get(Calendar.AM_PM));
                 }
 
+                Intent mainIntent = new Intent(AlarmEditTimeActivity.this, AlarmMainActivity.class);
+                startActivity(mainIntent);
+            }
+        });
 
+        Button btn_delete = (Button) findViewById(R.id.btn_delete_alarm);
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dbHelper.deleteAlarm(alarmID);
+
+                int requestCode = PENDING_CODE_OFFSET + alarmID;
+                Intent alarmRingIntent = new Intent(AlarmEditTimeActivity.this, AlarmStatusActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(AlarmEditTimeActivity.this,
+                        requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                pendingIntent.cancel();
+                am.cancel(pendingIntent);
+
+                Toast.makeText(getApplicationContext(), "Deleted alarm!", Toast.LENGTH_SHORT).show();
 
                 Intent mainIntent = new Intent(AlarmEditTimeActivity.this, AlarmMainActivity.class);
                 startActivity(mainIntent);
