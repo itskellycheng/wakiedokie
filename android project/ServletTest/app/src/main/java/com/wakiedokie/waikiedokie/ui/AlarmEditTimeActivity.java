@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.TimePicker;
 
 import com.wakiedokie.waikiedokie.R;
+import com.wakiedokie.waikiedokie.util.database.DBHelper;
 
 import java.util.Calendar;
 
@@ -21,6 +23,7 @@ import java.util.Calendar;
 public class AlarmEditTimeActivity extends Activity {
     private static final String TAG = "AlarmEditActivity";
     private TimePicker alarmTimePicker;
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,23 @@ public class AlarmEditTimeActivity extends Activity {
                 am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
                         pendingIntent);
                 Log.d(TAG, "Alarm is set");
+
+                // Save alarm to SQlite
+                dbHelper = new DBHelper(AlarmEditTimeActivity.this);
+                dbHelper.addAlarm(Long.toString(cal.getTimeInMillis()), "", 1);
+                Cursor cursor = dbHelper.getAllAlarms();
+                cursor.moveToFirst();
+                String alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
+                System.out.println("Alarm time = " + alarmTime);
+                while (cursor.moveToNext()) {
+                    alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
+                    Log.d(TAG, "Alarm time = " + alarmTime);
+                    Calendar calCheck = Calendar.getInstance();
+                    calCheck.setTimeInMillis(Long.parseLong(alarmTime));
+                    Log.d(TAG, "Hour  : " + calCheck.get(Calendar.HOUR));
+                    Log.d(TAG, "Minute : " + calCheck.get(Calendar.MINUTE));
+                    Log.d(TAG, "AM PM : " + calCheck.get(Calendar.AM_PM));
+                }
 
                 Intent mainIntent = new Intent(AlarmEditTimeActivity.this, AlarmMainActivity.class);
                 startActivity(mainIntent);

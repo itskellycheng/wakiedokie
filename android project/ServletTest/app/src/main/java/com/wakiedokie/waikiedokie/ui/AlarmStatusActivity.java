@@ -55,7 +55,7 @@ public class AlarmStatusActivity extends Activity {
         mMediaPlayer.setLooping(true);
         AudioManager mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-        mAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
+        mAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume/4, 0);
         try {
             mMediaPlayer.setDataSource(getApplicationContext(), alert);
             System.out.println(alert);
