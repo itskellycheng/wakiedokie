@@ -49,8 +49,6 @@ public class AlarmMainActivity extends Activity {
 
         dbHelper = new DBHelper(AlarmMainActivity.this);
         Cursor cursor = dbHelper.getAllAlarms();
-//        String alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
-//        System.out.println("Alarm time = " + alarmTime);
         while (cursor.moveToNext()) {
             String alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
             final int alarmID = cursor.getInt(cursor.getColumnIndex("id"));
@@ -118,6 +116,7 @@ public class AlarmMainActivity extends Activity {
 
     }
 
+    /* Helper function for toggling alarm on/off */
     private void toggleAlarm(int id, Calendar cal) {
         AlarmManager am =
                 (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
@@ -154,6 +153,7 @@ public class AlarmMainActivity extends Activity {
         }
     }
 
+    /* Helper function to check in database if alarm is active or not */
     private boolean alarmIsActive(int id) {
         Cursor c = dbHelper.getAlarm(id);
         c.moveToFirst();
