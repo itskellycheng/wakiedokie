@@ -39,6 +39,7 @@ public class AlarmEditTimeActivity extends Activity {
         dbHelper = new DBHelper(AlarmEditTimeActivity.this);
         am = (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
 
+        // set alarmID to -1 if not passed in from intent (New alarm)
         Intent thisIntent = getIntent();
         alarmID = thisIntent.getIntExtra("alarmID", -1);closeContextMenu();
 
@@ -66,6 +67,7 @@ public class AlarmEditTimeActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(AlarmEditTimeActivity.this, AlarmSelectBuddyActivity.class);
+                intent.putExtra("alarmID", alarmID);
                 startActivity(intent);
             }
         });
