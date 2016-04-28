@@ -116,14 +116,6 @@ public class AlarmMainActivity extends Activity {
             }
         });
 
-        Button btn_dummy = (Button) findViewById(R.id.btn_dummy_to_type);
-        btn_dummy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AlarmMainActivity.this, AlarmEditTypeActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     private void toggleAlarm(int id, Calendar cal) {
