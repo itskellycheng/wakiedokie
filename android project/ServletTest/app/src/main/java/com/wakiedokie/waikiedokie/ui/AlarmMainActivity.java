@@ -3,15 +3,19 @@ package com.wakiedokie.waikiedokie.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.app.ActionBar.LayoutParams;
@@ -35,8 +39,8 @@ public class AlarmMainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_main);
 
-        LinearLayout.LayoutParams paramsAlarmLL = new LinearLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramsAlarmRL = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         timeContainer = (LinearLayout) findViewById(R.id.time_container);
 
@@ -62,16 +66,21 @@ public class AlarmMainActivity extends Activity {
             timeTV.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 40f);
 //            timeTV.setLayoutParams(paramsTime);
 
-            LinearLayout alarmLL = new LinearLayout(this);
-            alarmLL.setOrientation(LinearLayout.HORIZONTAL);
-            alarmLL.setLayoutParams(paramsAlarmLL);
-            alarmLL.setPadding(10, 10, 10, 10);
+            RelativeLayout alarmRL = new RelativeLayout(this);
+            alarmRL.setLayoutParams(paramsAlarmRL);
+            alarmRL.setPadding(10, 10, 10, 10);
+//            alarmRL.setBackgroundColor(Color.parseColor("#b5d6e1"));
 
             Switch mSwitch = new Switch(AlarmMainActivity.this);
+            RelativeLayout.LayoutParams paramsSwitch = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            paramsSwitch.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            mSwitch.setLayoutParams(paramsSwitch);
 
-            alarmLL.addView(timeTV);
-            alarmLL.addView(mSwitch);
-            timeContainer.addView(alarmLL);
+            alarmRL.addView(timeTV);
+            alarmRL.addView(mSwitch);
+            timeContainer.addView(alarmRL);
         }
 
         ImageButton imgBtn = (ImageButton) findViewById(R.id.btn_main_add_alarm);
