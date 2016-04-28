@@ -90,6 +90,18 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    /* updateAlarm - update alarm with id */
+    public boolean updateAlarm(int id, String alarmTime, String wakieBuddy, int isActive) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("alarm_time", alarmTime);
+        contentValues.put("wakie_buddy", wakieBuddy);
+        contentValues.put("is_active", isActive);
+        String whereStr = "id=" + Integer.toString(id);
+        db.update(ALARM_TABLE_NAME, contentValues, whereStr, null);
+        return true;
+    }
+
     /* getAllAlarms - get all data in alarm table */
     public Cursor getAllAlarms() {
         SQLiteDatabase db = this.getReadableDatabase();

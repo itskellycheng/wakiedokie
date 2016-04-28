@@ -32,7 +32,7 @@ public class AlarmEditTimeActivity extends Activity {
         dbHelper = new DBHelper(AlarmEditTimeActivity.this);
 
         Intent thisIntent = getIntent();
-        final int alarmID = thisIntent.getIntExtra("alarmID", 1);closeContextMenu();
+        final int alarmID = thisIntent.getIntExtra("alarmID", -1);closeContextMenu();
 
         Cursor cursor = dbHelper.getAlarm(alarmID);
         cursor.moveToFirst();
@@ -83,8 +83,15 @@ public class AlarmEditTimeActivity extends Activity {
                         pendingIntent);
                 Log.d(TAG, "Alarm is set");
 
-                // Save alarm to SQlite
-                dbHelper.addAlarm(Long.toString(cal.getTimeInMillis()), "", 1);
+                if (alarmID != -1) {
+                    dbHelper.updateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), "", 1);
+                }
+                else {
+                    // Save alarm to SQlite if new alarm
+                    dbHelper.addAlarm(Long.toString(cal.getTimeInMillis()), "", 1);
+
+                }
+                // debugging checks
                 Cursor cursor = dbHelper.getAllAlarms();
                 cursor.moveToFirst();
                 String alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
@@ -99,7 +106,7 @@ public class AlarmEditTimeActivity extends Activity {
                     Log.d(TAG, "AM PM : " + calCheck.get(Calendar.AM_PM));
                 }
 
-                dbHelper.setAlarmToActive(alarmID);
+
 
                 Intent mainIntent = new Intent(AlarmEditTimeActivity.this, AlarmMainActivity.class);
                 startActivity(mainIntent);
