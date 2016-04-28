@@ -97,6 +97,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    /* getAlarm - get alarm according to id */
+    public Cursor getAlarm(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id=" + id + "", null);
+        return res;
+    }
+
 //    public boolean updateContact (Integer id, String name, String phone, String email, String street,String place)
 //    {
 //        SQLiteDatabase db = this.getWritableDatabase();

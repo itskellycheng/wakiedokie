@@ -50,6 +50,7 @@ public class AlarmMainActivity extends Activity {
 //        System.out.println("Alarm time = " + alarmTime);
         while (cursor.moveToNext()) {
             String alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
+            final int alarmID = cursor.getInt(cursor.getColumnIndex("id"));
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(Long.parseLong(alarmTime));
             String hour = Integer.toString(cal.get(Calendar.HOUR));
@@ -64,12 +65,19 @@ public class AlarmMainActivity extends Activity {
             TextView timeTV = new TextView(this);
             timeTV.setText(timeStr);
             timeTV.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 40f);
-//            timeTV.setLayoutParams(paramsTime);
+            timeTV.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(AlarmMainActivity.this, AlarmEditTimeActivity.class);
+                        intent.putExtra("alarmID", alarmID);
+                        startActivity(intent);
+                    }
+                }
+            );
 
             RelativeLayout alarmRL = new RelativeLayout(this);
             alarmRL.setLayoutParams(paramsAlarmRL);
             alarmRL.setPadding(10, 10, 10, 10);
-//            alarmRL.setBackgroundColor(Color.parseColor("#b5d6e1"));
 
             Switch mSwitch = new Switch(AlarmMainActivity.this);
             RelativeLayout.LayoutParams paramsSwitch = new RelativeLayout.LayoutParams(

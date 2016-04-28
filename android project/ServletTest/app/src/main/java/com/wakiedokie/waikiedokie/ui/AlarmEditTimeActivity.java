@@ -29,8 +29,26 @@ public class AlarmEditTimeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_alarm_time);
+        dbHelper = new DBHelper(AlarmEditTimeActivity.this);
+
+        Intent thisIntent = getIntent();
+        int alarmID = thisIntent.getIntExtra("alarmID", 1);closeContextMenu();
+
+        Cursor cursor = dbHelper.getAlarm(alarmID);
+        cursor.moveToFirst();
+        String alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(alarmTime));
 
         alarmTimePicker = (TimePicker) findViewById(R.id.alarmTimePicker);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmTimePicker.setHour(cal.get(Calendar.HOUR_OF_DAY));
+            alarmTimePicker.setMinute(cal.get(Calendar.MINUTE));
+        }
+        else {
+            alarmTimePicker.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
+            alarmTimePicker.setCurrentMinute(cal.get(Calendar.MINUTE));
+        }
 
         Button btn_select_buddy = (Button) findViewById(R.id.btn_to_select_buddy);
         btn_select_buddy.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +84,6 @@ public class AlarmEditTimeActivity extends Activity {
                 Log.d(TAG, "Alarm is set");
 
                 // Save alarm to SQlite
-                dbHelper = new DBHelper(AlarmEditTimeActivity.this);
                 dbHelper.addAlarm(Long.toString(cal.getTimeInMillis()), "", 1);
                 Cursor cursor = dbHelper.getAllAlarms();
                 cursor.moveToFirst();
