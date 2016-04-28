@@ -34,11 +34,14 @@ public class AlarmEditTimeActivity extends Activity {
         Intent thisIntent = getIntent();
         final int alarmID = thisIntent.getIntExtra("alarmID", -1);closeContextMenu();
 
-        Cursor cursor = dbHelper.getAlarm(alarmID);
-        cursor.moveToFirst();
-        String alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
+
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(Long.parseLong(alarmTime));
+        if (alarmID != -1) {
+            Cursor cursor = dbHelper.getAlarm(alarmID);
+            cursor.moveToFirst();
+            String alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
+            cal.setTimeInMillis(Long.parseLong(alarmTime));
+        }
 
         alarmTimePicker = (TimePicker) findViewById(R.id.alarmTimePicker);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -76,7 +79,7 @@ public class AlarmEditTimeActivity extends Activity {
 
                 Intent alarmRingIntent = new Intent(AlarmEditTimeActivity.this, AlarmStatusActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(AlarmEditTimeActivity.this,
-                        12345, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                        alarmID, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                 AlarmManager am =
                         (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
                 am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),

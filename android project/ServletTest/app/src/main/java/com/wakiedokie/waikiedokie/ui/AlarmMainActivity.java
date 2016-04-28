@@ -1,6 +1,8 @@
 package com.wakiedokie.waikiedokie.ui;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -53,6 +55,7 @@ public class AlarmMainActivity extends Activity {
             final int alarmID = cursor.getInt(cursor.getColumnIndex("id"));
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(Long.parseLong(alarmTime));
+            final Calendar finalCal = cal;
             String hour = Integer.toString(cal.get(Calendar.HOUR));
             String minute = Integer.toString(cal.get(Calendar.MINUTE));
             String amPm;
@@ -94,7 +97,7 @@ public class AlarmMainActivity extends Activity {
             mSwitch.setOnClickListener(new View.OnClickListener() {
                  @Override
                  public void onClick(View view) {
-                    toggleAlarm(alarmID);
+                    toggleAlarm(alarmID, finalCal);
                  }
             });
 
@@ -122,15 +125,35 @@ public class AlarmMainActivity extends Activity {
         });
     }
 
-    private void toggleAlarm(int id) {
+    private void toggleAlarm(int id, Calendar cal) {
+        AlarmManager am =
+                (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
+
         Cursor c = dbHelper.getAlarm(id);
         c.moveToFirst();
         int isActive = c.getInt(c.getColumnIndex("is_active"));
+
         if (isActive == 0) {
             dbHelper.setAlarmToActive(id);
+
+            Intent alarmRingIntent = new Intent(AlarmMainActivity.this, AlarmStatusActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(AlarmMainActivity.this,
+                    id, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+                    pendingIntent);
         }
         else {
             dbHelper.setAlarmToInactive(id);
+
+            Intent alarmRingIntent = new Intent(AlarmMainActivity.this, AlarmStatusActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(AlarmMainActivity.this,
+                    id, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent pendingIntent2 = PendingIntent.getActivity(AlarmMainActivity.this,
+                    12345, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            pendingIntent.cancel();
+            am.cancel(pendingIntent);
+            pendingIntent2.cancel();
+            am.cancel(pendingIntent2);
         }
     }
 
