@@ -43,35 +43,41 @@
                 android:text="@string/btn_to_link_buddy"
                 android:id="@+id/btn_to_select_buddy"
                 android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textview_buddy"
+                android:layout_gravity="center_horizontal"/>
+
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/bottom_container"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:layout_gravity="bottom|center_horizontal">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentBottom="true">
 
-        </LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_save"
+                android:layout_toRightOf="@+id/btn_delete_alarm"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/btn_save_alarm" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/btn_delete_alarm" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_save"
-        android:id="@+id/btn_save_alarm"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete"
-        android:id="@+id/btn_delete_alarm"
-        android:layout_gravity="center_horizontal"
-        android:layout_above="@id/btn_save_alarm"
-        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

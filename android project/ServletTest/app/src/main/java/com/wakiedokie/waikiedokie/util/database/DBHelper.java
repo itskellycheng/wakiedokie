@@ -79,15 +79,22 @@ public class DBHelper extends SQLiteOpenHelper {
         return numRows;
     }
 
+    /* getAllUsers - get all users in user table */
+    public Cursor getAllUsers() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + USER_INFO_TABLE_NAME, null);
+        return res;
+    }
+
     /* addAlarm - add row into alarm table */
-    public boolean addAlarm(String alarmTime, String wakieBuddy, int isActive) {
+    public long addAlarm(String alarmTime, String wakieBuddy, int isActive) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("alarm_time", alarmTime);
         contentValues.put("wakie_buddy", wakieBuddy);
         contentValues.put("is_active", isActive);
-        db.insert(ALARM_TABLE_NAME, null, contentValues);
-        return true;
+        long pk = db.insert(ALARM_TABLE_NAME, null, contentValues);
+        return pk;
     }
 
     /* updateAlarm - update alarm with id */

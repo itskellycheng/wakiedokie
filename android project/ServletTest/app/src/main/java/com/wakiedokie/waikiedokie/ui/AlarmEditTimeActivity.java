@@ -10,11 +10,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.util.database.DBHelper;
+
+import org.w3c.dom.Text;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +34,8 @@ public class AlarmEditTimeActivity extends Activity {
     private DBHelper dbHelper;
     private int alarmID;
     private AlarmManager am;
+    private String mBuddy;
+    TextView buddyTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +46,13 @@ public class AlarmEditTimeActivity extends Activity {
 
         // set alarmID to -1 if not passed in from intent (New alarm)
         Intent thisIntent = getIntent();
-        alarmID = thisIntent.getIntExtra("alarmID", -1);closeContextMenu();
+        alarmID = thisIntent.getIntExtra("alarmID", -1);
+        mBuddy = thisIntent.getStringExtra("buddy");
 
+        buddyTV = (TextView)findViewById(R.id.textview_buddy);
+        if (mBuddy.length() > 0) {
+            buddyTV.setText(mBuddy);
+        }
 
         Calendar cal = Calendar.getInstance();
         if (alarmID != -1) {
@@ -67,7 +77,7 @@ public class AlarmEditTimeActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(AlarmEditTimeActivity.this, AlarmSelectBuddyActivity.class);
-                intent.putExtra("alarmID", alarmID);
+                intent.putExtra("alarmID", alarmID); // pass alarmID to pass back
                 startActivity(intent);
             }
         });
@@ -93,31 +103,13 @@ public class AlarmEditTimeActivity extends Activity {
                     cal.add(Calendar.DATE, 1);
                 }
 
-                int requestCode = PENDING_CODE_OFFSET + alarmID;
-                Intent alarmRingIntent = new Intent(AlarmEditTimeActivity.this, AlarmStatusActivity.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(AlarmEditTimeActivity.this,
-                        requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-                        pendingIntent);
-
-                // Logging stuff
-                Log.d(TAG, "Alarm is set");
-                Long hours = TimeUnit.MILLISECONDS.toHours(
-                        cal.getTimeInMillis()-now.getTimeInMillis());
-                Long minutes = TimeUnit.MILLISECONDS.toMinutes(
-                        cal.getTimeInMillis() - now.getTimeInMillis() - TimeUnit.HOURS.toMillis(hours));
-                String hoursStr = Long.toString(hours);
-                String minutesStr = Long.toString(minutes);
-                String toastStr = "Alarm will go off in " + hoursStr + " hrs " + minutesStr + " mins";
-                Toast.makeText(getApplicationContext(), toastStr, Toast.LENGTH_SHORT).show();
-
+                // Database update/insert
                 if (alarmID != -1) {
                     dbHelper.updateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), "", 1);
                 }
                 else {
                     // Save alarm to SQlite if new alarm
-                    dbHelper.addAlarm(Long.toString(cal.getTimeInMillis()), "", 1);
-
+                    alarmID = (int)dbHelper.addAlarm(Long.toString(cal.getTimeInMillis()), "", 1);
                 }
 
                 // debugging logs
@@ -134,6 +126,25 @@ public class AlarmEditTimeActivity extends Activity {
                     Log.d(TAG, "Minute : " + calCheck.get(Calendar.MINUTE));
                     Log.d(TAG, "AM PM : " + calCheck.get(Calendar.AM_PM));
                 }
+
+                int requestCode = PENDING_CODE_OFFSET + alarmID;
+                Intent alarmRingIntent = new Intent(AlarmEditTimeActivity.this, AlarmStatusActivity.class);
+                alarmRingIntent.putExtra("alarmID", alarmID);
+                PendingIntent pendingIntent = PendingIntent.getActivity(AlarmEditTimeActivity.this,
+                        requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+                        pendingIntent);
+
+                // Logging stuff
+                Log.d(TAG, "Alarm is set");
+                Long hours = TimeUnit.MILLISECONDS.toHours(
+                        cal.getTimeInMillis()-now.getTimeInMillis());
+                Long minutes = TimeUnit.MILLISECONDS.toMinutes(
+                        cal.getTimeInMillis() - now.getTimeInMillis() - TimeUnit.HOURS.toMillis(hours));
+                String hoursStr = Long.toString(hours);
+                String minutesStr = Long.toString(minutes);
+                String toastStr = "Alarm will go off in " + hoursStr + " hrs " + minutesStr + " mins";
+                Toast.makeText(getApplicationContext(), toastStr, Toast.LENGTH_SHORT).show();
 
                 Intent mainIntent = new Intent(AlarmEditTimeActivity.this, AlarmMainActivity.class);
                 startActivity(mainIntent);
@@ -159,5 +170,7 @@ public class AlarmEditTimeActivity extends Activity {
                 startActivity(mainIntent);
             }
         });
+
+
     }
 }

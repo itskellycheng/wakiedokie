@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -128,9 +129,12 @@ public class AlarmMainActivity extends Activity {
         if (isActive == 0) {
             dbHelper.setAlarmToActive(id);
 
+            cal = getCorrectDate(cal, id);
+
             int requestCode = PENDING_CODE_OFFSET + id;
 
             Intent alarmRingIntent = new Intent(AlarmMainActivity.this, AlarmStatusActivity.class);
+            alarmRingIntent.putExtra("alarmID", id);
             PendingIntent pendingIntent = PendingIntent.getActivity(AlarmMainActivity.this,
                     requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
@@ -164,5 +168,15 @@ public class AlarmMainActivity extends Activity {
         else {
             return true;
         }
+    }
+
+    private Calendar getCorrectDate(Calendar cal, int alarmID) {
+        Calendar now = Calendar.getInstance();
+        // Set alarm for next day if time is before current time
+        if (cal.before(now)) {
+            cal.add(Calendar.DATE, 1);
+        }
+        dbHelper.updateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), "", 1);
+        return cal;
     }
 }

@@ -18,7 +18,6 @@ public class AlarmConfirmActivity extends Activity {
         setContentView(R.layout.activity_confirm_alarm);
 
 
-
         Button btn = (Button) findViewById(R.id.btn_confirm_alarm);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
