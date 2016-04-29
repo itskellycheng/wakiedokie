@@ -24,13 +24,13 @@
     <string name="title_choose_buddy">Choose Wakie Buddy</string>
     <string name="text_chosen_buddy_name">Victor Chao</string>
     <string name="text_note">Write a note...</string>
-    <string name="btn_send_request">Send Request</string>
+    <string name="btn_send_request">Ok</string>
 
     <!-- fragment_confirm_alarm-->
     <string name="title_confirm_buddy">You are about to set an alarm with</string>
     <string name="text_confirm_at">at</string>
     <string name="text_confirm_note">Note: Meeting tomorrow!</string>
-    <string name="btn_confirm_confirm">Confirm</string>
+    <string name="btn_confirm_confirm">Send Request</string>
 
 
     <string name="wakeup_message">Wake Up Now!!!</string>
