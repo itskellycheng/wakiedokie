@@ -18,11 +18,8 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-<<<<<<< HEAD:android project/ServletTest/app/src/main/java/com/wakiedokie/waikiedokie/ui/LoginActivityFragment.java
 
-=======
 import com.wakiedokie.waikiedokie.util.database.DBHelper;
->>>>>>> my-saved-work:android project/ServletTest/app/src/main/java/com/wakiedokie/waikiedokie/ui/MainActivityFragment.java
 /**
  * A placeholder fragment containing a simple view.
  */

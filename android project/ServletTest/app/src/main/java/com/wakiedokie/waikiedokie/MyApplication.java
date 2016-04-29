@@ -11,6 +11,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
+ * Settings for Facebook login
+ *
  * Created by chaovictorshin-deh on 4/12/16.
  */
 public class MyApplication extends Application {

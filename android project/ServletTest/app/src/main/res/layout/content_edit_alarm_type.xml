@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="70dp">
-    <!--tools:showIn="@layout/activity_main">-->
+    <!--tools:showIn="@layout/activity_login">-->
 
     <TextView
         android:id="@+id/wakeup_message"
