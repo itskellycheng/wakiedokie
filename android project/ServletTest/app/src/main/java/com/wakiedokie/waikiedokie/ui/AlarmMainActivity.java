@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -47,7 +48,7 @@ public class AlarmMainActivity extends Activity {
         dbHelper = new DBHelper(this);
         setContentView(R.layout.activity_alarm_main);
 
-        Cursor result = dbHelper.getData(1);
+        Cursor result = dbHelper.getMe();
         result.moveToFirst();
         String facebook_id = result.getString(result.getColumnIndex(DBHelper.USER_INFO_COLUMN_FACEBOOK_ID));
         String first_name = result.getString(result.getColumnIndex(DBHelper.USER_INFO_COLUMN_FIRST_NAME));
@@ -131,6 +132,18 @@ public class AlarmMainActivity extends Activity {
             }
         });
 
+        // insert fake users for debuggin
+        Button fakeBtn = (Button)findViewById(R.id.btn_populate_fake_user);
+        fakeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dbHelper.insertInfo(0, "12345CB", "Charlie", "Brown");
+                dbHelper.insertInfo(0, "54321PP", "Peppermint", "Patty");
+                dbHelper.insertInfo(0, "22333SB", "Sally", "Brown");
+                Toast.makeText(getApplicationContext(), "Saved fake users", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     /* Helper function for toggling alarm on/off */
@@ -196,4 +209,6 @@ public class AlarmMainActivity extends Activity {
         dbHelper.updateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), "", 1);
         return cal;
     }
+
+
 }

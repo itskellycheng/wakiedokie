@@ -35,7 +35,7 @@ public class LoginActivityFragment extends Fragment {
             AccessToken accessToken = loginResult.getAccessToken();
             Profile profile = Profile.getCurrentProfile();
             displayProfile(profile);
-            mydb.insertInfo(1, profile.getId(), profile.getFirstName(), profile.getLastName());
+            mydb.insertMe(profile.getId(), profile.getFirstName(), profile.getLastName());
             Intent intent = new Intent(getActivity(), AlarmMainActivity.class);
             startActivity(intent);
 
@@ -87,7 +87,7 @@ public class LoginActivityFragment extends Fragment {
         super.onResume();
         Profile profile = Profile.getCurrentProfile();
         displayProfile(profile);
-        mydb.insertInfo(1, profile.getId(), profile.getFirstName(), profile.getLastName());
+        mydb.insertMe(profile.getId(), profile.getFirstName(), profile.getLastName());
         Intent intent = new Intent(getActivity(), AlarmMainActivity.class);
         startActivity(intent);
 

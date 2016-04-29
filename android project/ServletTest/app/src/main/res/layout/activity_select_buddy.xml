@@ -29,72 +29,18 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/buddy_container">
-
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:id="@+id/list_item_thumbnail"
-                android:src="@drawable/boy"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="35dp"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="43dp" />
-
-            <TextView
+            <ScrollView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/friend_name_1"
-                android:id="@+id/buddy1"
-                android:layout_alignBottom="@+id/list_item_thumbnail"
-                android:layout_centerHorizontal="true" />
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:id="@+id/imageView2"
-                android:src="@drawable/boy"
-                android:layout_marginTop="35dp"
-                android:layout_below="@+id/list_item_thumbnail"
-                android:layout_alignLeft="@+id/list_item_thumbnail"
-                android:layout_alignStart="@+id/list_item_thumbnail" />
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/buddy_container">
+                </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/friend_name_2"
-                android:id="@+id/buddy2"
-                android:layout_alignBottom="@+id/imageView2"
-                android:layout_alignLeft="@+id/buddy1"
-                android:layout_alignStart="@+id/buddy1" />
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/checkBox"
-                android:layout_above="@+id/imageView2"
-                android:layout_toRightOf="@+id/buddy2"
-                android:layout_toEndOf="@+id/buddy2"
-                android:layout_marginLeft="35dp"
-                android:layout_marginStart="35dp"
-                android:allowUndo="false" />
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/checkBox2"
-                android:layout_alignBottom="@+id/buddy2"
-                android:layout_alignLeft="@+id/checkBox"
-                android:layout_alignStart="@+id/checkBox" />
+            </ScrollView>
 
 
         </RelativeLayout>

@@ -7,6 +7,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -26,11 +27,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String USER_INFO_COLUMN_FIRST_NAME = "first_name";
     public static final String USER_INFO_COLUMN_LAST_NAME = "last_name";
 
-
     // alarm Table
     public static final String ALARM_TABLE_NAME = "alarm";
 
-
+    public static final String ME_TABLE_NAME = "me_info";
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -43,7 +43,12 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS user_info");
         db.execSQL(
                 "create table user_info " +
-                        "(id integer primary key, facebook_id text, first_name text, last_name text)"
+                        "(facebook_id text primary key, first_name text, last_name text)"
+        );
+        db.execSQL("DROP TABLE IF EXISTS " + ME_TABLE_NAME);
+        db.execSQL(
+                "create table " + ME_TABLE_NAME +
+                        "(facebook_id text primary key, first_name text, last_name text)"
         );
         // Create alarm table
         db.execSQL("CREATE TABLE IF NOT EXISTS " + ALARM_TABLE_NAME +
@@ -55,9 +60,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
         db.execSQL("DROP TABLE IF EXISTS user_info");
+        db.execSQL("DROP TABLE IF EXISTS " + ME_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ALARM_TABLE_NAME);
         onCreate(db);
     }
+
 
     public boolean insertInfo(int id, String facebook_id, String first_name, String last_name) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -95,6 +102,24 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getAllUsers() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("SELECT * FROM " + USER_INFO_TABLE_NAME, null);
+        return res;
+    }
+
+    /* insertMe - insert row into me table. Me table only has one row. */
+    public boolean insertMe(String facebook_id, String first_name, String last_name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(ME_TABLE_NAME, null, null); // delete all rows
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("facebook_id", facebook_id);
+        contentValues.put("first_name", first_name);
+        contentValues.put("last_name", last_name);
+        db.insert(ME_TABLE_NAME, null, contentValues);
+        return true;
+    }
+
+    public Cursor getMe() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + ME_TABLE_NAME, null);
         return res;
     }
 
@@ -161,6 +186,29 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id=" + id + "", null);
         return res;
+    }
+
+    /* getTimeString - get formatted string of time eg. 10:31 AM */
+    public String getTimeString(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id=" + id + "", null);
+
+        String alarmTime = res.getString(res.getColumnIndex("alarm_time"));
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(alarmTime));
+        final Calendar finalCal = cal;
+        String hour = Integer.toString(cal.get(Calendar.HOUR));
+        String minute = Integer.toString(cal.get(Calendar.MINUTE));
+        if (minute.length()==1){
+            minute = "0" + minute;
+        }
+        String amPm;
+        if (cal.get(Calendar.AM_PM) == 0)
+            amPm = "AM";
+        else
+            amPm = "PM";
+        String timeStr = hour + ":" + minute + " " + amPm;
+        return timeStr;
     }
 
     /* setAlarmToActive - with alarm id, set alarm active column to active (1) */
