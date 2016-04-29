@@ -7,6 +7,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -124,6 +125,29 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id=" + id + "", null);
         return res;
+    }
+
+    /* getTimeString - get formatted string of time eg. 10:31 AM */
+    public String getTimeString(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id=" + id + "", null);
+
+        String alarmTime = res.getString(res.getColumnIndex("alarm_time"));
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(alarmTime));
+        final Calendar finalCal = cal;
+        String hour = Integer.toString(cal.get(Calendar.HOUR));
+        String minute = Integer.toString(cal.get(Calendar.MINUTE));
+        if (minute.length()==1){
+            minute = "0" + minute;
+        }
+        String amPm;
+        if (cal.get(Calendar.AM_PM) == 0)
+            amPm = "AM";
+        else
+            amPm = "PM";
+        String timeStr = hour + ":" + minute + " " + amPm;
+        return timeStr;
     }
 
     /* setAlarmToActive - with alarm id, set alarm active column to active (1) */

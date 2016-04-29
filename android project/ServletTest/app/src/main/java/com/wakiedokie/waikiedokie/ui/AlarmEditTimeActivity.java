@@ -17,8 +17,6 @@ import android.widget.Toast;
 import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.util.database.DBHelper;
 
-import org.w3c.dom.Text;
-
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -87,75 +85,61 @@ public class AlarmEditTimeActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                Calendar now = Calendar.getInstance();
-                Calendar cal = Calendar.getInstance();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    cal.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
-                    cal.set(Calendar.MINUTE, alarmTimePicker.getMinute());
-                }
-                else {
-                    cal.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
-                    cal.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
-                }
-
-                // Set alarm for next day if time is before current time
-                if (cal.before(now)) {
-                    cal.add(Calendar.DATE, 1);
-                }
-
-                // Database update/insert
-                if (alarmID != -1) {
-                    dbHelper.updateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), "", 1);
-                }
-                else {
-                    // Save alarm to SQlite if new alarm
-                    alarmID = (int)dbHelper.addAlarm(Long.toString(cal.getTimeInMillis()), "", 1);
-                }
-
-                // debugging logs
-                Cursor cursor = dbHelper.getAllAlarms();
-                cursor.moveToFirst();
-                String alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
-                System.out.println("Alarm time = " + alarmTime);
-                while (cursor.moveToNext()) {
-                    alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
-                    Log.d(TAG, "Alarm time = " + alarmTime);
-                    Calendar calCheck = Calendar.getInstance();
-                    calCheck.setTimeInMillis(Long.parseLong(alarmTime));
-                    Log.d(TAG, "Hour  : " + calCheck.get(Calendar.HOUR));
-                    Log.d(TAG, "Minute : " + calCheck.get(Calendar.MINUTE));
-                    Log.d(TAG, "AM PM : " + calCheck.get(Calendar.AM_PM));
-                }
-
-                int requestCode = PENDING_CODE_OFFSET + alarmID;
-                Intent alarmRingIntent = new Intent(AlarmEditTimeActivity.this, AlarmStatusActivity.class);
-                alarmRingIntent.putExtra("alarmID", alarmID);
-                PendingIntent pendingIntent = PendingIntent.getActivity(AlarmEditTimeActivity.this,
-                        requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-                        pendingIntent);
-
-                // Logging stuff
-                Log.d(TAG, "Alarm is set");
-                Long hours = TimeUnit.MILLISECONDS.toHours(
-                        cal.getTimeInMillis()-now.getTimeInMillis());
-                Long minutes = TimeUnit.MILLISECONDS.toMinutes(
-                        cal.getTimeInMillis() - now.getTimeInMillis() - TimeUnit.HOURS.toMillis(hours));
-                String hoursStr = Long.toString(hours);
-                String minutesStr = Long.toString(minutes);
-                String toastStr = "Alarm will go off in " + hoursStr + " hrs " + minutesStr + " mins";
-                Toast.makeText(getApplicationContext(), toastStr, Toast.LENGTH_SHORT).show();
+                Calendar cal = getCorrectTime();
 
                 if (mBuddy!=null) {
+                    String timeStr = dbHelper.getTimeString(alarmID);
+
                     Intent confirmIntent = new Intent(AlarmEditTimeActivity.this, AlarmConfirmActivity.class);
                     confirmIntent.putExtra("alarmID", alarmID);
                     confirmIntent.putExtra("buddy", mBuddy);
+                    confirmIntent.putExtra("timeStr", timeStr);
+                    confirmIntent.putExtra("calMillis", Long.toString(cal.getTimeInMillis()));
+
                     startActivity(confirmIntent);
                 }
-                else {
+
+                else { // standalone alarm
+
+                    // Database update/insert
+                    if (alarmID != -1) {
+                        dbHelper.updateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), "", 1);
+                    }
+                    else {
+                        // Save alarm to SQlite if new alarm
+                        alarmID = (int)dbHelper.addAlarm(Long.toString(cal.getTimeInMillis()), "", 1);
+                    }
+
+                    // debugging logs
+                    Cursor cursor = dbHelper.getAllAlarms();
+                    cursor.moveToFirst();
+                    String alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
+                    System.out.println("Alarm time = " + alarmTime);
+                    while (cursor.moveToNext()) {
+                        alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
+                        Log.d(TAG, "Alarm time = " + alarmTime);
+                        Calendar calCheck = Calendar.getInstance();
+                        calCheck.setTimeInMillis(Long.parseLong(alarmTime));
+                        Log.d(TAG, "Hour  : " + calCheck.get(Calendar.HOUR));
+                        Log.d(TAG, "Minute : " + calCheck.get(Calendar.MINUTE));
+                        Log.d(TAG, "AM PM : " + calCheck.get(Calendar.AM_PM));
+                    }
+
+                    int requestCode = PENDING_CODE_OFFSET + alarmID;
+                    Intent alarmRingIntent = new Intent(AlarmEditTimeActivity.this, AlarmStatusActivity.class);
+                    alarmRingIntent.putExtra("alarmID", alarmID);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(AlarmEditTimeActivity.this,
+                            requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+                            pendingIntent);
+
+                    makeCountdownToast(cal);
+
                     Intent mainIntent = new Intent(AlarmEditTimeActivity.this, AlarmMainActivity.class);
                     startActivity(mainIntent);
                 }
+
+
             }
         });
 
@@ -178,7 +162,44 @@ public class AlarmEditTimeActivity extends Activity {
                 startActivity(mainIntent);
             }
         });
+    }
 
+    /* Helper function that gets time from timePicker and sets to correct day */
+    private Calendar getCorrectTime() {
+        Calendar now = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            cal.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
+            cal.set(Calendar.MINUTE, alarmTimePicker.getMinute());
+        }
+        else {
+            cal.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
+            cal.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
+        }
+
+        // Set alarm for next day if time is before current time
+        if (cal.before(now)) {
+            cal.add(Calendar.DATE, 1);
+        }
+
+        return cal;
+    }
+
+    /* Helper function to make toast that shows how much time till alarm goes off */
+    private void makeCountdownToast(Calendar cal) {
+
+        // Logging stuff
+        Log.d(TAG, "Alarm is set");
+        Calendar now = Calendar.getInstance();
+        Long hours = TimeUnit.MILLISECONDS.toHours(
+                cal.getTimeInMillis()-now.getTimeInMillis());
+        Long minutes = TimeUnit.MILLISECONDS.toMinutes(
+                cal.getTimeInMillis() - now.getTimeInMillis() - TimeUnit.HOURS.toMillis(hours));
+        String hoursStr = Long.toString(hours);
+        String minutesStr = Long.toString(minutes);
+        String toastStr = "Alarm will go off in " + hoursStr + " hrs " + minutesStr + " mins";
+        Toast.makeText(getApplicationContext(), toastStr, Toast.LENGTH_SHORT).show();
 
     }
+
 }

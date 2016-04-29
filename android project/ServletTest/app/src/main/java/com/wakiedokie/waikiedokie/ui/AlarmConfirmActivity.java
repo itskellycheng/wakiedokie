@@ -1,10 +1,14 @@
 package com.wakiedokie.waikiedokie.ui;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -16,10 +20,14 @@ import com.wakiedokie.waikiedokie.model.Alarm;
 import com.wakiedokie.waikiedokie.model.User;
 import com.wakiedokie.waikiedokie.util.CustomJSONObjectRequest;
 import com.wakiedokie.waikiedokie.util.CustomVolleyRequestQueue;
+import com.wakiedokie.waikiedokie.util.database.DBHelper;
 
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by chaovictorshin-deh on 4/14/16.
@@ -30,12 +38,29 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
     public static final String REQUEST_TAG = "MainVolleyActivity";
     private static final String SERVER_URL = "http://128.237.191.203:8080/AndroidAppServlet/SetAlarmRequestServlet";
     private RequestQueue mQueue;
+    private static final int PENDING_CODE_OFFSET = 990000;
+    private static final String TAG = "AlarmConfirmActivity";
+    private int alarmID;
+    private String mBuddy;
+    private String timeStr;
+    private Calendar cal = Calendar.getInstance();
+    private DBHelper dbHelper;
+    private AlarmManager am;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_alarm);
+        dbHelper = new DBHelper(this);
+        am = (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
+
+        Intent thisIntent = getIntent();
+        alarmID = thisIntent.getIntExtra("alarmID", -1);
+        mBuddy = thisIntent.getStringExtra("buddy");
+        timeStr = thisIntent.getStringExtra("timeStr");
+        String calStr = thisIntent.getStringExtra("calMillis");
+        cal.setTimeInMillis(Long.parseLong(calStr));
 
         /* Replace this by getting alarm info from other activities later*/
         final User sender = new User("1151451178206737", "Victor", "Chao");
@@ -48,6 +73,9 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
         mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
                 .getRequestQueue();
 
+        /****************
+         * Confirm button
+         ****************/
         Button btn = (Button) findViewById(R.id.btn_confirm_alarm);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,8 +98,37 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
                         mJSONObject, AlarmConfirmActivity.this, AlarmConfirmActivity.this);
                 jsonRequest.setTag(REQUEST_TAG);
                 mQueue.add(jsonRequest);
+
+                // Database update/insert
+                if (alarmID != -1) {
+                    dbHelper.updateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), "", 1);
+                }
+                else {
+                    alarmID = (int)dbHelper.addAlarm(Long.toString(cal.getTimeInMillis()), "", 1);
+                }
+
+                int requestCode = PENDING_CODE_OFFSET + alarmID;
+                Intent alarmRingIntent = new Intent(AlarmConfirmActivity.this, AlarmStatusActivity.class);
+                alarmRingIntent.putExtra("alarmID", alarmID);
+                PendingIntent pendingIntent = PendingIntent.getActivity(AlarmConfirmActivity.this,
+                        requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+                        pendingIntent);
+
+                makeCountdownToast(cal);
+
+                Intent mainIntent = new Intent(AlarmConfirmActivity.this, AlarmMainActivity.class);
+                startActivity(mainIntent);
+
             }
         });
+
+        TextView buddyTV = (TextView)findViewById(R.id.textBuddy);
+        buddyTV.setText(mBuddy);
+
+        TextView clockTV = (TextView)findViewById(R.id.textClock);
+        clockTV.setText(timeStr);
+
     }
 
     @Override
@@ -88,5 +145,22 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
         Toast.makeText(this, "SUCCESS: server responded in success", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(AlarmConfirmActivity.this, AlarmMainActivity.class);
         startActivity(intent);
+    }
+
+    /* Helper function to make toast that shows how much time till alarm goes off */
+    private void makeCountdownToast(Calendar cal) {
+
+        // Logging stuff
+        Log.d(TAG, "Alarm is set");
+        Calendar now = Calendar.getInstance();
+        Long hours = TimeUnit.MILLISECONDS.toHours(
+                cal.getTimeInMillis()-now.getTimeInMillis());
+        Long minutes = TimeUnit.MILLISECONDS.toMinutes(
+                cal.getTimeInMillis() - now.getTimeInMillis() - TimeUnit.HOURS.toMillis(hours));
+        String hoursStr = Long.toString(hours);
+        String minutesStr = Long.toString(minutes);
+        String toastStr = "Alarm will go off in " + hoursStr + " hrs " + minutesStr + " mins";
+        Toast.makeText(getApplicationContext(), toastStr, Toast.LENGTH_SHORT).show();
+
     }
 }

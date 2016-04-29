@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/friend_name_1"
-                android:id="@+id/textView9"
+                android:id="@+id/textBuddy"
                 android:layout_marginLeft="41dp"
                 android:layout_marginStart="41dp"
                 android:layout_centerVertical="true"
