@@ -16,6 +16,7 @@ import com.wakiedokie.waikiedokie.model.Alarm;
 import com.wakiedokie.waikiedokie.model.User;
 import com.wakiedokie.waikiedokie.util.CustomJSONObjectRequest;
 import com.wakiedokie.waikiedokie.util.CustomVolleyRequestQueue;
+import com.wakiedokie.waikiedokie.util.database.DBHelper;
 
 
 import org.json.JSONException;
@@ -28,21 +29,22 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
         Response.ErrorListener {
 
     public static final String REQUEST_TAG = "MainVolleyActivity";
-    private static final String SERVER_URL = "http://128.237.191.203:8080/AndroidAppServlet/SetAlarmRequestServlet";
+    private static final String SERVER_URL = "http://128.237.133.8:8080/AndroidAppServlet/SetAlarmRequestServlet";
     private RequestQueue mQueue;
-
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_alarm);
 
+
         /* Replace this by getting alarm info from other activities later*/
         final User sender = new User("1151451178206737", "Victor", "Chao");
         final User receiver = new User("10209500772462847", "Kelly", "Cheng");
         final String time = "04/30/2016-01:00";
         final String type = "quiz";
-
+        dbHelper = new DBHelper(this);
         final Alarm alarm = new Alarm(sender, receiver, time, type);
 
         mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
@@ -70,6 +72,10 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
                         mJSONObject, AlarmConfirmActivity.this, AlarmConfirmActivity.this);
                 jsonRequest.setTag(REQUEST_TAG);
                 mQueue.add(jsonRequest);
+                
+
+
+
             }
         });
     }

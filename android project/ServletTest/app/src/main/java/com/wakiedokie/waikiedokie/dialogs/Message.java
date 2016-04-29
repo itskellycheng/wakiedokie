@@ -59,7 +59,7 @@ public class Message {
     }
 
 
-    public static void showAlertRequestFromOthers(final Activity activity, final String owner_name, final String owner_fb_id, String titleText, String message) {
+    public static void showAlertRequestFromOthers(final Activity activity, final String time, final String owner_name, final String owner_fb_id, String titleText, String message) {
         TextView title = new TextView(activity);
         title.setText(titleText);
         title.setPadding(10, 10, 10, 10);
@@ -79,7 +79,7 @@ public class Message {
 
         builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                (new MyTimerTask(activity)).acceptRequest(activity, owner_name, owner_fb_id);
+                (new MyTimerTask(activity)).acceptRequest(activity, time, owner_name, owner_fb_id);
                 dialog.cancel();
 
             }

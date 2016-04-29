@@ -1,6 +1,7 @@
 package com.wakiedokie.waikiedokie.util.timer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.widget.Toast;
 
@@ -27,10 +28,11 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
         Response.ErrorListener{
 
     public static final String REQUEST_TAG = "MainVolleyActivity";
-    private static final String SERVER_URL = "http://128.237.191.203:8080/AndroidAppServlet/UserServlet";
+    private static final String SERVER_URL = "http://128.237.133.8:8080/AndroidAppServlet/UserServlet";
     private RequestQueue mQueue;
     private User user;
     private Activity activity;
+    private DBHelper dbHelper;
 
 
     String my_fb_id;
@@ -82,33 +84,47 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
 
     @Override
     public void onResponse(Object response) {
-
+        dbHelper = new DBHelper(activity);
         // should check the the status of alarm table
         // for alarm I set
-        String user2;
+        String user2_name;
+        String user2_fb_id;
+        String my_fb_id = dbHelper.getMyFbId(1);;
         String title = "";
         String message;
-        String owner_fb_id;
         String owner_name;
         String time;
+        String owner_fb_id;
 
         try {
             // 1. check the status of alarm I set before
             String alarm = ((JSONObject) response).getString("alarm");
             if (alarm.equals("approved")) {
-                user2 = ((JSONObject) response).getString("user2_name");
+                user2_name = ((JSONObject) response).getString("user2_name");
+                user2_fb_id = ((JSONObject) response).getString("user2_fb_id");
                 time = ((JSONObject) response).getString("time");
                 title = "Request approved!";
-                message = user2 + " has become your wakie buddy!!" + "Time:" + time;
+                message = user2_name + " has become your wakie buddy!!" + "Time:" + time;
                 Message.showAlert(activity, title, message);
 
+                // 1. update this alarm with 2 fb_id's --> to active.
+                dbHelper.setAlarmToActive(my_fb_id, user2_fb_id);
+                // 2. add pending intent
+
+
+
             } else if (alarm.equals("denied")) {
-                user2 = ((JSONObject) response).getString("user2_name");
+                user2_name = ((JSONObject) response).getString("user2_name");
+                user2_fb_id = ((JSONObject) response).getString("user2_fb_id");
                 time = ((JSONObject) response).getString("time");
                 title = "Request denied";
-                message = user2 + " has declined your request.." + "Time:" + time;
+                message = user2_name + " has declined your request.." + "Time:" + time;
                 Message.showAlert(activity, title, message);
+
+                // 1. delete this alarm from table
+                dbHelper.deleteAlarm(my_fb_id, user2_fb_id);
             }
+
 
             // 2. check if I received a new alarm request
             String received_new_alarm = ((JSONObject) response).getString("new_request_from_others");
@@ -118,7 +134,7 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
                 time =  ((JSONObject) response).getString("new_request_from_others_time");
                 title = "You Received a New Request!";
                 message = "New Request from: " + owner_name + "Time:"+ time;
-                Message.showAlertRequestFromOthers(activity, owner_name, owner_fb_id, title, message);
+                Message.showAlertRequestFromOthers(activity, time, owner_name, owner_fb_id, title, message);
 
             }
 
@@ -132,7 +148,8 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
 
 
 
-    public void acceptRequest(Activity activity, String owner_name, String owner_fb_id) {
+    public void acceptRequest(Activity activity, String time, String owner_name, String owner_fb_id) {
+        dbHelper = new DBHelper(activity);
         mQueue = CustomVolleyRequestQueue.getInstance(activity.getApplicationContext())
                 .getRequestQueue();
         JSONObject mJSONObject = new JSONObject();
@@ -147,13 +164,23 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
             e.printStackTrace();
         }
 
+        // 1. insert new alarm 2 fb_ids, time, active
+        dbHelper.addAlarm(time, owner_fb_id, my_fb_id, 1);
+        // 2, add pending intent
+
+
         final CustomJSONObjectRequest jsonRequest = new CustomJSONObjectRequest(Request.Method.POST, SERVER_URL,
                 mJSONObject, this, this);
         jsonRequest.setTag(REQUEST_TAG);
         mQueue.add(jsonRequest);
+
+        Intent intent = activity.getIntent();
+        activity.finish();
+        activity.startActivity(intent);
     }
 
     public void denyRequest(Activity activity, String owner_name, String owner_fb_id) {
+        dbHelper = new DBHelper(activity);
         mQueue = CustomVolleyRequestQueue.getInstance(activity.getApplicationContext())
                 .getRequestQueue();
         JSONObject mJSONObject = new JSONObject();
@@ -166,6 +193,9 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        // alarm table: do nothing
+
         final CustomJSONObjectRequest jsonRequest = new CustomJSONObjectRequest(Request.Method.POST, SERVER_URL,
                 mJSONObject, this, this);
         jsonRequest.setTag(REQUEST_TAG);
