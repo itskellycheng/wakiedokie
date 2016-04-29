@@ -28,7 +28,7 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
         Response.ErrorListener {
 
     public static final String REQUEST_TAG = "MainVolleyActivity";
-    private static final String SERVER_URL = "http://128.237.166.30:8080/AndroidAppServlet/SetAlarmRequestServlet";
+    private static final String SERVER_URL = "http://128.237.191.203:8080/AndroidAppServlet/SetAlarmRequestServlet";
     private RequestQueue mQueue;
 
 
@@ -39,7 +39,7 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
 
         /* Replace this by getting alarm info from other activities later*/
         final User sender = new User("1151451178206737", "Victor", "Chao");
-        final User receiver = new User("8888888888888888", "Kelly", "Cheng");
+        final User receiver = new User("10209500772462847", "Kelly", "Cheng");
         final String time = "04/30/2016-01:00";
         final String type = "quiz";
 

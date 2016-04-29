@@ -19,9 +19,6 @@ import java.util.Timer;
 public class AlarmMainActivity extends Activity {
 
     private User user;
-    String current_user_facebook_id;
-    String current_user_first_name;
-    String current_user_last_name;
     DBHelper mydb;
     // init ui
 
