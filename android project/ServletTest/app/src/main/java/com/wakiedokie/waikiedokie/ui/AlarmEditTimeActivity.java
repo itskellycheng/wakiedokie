@@ -146,8 +146,16 @@ public class AlarmEditTimeActivity extends Activity {
                 String toastStr = "Alarm will go off in " + hoursStr + " hrs " + minutesStr + " mins";
                 Toast.makeText(getApplicationContext(), toastStr, Toast.LENGTH_SHORT).show();
 
-                Intent mainIntent = new Intent(AlarmEditTimeActivity.this, AlarmMainActivity.class);
-                startActivity(mainIntent);
+                if (mBuddy!=null) {
+                    Intent confirmIntent = new Intent(AlarmEditTimeActivity.this, AlarmConfirmActivity.class);
+                    confirmIntent.putExtra("alarmID", alarmID);
+                    confirmIntent.putExtra("buddy", mBuddy);
+                    startActivity(confirmIntent);
+                }
+                else {
+                    Intent mainIntent = new Intent(AlarmEditTimeActivity.this, AlarmMainActivity.class);
+                    startActivity(mainIntent);
+                }
             }
         });
 

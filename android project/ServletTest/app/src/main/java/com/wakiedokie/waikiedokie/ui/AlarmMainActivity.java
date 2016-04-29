@@ -170,6 +170,7 @@ public class AlarmMainActivity extends Activity {
         }
     }
 
+    /* Helper function to check if the alarm needs to be set for tomorrow instead of today */
     private Calendar getCorrectDate(Calendar cal, int alarmID) {
         Calendar now = Calendar.getInstance();
         // Set alarm for next day if time is before current time
