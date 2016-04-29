@@ -1,10 +1,10 @@
 package com.wakiedokie.waikiedokie.ui;
 
 import com.wakiedokie.waikiedokie.R;
-import com.wakiedokie.waikiedokie.model.User;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,27 +18,28 @@ import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+<<<<<<< HEAD:android project/ServletTest/app/src/main/java/com/wakiedokie/waikiedokie/ui/LoginActivityFragment.java
 
+=======
+import com.wakiedokie.waikiedokie.util.database.DBHelper;
+>>>>>>> my-saved-work:android project/ServletTest/app/src/main/java/com/wakiedokie/waikiedokie/ui/MainActivityFragment.java
 /**
  * A placeholder fragment containing a simple view.
  */
 public class LoginActivityFragment extends Fragment {
 
-
+    DBHelper mydb;
     private CallbackManager mCallbackManager;
 
     private FacebookCallback<LoginResult> mCallback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
+
             AccessToken accessToken = loginResult.getAccessToken();
             Profile profile = Profile.getCurrentProfile();
             displayProfile(profile);
-            User currentUser = new User(profile.getId(), profile.getFirstName(), profile.getLastName());
-
+            mydb.insertInfo(1, profile.getId(), profile.getFirstName(), profile.getLastName());
             Intent intent = new Intent(getActivity(), AlarmMainActivity.class);
-            intent.putExtra("current_user_facebook_id", (profile.getId()));
-            intent.putExtra("current_user_first_name", (profile.getFirstName()));
-            intent.putExtra("current_user_last_name", (profile.getLastName()));
             startActivity(intent);
 
         }
@@ -62,7 +63,9 @@ public class LoginActivityFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         super.onCreate(savedInstanceState);
+        mydb = new DBHelper(getActivity());
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         mCallbackManager = CallbackManager.Factory.create();
     }
@@ -87,7 +90,7 @@ public class LoginActivityFragment extends Fragment {
         super.onResume();
         Profile profile = Profile.getCurrentProfile();
         displayProfile(profile);
-
+        mydb.insertInfo(1, profile.getId(), profile.getFirstName(), profile.getLastName());
         Intent intent = new Intent(getActivity(), AlarmMainActivity.class);
         startActivity(intent);
 
@@ -101,7 +104,10 @@ public class LoginActivityFragment extends Fragment {
 
     public void displayProfile(Profile profile) {
         if (profile != null) {
-            Toast.makeText(getActivity(), profile.getId() + " has just logged in", Toast.LENGTH_SHORT).show();
+            String greetings = "Welcome! " + profile.getName();
+            Toast.makeText(getActivity(), greetings, Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }

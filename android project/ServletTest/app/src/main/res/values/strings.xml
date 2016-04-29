@@ -36,4 +36,10 @@
     <string name="wakeup_message">Wake Up Now!!!</string>
     <string name="question_intro">Question intro</string>
     <string name="shake_intro">Shake intro</string>
+
+
+
+    <!--- ApprovedAlarmDialog -->
+    <string name="approved_message">YAYAYAYAYA</string>
+    <string name="fire"> OK</string>
 </resources>
