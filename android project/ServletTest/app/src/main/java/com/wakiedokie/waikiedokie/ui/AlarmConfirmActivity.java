@@ -38,6 +38,7 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
     public static final String REQUEST_TAG = "MainVolleyActivity";
     private static final String SERVER_URL = "http://128.237.191.203:8080/AndroidAppServlet/SetAlarmRequestServlet";
     private RequestQueue mQueue;
+
     private static final int PENDING_CODE_OFFSET = 990000;
     private static final String TAG = "AlarmConfirmActivity";
     private int alarmID;

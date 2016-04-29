@@ -88,7 +88,8 @@ public class AlarmEditTimeActivity extends Activity {
                 Calendar cal = getCorrectTime();
 
                 if (mBuddy!=null) {
-                    String timeStr = dbHelper.getTimeString(alarmID);
+
+                    String timeStr = getTimeString(cal);
 
                     Intent confirmIntent = new Intent(AlarmEditTimeActivity.this, AlarmConfirmActivity.class);
                     confirmIntent.putExtra("alarmID", alarmID);
@@ -164,7 +165,7 @@ public class AlarmEditTimeActivity extends Activity {
         });
     }
 
-    /* Helper function that gets time from timePicker and sets to correct day */
+    /* Helper method that gets time from timePicker and sets to correct day */
     private Calendar getCorrectTime() {
         Calendar now = Calendar.getInstance();
         Calendar cal = Calendar.getInstance();
@@ -185,7 +186,7 @@ public class AlarmEditTimeActivity extends Activity {
         return cal;
     }
 
-    /* Helper function to make toast that shows how much time till alarm goes off */
+    /* Helper method to make toast that shows how much time till alarm goes off */
     private void makeCountdownToast(Calendar cal) {
 
         // Logging stuff
@@ -200,6 +201,22 @@ public class AlarmEditTimeActivity extends Activity {
         String toastStr = "Alarm will go off in " + hoursStr + " hrs " + minutesStr + " mins";
         Toast.makeText(getApplicationContext(), toastStr, Toast.LENGTH_SHORT).show();
 
+    }
+
+    /* getTimeString - Helper method to get formatted string of time eg. 10:31 AM */
+    private String getTimeString(Calendar cal) {
+        String hour = Integer.toString(cal.get(Calendar.HOUR));
+        String minute = Integer.toString(cal.get(Calendar.MINUTE));
+        if (minute.length()==1){
+            minute = "0" + minute;
+        }
+        String amPm;
+        if (cal.get(Calendar.AM_PM) == 0)
+            amPm = "AM";
+        else
+            amPm = "PM";
+        String timeStr = hour + ":" + minute + " " + amPm;
+        return timeStr;
     }
 
 }
