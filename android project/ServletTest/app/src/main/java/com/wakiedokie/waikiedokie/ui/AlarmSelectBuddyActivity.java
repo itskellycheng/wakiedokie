@@ -22,7 +22,7 @@ public class AlarmSelectBuddyActivity extends Activity {
     private LinearLayout buddyContainer;
     private int alarmID;
     private DBHelper dbHelper;
-    private String mBuddy = "";
+    private String mBuddy = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

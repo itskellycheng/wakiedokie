@@ -34,7 +34,7 @@ public class AlarmEditTimeActivity extends Activity {
     private DBHelper dbHelper;
     private int alarmID;
     private AlarmManager am;
-    private String mBuddy;
+    private String mBuddy=null;
     TextView buddyTV;
 
     @Override
@@ -50,7 +50,7 @@ public class AlarmEditTimeActivity extends Activity {
         mBuddy = thisIntent.getStringExtra("buddy");
 
         buddyTV = (TextView)findViewById(R.id.textview_buddy);
-        if (mBuddy.length() > 0) {
+        if (mBuddy != null) {
             buddyTV.setText(mBuddy);
         }
 
