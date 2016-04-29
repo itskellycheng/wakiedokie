@@ -18,7 +18,7 @@ import java.util.HashMap;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "MyDBName.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
 
     // user_info Table
     public static final String USER_INFO_TABLE_NAME = "user_info";
@@ -27,11 +27,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String USER_INFO_COLUMN_FIRST_NAME = "first_name";
     public static final String USER_INFO_COLUMN_LAST_NAME = "last_name";
 
-
     // alarm Table
     public static final String ALARM_TABLE_NAME = "alarm";
 
-
+    public static final String ME_TABLE_NAME = "me_info";
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -44,7 +43,12 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS user_info");
         db.execSQL(
                 "create table user_info " +
-                        "(id integer primary key, facebook_id text, first_name text, last_name text)"
+                        "(facebook_id text primary key, first_name text, last_name text)"
+        );
+        db.execSQL("DROP TABLE IF EXISTS " + ME_TABLE_NAME);
+        db.execSQL(
+                "create table " + ME_TABLE_NAME +
+                        "(facebook_id text primary key, first_name text, last_name text)"
         );
         // Create alarm table
         db.execSQL("CREATE TABLE IF NOT EXISTS " + ALARM_TABLE_NAME +
@@ -56,9 +60,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
         db.execSQL("DROP TABLE IF EXISTS user_info");
+        db.execSQL("DROP TABLE IF EXISTS " + ME_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ALARM_TABLE_NAME);
         onCreate(db);
     }
+
 
     public boolean insertInfo(int id, String facebook_id, String first_name, String last_name) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -87,6 +93,24 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getAllUsers() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("SELECT * FROM " + USER_INFO_TABLE_NAME, null);
+        return res;
+    }
+
+    /* insertMe - insert row into me table. Me table only has one row. */
+    public boolean insertMe(String facebook_id, String first_name, String last_name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(ME_TABLE_NAME, null, null); // delete all rows
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("facebook_id", facebook_id);
+        contentValues.put("first_name", first_name);
+        contentValues.put("last_name", last_name);
+        db.insert(ME_TABLE_NAME, null, contentValues);
+        return true;
+    }
+
+    public Cursor getMe() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + ME_TABLE_NAME, null);
         return res;
     }
 

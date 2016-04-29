@@ -33,6 +33,7 @@ public class AlarmEditTimeActivity extends Activity {
     private int alarmID;
     private AlarmManager am;
     private String mBuddy=null;
+    private String mBuddyID=null;
     TextView buddyTV;
 
     @Override
@@ -46,9 +47,10 @@ public class AlarmEditTimeActivity extends Activity {
         Intent thisIntent = getIntent();
         alarmID = thisIntent.getIntExtra("alarmID", -1);
         mBuddy = thisIntent.getStringExtra("buddy");
+        mBuddyID = thisIntent.getStringExtra("buddyID");
 
         buddyTV = (TextView)findViewById(R.id.textview_buddy);
-        if (mBuddy != null) {
+        if (mBuddyID != null) {
             buddyTV.setText(mBuddy);
         }
 
@@ -94,6 +96,7 @@ public class AlarmEditTimeActivity extends Activity {
                     Intent confirmIntent = new Intent(AlarmEditTimeActivity.this, AlarmConfirmActivity.class);
                     confirmIntent.putExtra("alarmID", alarmID);
                     confirmIntent.putExtra("buddy", mBuddy);
+                    confirmIntent.putExtra("buddyID", mBuddyID);
                     confirmIntent.putExtra("timeStr", timeStr);
                     confirmIntent.putExtra("calMillis", Long.toString(cal.getTimeInMillis()));
 
