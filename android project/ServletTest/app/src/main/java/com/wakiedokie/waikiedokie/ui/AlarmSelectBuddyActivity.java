@@ -104,8 +104,10 @@ public class AlarmSelectBuddyActivity extends Activity {
             public void onClick(View view) {
                 Intent intent = new Intent(AlarmSelectBuddyActivity.this, AlarmEditTimeActivity.class);
                 intent.putExtra("alarmID", alarmID);
-                intent.putExtra("buddy", mBuddy);
-                intent.putExtra("buddyID", mBuddyID);
+//                intent.putExtra("buddy", mBuddy);
+//                intent.putExtra("buddyID", mBuddyID);
+                intent.putExtra("buddy", "Victor");
+                intent.putExtra("buddyID", "12345");
                 startActivity(intent);
             }
         });

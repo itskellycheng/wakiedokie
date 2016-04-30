@@ -36,7 +36,7 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
         Response.ErrorListener {
 
     public static final String REQUEST_TAG = "MainVolleyActivity";
-    private static final String SERVER_URL = "http://128.237.133.8:8080/AndroidAppServlet/SetAlarmRequestServlet";
+    private static final String SERVER_URL = "http://10.0.0.25:8080/AndroidAppServlet/SetAlarmRequestServlet";
     private RequestQueue mQueue;
 
     private static final int PENDING_CODE_OFFSET = 990000;
@@ -65,12 +65,12 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
 
 
         /* Replace this by getting alarm info from other activities later*/
-        final User sender = new User("1151451178206737", "Victor", "Chao");
-        final User receiver = new User("10209500772462847", "Kelly", "Cheng");
+        final User me = new User("1151451178206737", "Victor", "Chao");
+        final User user2 = new User("10209500772462847", "Kelly", "Cheng");
         final String time = "04/30/2016-01:00";
         final String type = "quiz";
         dbHelper = new DBHelper(this);
-        final Alarm alarm = new Alarm(sender, receiver, time, type);
+        final Alarm alarm = new Alarm(me, user2, time, type);
 
         mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
                 .getRequestQueue();
@@ -86,8 +86,8 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
                 JSONObject mJSONObject = new JSONObject();
 
                 try {
-                    mJSONObject.put("user1_facebook_id", sender.getFacebookId());
-                    mJSONObject.put("user2_facebook_id", receiver.getFacebookId());
+                    mJSONObject.put("user1_facebook_id", me.getFacebookId());
+                    mJSONObject.put("user2_facebook_id", user2.getFacebookId());
                     mJSONObject.put("time", time);
                     mJSONObject.put("type", type);
                     System.out.println("JSON object ready to be sent to SetAlarmRequestServlet");
@@ -102,22 +102,16 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
                 mQueue.add(jsonRequest);
 
                 // Database update/insert
-                if (alarmID != -1) {
-                    dbHelper.updateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), "", 1);
-                }
-                else {
-                    alarmID = (int)dbHelper.addAlarm(Long.toString(cal.getTimeInMillis()), "", 1);
-                }
+                dbHelper.addOrUpdateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), me.getFacebookId(), user2.getFacebookId(), 0);
 
-                int requestCode = PENDING_CODE_OFFSET + alarmID;
-                Intent alarmRingIntent = new Intent(AlarmConfirmActivity.this, AlarmStatusActivity.class);
-                alarmRingIntent.putExtra("alarmID", alarmID);
-                PendingIntent pendingIntent = PendingIntent.getActivity(AlarmConfirmActivity.this,
-                        requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-                        pendingIntent);
-
-                makeCountdownToast(cal);
+//                int requestCode = PENDING_CODE_OFFSET + alarmID;
+//                Intent alarmRingIntent = new Intent(AlarmConfirmActivity.this, AlarmStatusActivity.class);
+//                alarmRingIntent.putExtra("alarmID", alarmID);
+//                PendingIntent pendingIntent = PendingIntent.getActivity(AlarmConfirmActivity.this,
+//                        requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+//                am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+//                        pendingIntent);
+//                makeCountdownToast(cal);
 
                 Intent mainIntent = new Intent(AlarmConfirmActivity.this, AlarmMainActivity.class);
                 startActivity(mainIntent);

@@ -82,16 +82,16 @@ public class LoginActivityFragment extends Fragment {
         loginButton.registerCallback(mCallbackManager, mCallback);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Profile profile = Profile.getCurrentProfile();
-        displayProfile(profile);
-        mydb.insertMe(profile.getId(), profile.getFirstName(), profile.getLastName());
-        Intent intent = new Intent(getActivity(), AlarmMainActivity.class);
-        startActivity(intent);
-
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        Profile profile = Profile.getCurrentProfile();
+//        displayProfile(profile);
+//        mydb.insertMe(profile.getId(), profile.getFirstName(), profile.getLastName());
+//        Intent intent = new Intent(getActivity(), AlarmMainActivity.class);
+//        startActivity(intent);
+//
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

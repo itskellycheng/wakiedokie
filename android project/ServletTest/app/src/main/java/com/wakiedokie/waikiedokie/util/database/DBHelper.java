@@ -18,7 +18,7 @@ import java.util.HashMap;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "MyDBName.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 8;
 
     // user_info Table
     public static final String USER_INFO_TABLE_NAME = "user_info";
@@ -85,7 +85,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public String getMyFbId(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select * from user_info where id=" + id + "", null);
+        Cursor res = db.rawQuery("select * from me_info", null);
         res.moveToFirst();
         String fb_id = res.getString(res.getColumnIndex(DBHelper.USER_INFO_COLUMN_FACEBOOK_ID));
         return fb_id;
@@ -136,18 +136,18 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean addOrUpdateAlarm(int id, String alarmTime, String owner_fb_id, String user2_fb_id, int isActive) {
+    public long addOrUpdateAlarm(int id, String alarmTime, String owner_fb_id, String user2_fb_id, int isActive) {
+        long pk = -1;
         if (id == -1) {
             // add alarm
-            addAlarm(alarmTime, owner_fb_id, user2_fb_id, isActive);
+            pk = addAlarm(alarmTime, owner_fb_id, user2_fb_id, isActive);
         } else {
             // update field: user2_fb_id, alarmTime
             updateAlarm(id, alarmTime, user2_fb_id, isActive);
+            pk = (long) id;
         }
-        return true;
+        return pk;
     }
-
-
 
 
     /* addAlarm - add row into alarm table */
@@ -241,7 +241,7 @@ public class DBHelper extends SQLiteOpenHelper {
     /* deleteAlarm - deletes row in alarm table with owner & user2's fb id*/
     public void deleteAlarm(String owner_fb_id, String user2_fb_id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String whereClause = "owner_fb_id ="+owner_fb_id+"AND user2_fb_id="+user2_fb_id;
+        String whereClause = "owner_fb_id ="+owner_fb_id+" AND user2_fb_id="+user2_fb_id;
         db.delete(ALARM_TABLE_NAME, whereClause, null);
     }
 
