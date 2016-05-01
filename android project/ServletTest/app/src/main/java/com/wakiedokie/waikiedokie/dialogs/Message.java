@@ -31,7 +31,7 @@ public class Message {
     String current_user_first_name;
     String current_user_last_name;
 
-    public static void showAlert(Activity activity, String titleText, String message) {
+    public static void showAlert(final Activity activity, String titleText, String message) {
         TextView title = new TextView(activity);
         title.setText(titleText);
         title.setPadding(10, 10, 10, 10);
@@ -50,7 +50,8 @@ public class Message {
         builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
-
+                Intent intent= new Intent(activity, activity.getClass());
+                activity.startActivity(intent);
             }
 
         });
