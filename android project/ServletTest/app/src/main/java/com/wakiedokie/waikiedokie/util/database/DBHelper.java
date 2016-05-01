@@ -32,6 +32,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String ME_TABLE_NAME = "me_info";
 
+    public static final int INACTIVE = 0;
+    public static final int ACTIVE = 1;
+    public static final int PENDING = 2;
+
+
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
