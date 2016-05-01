@@ -8,6 +8,9 @@ import android.database.Cursor;
 
 import android.os.Bundle;
 
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+
 import android.util.TypedValue;
 
 import android.view.View;
@@ -33,7 +36,7 @@ import java.util.Calendar;
  *
  * Created by chaovictorshin-deh on 4/13/16.
  */
-public class AlarmMainActivity extends Activity {
+public class AlarmMainActivity extends AppCompatActivity {
 
     private User user;
 
@@ -47,6 +50,10 @@ public class AlarmMainActivity extends Activity {
         super.onCreate(savedInstanceState);
         dbHelper = new DBHelper(this);
         setContentView(R.layout.activity_alarm_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("WakieDokie");
 
         Cursor result = dbHelper.getMe();
         result.moveToFirst();
@@ -70,6 +77,7 @@ public class AlarmMainActivity extends Activity {
         while (cursor.moveToNext()) {
             String alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
             final int alarmID = cursor.getInt(cursor.getColumnIndex("id"));
+            final int alarmStatus = cursor.getInt(cursor.getColumnIndex("is_active"));
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(Long.parseLong(alarmTime));
             final Calendar finalCal = cal;
@@ -88,8 +96,16 @@ public class AlarmMainActivity extends Activity {
             timeTV.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(AlarmMainActivity.this, AlarmEditTimeActivity.class);
+                        Intent intent;
+                        if (alarmStatus == dbHelper.ALARM_TYPE_NOT_SET) {
+                            intent = new Intent(AlarmMainActivity.this, AlarmEditTypeActivity.class);
+                        }
+                        else {
+                            intent = new Intent(AlarmMainActivity.this, AlarmEditTimeActivity.class);
+                        }
+//                        Intent intent = new Intent(AlarmMainActivity.this, AlarmEditTimeActivity.class);
                         intent.putExtra("alarmID", alarmID);
+                        intent.putExtra("alarmStatus", alarmStatus);
                         startActivity(intent);
                     }
                 }

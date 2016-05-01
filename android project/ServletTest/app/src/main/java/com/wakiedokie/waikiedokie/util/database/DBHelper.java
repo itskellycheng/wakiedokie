@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -29,12 +31,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // alarm Table
     public static final String ALARM_TABLE_NAME = "alarm";
+    public static final String ALARM_COLUMN_OWNER_ID = "owner_fb_id";
+    public static final String ALARM_COLUMN_USER2_ID = "user2_fb_id";
 
     public static final String ME_TABLE_NAME = "me_info";
+    public static final String ME_TABLE_COLUMN_FB_ID = "facebook_id";
 
-    public static final int INACTIVE = 0;
-    public static final int ACTIVE = 1;
-    public static final int PENDING = 2;
+    public static final int ALARM_LOCAL_INACTIVE = 0;
+    public static final int ALARM_LOCAL_ACTIVE = 1;
+    public static final int ALARM_PENDING = 2;
+    public static final int ALARM_TYPE_NOT_SET = 3;
+
+    private static final String TAG = "dbHelperBooboo";
 
 
     public DBHelper(Context context) {
@@ -53,7 +61,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ME_TABLE_NAME);
         db.execSQL(
                 "create table " + ME_TABLE_NAME +
-                        "(facebook_id text primary key, first_name text, last_name text)"
+                        "(facebook_id TEXT primary key, first_name text, last_name text)"
         );
         // Create alarm table
         db.execSQL("CREATE TABLE IF NOT EXISTS " + ALARM_TABLE_NAME +
@@ -90,7 +98,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public String getMyFbId(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select * from user_info where id=" + id + "", null);
+        Cursor res = db.rawQuery("select * from user_info where id=" + "=" + id + "", null);
         res.moveToFirst();
         String fb_id = res.getString(res.getColumnIndex(DBHelper.USER_INFO_COLUMN_FACEBOOK_ID));
         return fb_id;
@@ -110,6 +118,17 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    /* getFullNameWithID - looks up user table for user with XX ID and returns full name */
+    public String getFullNameWithID(String id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from user_info where " + USER_INFO_COLUMN_FACEBOOK_ID + " = \"" + id + "\"", null);
+        res.moveToFirst();
+        String fName = res.getString(res.getColumnIndex(USER_INFO_COLUMN_FIRST_NAME));
+        String lName = res.getString(res.getColumnIndex(USER_INFO_COLUMN_LAST_NAME));
+        String fullName = fName + " " + lName;
+        return fullName;
+    }
+
     /* insertMe - insert row into me table. Me table only has one row. */
     public boolean insertMe(String facebook_id, String first_name, String last_name) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -126,6 +145,15 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("SELECT * FROM " + ME_TABLE_NAME, null);
         return res;
+    }
+
+    /* getMyID - returns my facebook id from me_info table */
+    public String getMyIDFromMeTable(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + ME_TABLE_NAME, null);
+        res.moveToFirst();
+        String myID = res.getString(res.getColumnIndex(ME_TABLE_COLUMN_FB_ID));
+        return myID;
     }
 
     /* addAlarm - add row into alarm table */
@@ -216,6 +244,25 @@ public class DBHelper extends SQLiteOpenHelper {
         return timeStr;
     }
 
+    /* Returns name of buddy */
+    public String getBuddyName(int alarmID) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id=" + alarmID + "", null);
+        res.moveToFirst();
+        String ownerID = res.getString(res.getColumnIndex(ALARM_COLUMN_OWNER_ID));
+        String user2ID = res.getString(res.getColumnIndex(ALARM_COLUMN_USER2_ID));
+        String myID = getMyIDFromMeTable();
+        Log.d(TAG, ownerID + ", " + user2ID +  ", " + myID);
+        String buddyName;
+        if (myID.equals(ownerID)) {
+            buddyName = getFullNameWithID(user2ID);
+        }
+        else {
+            buddyName = getFullNameWithID(ownerID);
+        }
+        return buddyName;
+    }
+
     /* setAlarmToActive - with alarm id, set alarm active column to active (1) */
     public void setAlarmToActive(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -235,6 +282,13 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("UPDATE " + ALARM_TABLE_NAME +
                 " SET IS_ACTIVE = 0 WHERE ID = " + id);
+    }
+
+    /* setAlarmStatus - set alarm is_active column */
+    public  void setAlarmStatus(int id, int status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("UPDATE " + ALARM_TABLE_NAME +
+                " SET IS_ACTIVE = " + status + " WHERE ID = " + id);
     }
 
     /* deleteAlarm - deletes row in alarm table with alarm id */

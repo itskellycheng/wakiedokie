@@ -43,6 +43,7 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
     private static final String TAG = "AlarmConfirmActivity";
     private int alarmID;
     private String mBuddy;
+    private String mBuddyID;
     private String timeStr;
     private Calendar cal = Calendar.getInstance();
     private DBHelper dbHelper;
@@ -59,6 +60,7 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
         Intent thisIntent = getIntent();
         alarmID = thisIntent.getIntExtra("alarmID", -1);
         mBuddy = thisIntent.getStringExtra("buddy");
+        mBuddyID = thisIntent.getStringExtra("buddyID");
         timeStr = thisIntent.getStringExtra("timeStr");
         String calStr = thisIntent.getStringExtra("calMillis");
         cal.setTimeInMillis(Long.parseLong(calStr));
@@ -76,7 +78,7 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
                 .getRequestQueue();
 
         /****************
-         * Confirm button
+         * Send Request button
          ****************/
         Button btn = (Button) findViewById(R.id.btn_confirm_alarm);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -102,12 +104,8 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
                 mQueue.add(jsonRequest);
 
                 // Database update/insert
-                if (alarmID != -1) {
-                    dbHelper.updateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), "", 1);
-                }
-                else {
-                    alarmID = (int)dbHelper.addAlarm(Long.toString(cal.getTimeInMillis()), "", 1);
-                }
+                dbHelper.addOrUpdateAlarm(alarmID, Long.toString(cal.getTimeInMillis()),
+                        dbHelper.getMyIDFromMeTable(), mBuddyID, dbHelper.ALARM_TYPE_NOT_SET);
 
                 int requestCode = PENDING_CODE_OFFSET + alarmID;
                 Intent alarmRingIntent = new Intent(AlarmConfirmActivity.this, AlarmStatusActivity.class);
