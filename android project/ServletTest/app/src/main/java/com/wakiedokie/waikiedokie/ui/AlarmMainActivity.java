@@ -34,8 +34,9 @@ import java.util.Calendar;
  * Created by chaovictorshin-deh on 4/13/16.
  */
 public class AlarmMainActivity extends Activity {
-
+    private static boolean RUN_ONCE = true;
     private User user;
+    private int numShowingAlarms;
 
     // init ui
     private DBHelper dbHelper;
@@ -55,18 +56,48 @@ public class AlarmMainActivity extends Activity {
         String last_name = result.getString(result.getColumnIndex(DBHelper.USER_INFO_COLUMN_LAST_NAME));
         user = new User(facebook_id, first_name, last_name);
 
-        MyTimerTask mTimerTask = new MyTimerTask(user, this);
-        Timer timer = new Timer();
-        // scheduling the task at fixed rate delay
-        timer.scheduleAtFixedRate(mTimerTask, 500, 15000);
+        // call this only for the first time this activity is opened
+        startTimerTask(user, this);
+
+
+        ImageButton imgBtn = (ImageButton) findViewById(R.id.btn_main_add_alarm);
+        imgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AlarmMainActivity.this, AlarmEditTimeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // insert fake users for debuggin
+        Button fakeBtn = (Button)findViewById(R.id.btn_populate_fake_user);
+        fakeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dbHelper.insertInfo(0, "12345CB", "Charlie", "Brown");
+                dbHelper.insertInfo(0, "54321PP", "Peppermint", "Patty");
+                dbHelper.insertInfo(0, "22333SB", "Sally", "Brown");
+                Toast.makeText(getApplicationContext(), "Saved fake users", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
 
         LinearLayout.LayoutParams paramsAlarmRL = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         timeContainer = (LinearLayout) findViewById(R.id.time_container);
+        timeContainer.removeAllViewsInLayout();
 
         dbHelper = new DBHelper(AlarmMainActivity.this);
+        int numberOfRowsAlarmTable = dbHelper.numberOfRowsAlarmTable();
         Cursor cursor = dbHelper.getAllAlarms();
+
+        int i = 1;
         while (cursor.moveToNext()) {
             String alarmTime = cursor.getString(cursor.getColumnIndex("alarm_time"));
             final int alarmID = cursor.getInt(cursor.getColumnIndex("id"));
@@ -95,6 +126,7 @@ public class AlarmMainActivity extends Activity {
                 }
             );
 
+
             RelativeLayout alarmRL = new RelativeLayout(this);
             alarmRL.setLayoutParams(paramsAlarmRL);
             alarmRL.setPadding(10, 10, 10, 10);
@@ -117,32 +149,12 @@ public class AlarmMainActivity extends Activity {
                     toggleAlarm(alarmID, finalCal);
                  }
             });
-
             alarmRL.addView(timeTV);
             alarmRL.addView(mSwitch);
             timeContainer.addView(alarmRL);
         }
 
-        ImageButton imgBtn = (ImageButton) findViewById(R.id.btn_main_add_alarm);
-        imgBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AlarmMainActivity.this, AlarmEditTimeActivity.class);
-                startActivity(intent);
-            }
-        });
 
-        // insert fake users for debuggin
-        Button fakeBtn = (Button)findViewById(R.id.btn_populate_fake_user);
-        fakeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dbHelper.insertInfo(0, "12345CB", "Charlie", "Brown");
-                dbHelper.insertInfo(0, "54321PP", "Peppermint", "Patty");
-                dbHelper.insertInfo(0, "22333SB", "Sally", "Brown");
-                Toast.makeText(getApplicationContext(), "Saved fake users", Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 
@@ -186,6 +198,7 @@ public class AlarmMainActivity extends Activity {
         }
     }
 
+
     /* Helper function to check in database if alarm is active or not */
     private boolean alarmIsActive(int id) {
         Cursor c = dbHelper.getAlarm(id);
@@ -208,6 +221,19 @@ public class AlarmMainActivity extends Activity {
         }
         dbHelper.updateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), "", 1);
         return cal;
+    }
+
+
+    private void startTimerTask(User user, Activity activity) {
+        if (RUN_ONCE == true) {
+            RUN_ONCE = false;
+
+            MyTimerTask mTimerTask = new MyTimerTask(user, this);
+            Timer timer = new Timer();
+            // scheduling the task at fixed rate delay
+            timer.scheduleAtFixedRate(mTimerTask, 500, 15000);
+        }
+
     }
 
 

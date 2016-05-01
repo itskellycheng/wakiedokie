@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.util.database.DBHelper;
+import com.wakiedokie.waikiedokie.util.timer.MyTimerTask;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -113,6 +114,7 @@ public class AlarmEditTimeActivity extends Activity {
                         // Save alarm to SQlite if new alarm
                         alarmID = (int)dbHelper.addAlarm(Long.toString(cal.getTimeInMillis()), "", 1);
                     }
+//                    alarmID = (int)dbHelper.addOrUpdateAlarm(alarmID,  Long.toString(cal.getTimeInMillis()), "1151451178206737", "10209500772462847", 1);
 
                     // debugging logs
                     Cursor cursor = dbHelper.getAllAlarms();
@@ -127,6 +129,10 @@ public class AlarmEditTimeActivity extends Activity {
                         Log.d(TAG, "Hour  : " + calCheck.get(Calendar.HOUR));
                         Log.d(TAG, "Minute : " + calCheck.get(Calendar.MINUTE));
                         Log.d(TAG, "AM PM : " + calCheck.get(Calendar.AM_PM));
+                    }
+
+                    if (!cursor.isClosed()) {
+                        cursor.close();
                     }
 
                     int requestCode = PENDING_CODE_OFFSET + alarmID;
@@ -151,7 +157,9 @@ public class AlarmEditTimeActivity extends Activity {
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dbHelper.deleteAlarm(alarmID);
+                System.out.println("deleting alarmID");
+                (new MyTimerTask(AlarmEditTimeActivity.this)).deleteAlarm(AlarmEditTimeActivity.this, alarmID);
+                System.out.println("id = " + alarmID);
 
                 int requestCode = PENDING_CODE_OFFSET + alarmID;
                 Intent alarmRingIntent = new Intent(AlarmEditTimeActivity.this, AlarmStatusActivity.class);
@@ -159,6 +167,7 @@ public class AlarmEditTimeActivity extends Activity {
                         requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                 pendingIntent.cancel();
                 am.cancel(pendingIntent);
+
 
                 Toast.makeText(getApplicationContext(), "Deleted alarm!", Toast.LENGTH_SHORT).show();
 

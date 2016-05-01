@@ -18,7 +18,7 @@ import java.util.HashMap;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "MyDBName.db";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 59;
 
     // user_info Table
     public static final String USER_INFO_TABLE_NAME = "user_info";
@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // alarm Table
     public static final String ALARM_TABLE_NAME = "alarm";
-
+//    public static final String ALARM_MAIN_ACTIVITY_TABLE_NAME = "alarm_main_activity";
     public static final String ME_TABLE_NAME = "me_info";
 
     public DBHelper(Context context) {
@@ -52,8 +52,16 @@ public class DBHelper extends SQLiteOpenHelper {
         );
         // Create alarm table
         db.execSQL("CREATE TABLE IF NOT EXISTS " + ALARM_TABLE_NAME +
-                        "(id INTEGER primary key, owner_fb_id TEXT, user2_fb_id TEXT, alarm_time TEXT, is_active INTEGER)"
+                        "(id INTEGER primary key, owner_fb_id TEXT, user2_fb_id TEXT, alarm_time TEXT, is_active INTEGER, alarm_server_id TEXT NOT NULL DEFAULT '-1')"
         );
+
+
+        // Create run alarm main activity first time table
+//        db.execSQL("DROP TABLE IF EXISTS alarm_main_activity");
+//        db.execSQL(
+//                "create table " + ALARM_MAIN_ACTIVITY_TABLE_NAME +
+//                        "(facebook_id text primary key, first_name text, last_name text)"
+//        );
     }
 
     @Override
@@ -88,6 +96,9 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("select * from me_info", null);
         res.moveToFirst();
         String fb_id = res.getString(res.getColumnIndex(DBHelper.USER_INFO_COLUMN_FACEBOOK_ID));
+//        if (!res.isClosed()){
+//            res.close();
+//        }
         return fb_id;
 
     }
@@ -95,6 +106,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public int numberOfRows() {
         SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, USER_INFO_TABLE_NAME);
+        return numRows;
+    }
+
+
+    public int numberOfRowsAlarmTable() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int numRows = (int) DatabaseUtils.queryNumEntries(db, ALARM_TABLE_NAME);
         return numRows;
     }
 
@@ -157,6 +175,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("alarm_time", alarmTime);
         contentValues.put("is_active", isActive);
         long pk = db.insert(ALARM_TABLE_NAME, null, contentValues);
+        db.close();
         return pk;
     }
 
@@ -188,6 +207,27 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    public void printAllAlarms() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + ALARM_TABLE_NAME, null);
+        System.out.println("Printing local alarm table..");
+        while(res.moveToNext()) {
+            System.out.println("alarm table is not empty");
+            String alarmId = res.getString(res.getColumnIndex("id"));
+            String time = res.getString(res.getColumnIndex("alarm_time"));
+            String owner_fb_id = res.getString(res.getColumnIndex("owner_fb_id"));
+            String user2_fb_id = res.getString(res.getColumnIndex("user2_fb_id"));
+            String alarm_server_id = res.getString(res.getColumnIndex("alarm_server_id"));
+            int isActive = res.getInt(res.getColumnIndex("is_active"));
+            System.out.println("Alarm id: " + alarmId + ", time: " + time + ", alarm_server_id: " + alarm_server_id);
+            System.out.println("Owner_fb_id: " + owner_fb_id + ", user2_fb_id: " + user2_fb_id + ", isActive: " + isActive);
+
+        }
+//        if (!res.isClosed()) {
+//            res.close();
+//        }
+    }
+
     /* getTimeString - get formatted string of time eg. 10:31 AM */
     public String getTimeString(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -208,8 +248,13 @@ public class DBHelper extends SQLiteOpenHelper {
         else
             amPm = "PM";
         String timeStr = hour + ":" + minute + " " + amPm;
+
+//        if (!res.isClosed()) {
+//            res.close();
+//        }
         return timeStr;
     }
+
 
     /* setAlarmToActive - with alarm id, set alarm active column to active (1) */
     public void setAlarmToActive(int id) {
@@ -222,7 +267,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void setAlarmToActive(String owner_fb_id, String user2_fb_id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("UPDATE " + ALARM_TABLE_NAME +
-                " SET IS_ACTIVE = 1 WHERE owner_fb_id = "  + owner_fb_id + " AND user2_fb_id = " + user2_fb_id );
+                " SET IS_ACTIVE = 1 WHERE owner_fb_id = " + owner_fb_id + " AND user2_fb_id = " + user2_fb_id);
     }
 
     /* setAlarmToActive - set alarm active column to inactive (0) */
@@ -241,9 +286,19 @@ public class DBHelper extends SQLiteOpenHelper {
     /* deleteAlarm - deletes row in alarm table with owner & user2's fb id*/
     public void deleteAlarm(String owner_fb_id, String user2_fb_id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String whereClause = "owner_fb_id ="+owner_fb_id+" AND user2_fb_id="+user2_fb_id;
+        String whereClause = "owner_fb_id ="+owner_fb_id+" AND user2_fb_id=" + user2_fb_id;
         db.delete(ALARM_TABLE_NAME, whereClause, null);
     }
+
+
+    public void setAlarmServerId(String owner_fb_id, String user2_fb_id, String alarm_server_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("alarm_server_id", alarm_server_id);
+        String whereStr = "owner_fb_id = \"" + owner_fb_id +"\" and user2_fb_id = \"" + user2_fb_id + "\"";
+        db.update(ALARM_TABLE_NAME, contentValues, whereStr, null);
+    }
+
 
 
 

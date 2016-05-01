@@ -65,9 +65,9 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
 
 
         /* Replace this by getting alarm info from other activities later*/
-        final User me = new User("1151451178206737", "Victor", "Chao");
+        final User me= new User("1151451178206737", "Victor", "Chao");
         final User user2 = new User("10209500772462847", "Kelly", "Cheng");
-        final String time = "04/30/2016-01:00";
+        final String time = "1462126443161";
         final String type = "quiz";
         dbHelper = new DBHelper(this);
         final Alarm alarm = new Alarm(me, user2, time, type);
@@ -95,7 +95,7 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
+     //           System.out.println("my fb id is " + me.getFacebookId() + " user2 fb id is " + user2.getFacebookId());
                 final CustomJSONObjectRequest jsonRequest = new CustomJSONObjectRequest(Request.Method.POST, SERVER_URL,
                         mJSONObject, AlarmConfirmActivity.this, AlarmConfirmActivity.this);
                 jsonRequest.setTag(REQUEST_TAG);

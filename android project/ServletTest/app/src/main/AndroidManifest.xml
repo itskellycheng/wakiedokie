@@ -29,6 +29,7 @@
 
         <activity
             android:name=".ui.AlarmMainActivity"
+            android:launchMode="singleTask"
             android:label="@string/app_name" >
         </activity>
 

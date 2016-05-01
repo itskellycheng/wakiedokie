@@ -3,6 +3,7 @@ package com.wakiedokie.waikiedokie.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.DialogFragment;
 import android.content.DialogInterface;
@@ -55,11 +56,12 @@ public class Message {
         });
 
         AlertDialog alert = builder.create();
+        System.out.println("in dialog");
         alert.show();
     }
 
 
-    public static void showAlertRequestFromOthers(final Activity activity, final String time, final String owner_name, final String owner_fb_id, String titleText, String message) {
+    public static void showAlertRequestFromOthers(final Activity activity, final String alarm_server_id, final String time, final String owner_name, final String owner_fb_id, String titleText, String message) {
         TextView title = new TextView(activity);
         title.setText(titleText);
         title.setPadding(10, 10, 10, 10);
@@ -79,8 +81,10 @@ public class Message {
 
         builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                (new MyTimerTask(activity)).acceptRequest(activity, time, owner_name, owner_fb_id);
+                (new MyTimerTask(activity)).acceptRequest(activity, alarm_server_id, time, owner_name, owner_fb_id);
                 dialog.cancel();
+                Intent intent= new Intent(activity, activity.getClass());
+                activity.startActivity(intent);
 
             }
 
@@ -89,6 +93,8 @@ public class Message {
             public void onClick(DialogInterface dialog, int id) {
                 (new MyTimerTask(activity)).denyRequest(activity, owner_name, owner_fb_id);
                 dialog.cancel();
+                Intent intent= new Intent(activity, activity.getClass());
+                activity.startActivity(intent);
             }
 
         });
