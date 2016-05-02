@@ -96,12 +96,14 @@ public class AlarmMainActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        LinearLayout.LayoutParams paramsAlarmRL = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
         timeContainer = (LinearLayout) findViewById(R.id.time_container);
         timeContainer.removeAllViewsInLayout();
 
+        populateTimeContainer();
+
+    }
+
+    void populateTimeContainer() {
         dbHelper = new DBHelper(AlarmMainActivity.this);
         int numberOfRowsAlarmTable = dbHelper.numberOfRowsAlarmTable();
         Cursor cursor = dbHelper.getAllAlarms();
@@ -127,25 +129,27 @@ public class AlarmMainActivity extends AppCompatActivity {
             timeTV.setText(timeStr);
             timeTV.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 40f);
             timeTV.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent;
-                        if (alarmStatus == dbHelper.ALARM_TYPE_NOT_SET) {
-                            intent = new Intent(AlarmMainActivity.this, AlarmEditTypeActivity.class);
-                        }
-                        else {
-                            intent = new Intent(AlarmMainActivity.this, AlarmEditTimeActivity.class);
-                        }
+                                          @Override
+                                          public void onClick(View view) {
+                                              Intent intent;
+                                              if (alarmStatus == dbHelper.ALARM_TYPE_NOT_SET) {
+                                                  intent = new Intent(AlarmMainActivity.this, AlarmEditTypeActivity.class);
+                                              }
+                                              else {
+                                                  intent = new Intent(AlarmMainActivity.this, AlarmEditTimeActivity.class);
+                                              }
 //                        Intent intent = new Intent(AlarmMainActivity.this, AlarmEditTimeActivity.class);
-                        intent.putExtra("alarmID", alarmID);
-                        intent.putExtra("alarmStatus", alarmStatus);
-                        startActivity(intent);
-                    }
-                }
+                                              intent.putExtra("alarmID", alarmID);
+                                              intent.putExtra("alarmStatus", alarmStatus);
+                                              startActivity(intent);
+                                          }
+                                      }
             );
 
 
             RelativeLayout alarmRL = new RelativeLayout(this);
+            LinearLayout.LayoutParams paramsAlarmRL = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             alarmRL.setLayoutParams(paramsAlarmRL);
             alarmRL.setPadding(10, 10, 10, 10);
 
@@ -162,20 +166,16 @@ public class AlarmMainActivity extends AppCompatActivity {
                 mSwitch.setChecked(false);
             }
             mSwitch.setOnClickListener(new View.OnClickListener() {
-                 @Override
-                 public void onClick(View view) {
+                @Override
+                public void onClick(View view) {
                     toggleAlarm(alarmID, finalCal);
-                 }
+                }
             });
             alarmRL.addView(timeTV);
             alarmRL.addView(mSwitch);
             timeContainer.addView(alarmRL);
         }
-
-
-
     }
-
     /* Helper function for toggling alarm on/off */
     private void toggleAlarm(int id, Calendar cal) {
         AlarmManager am =
