@@ -20,11 +20,10 @@ import java.util.HashMap;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "MyDBName.db";
-    private static final int DATABASE_VERSION = 60;
+    private static final int DATABASE_VERSION = 62;
 
     // user_info Table
     public static final String USER_INFO_TABLE_NAME = "user_info";
-    public static final String USER_INFO_COLUMN_ID = "id";
     public static final String USER_INFO_COLUMN_FACEBOOK_ID = "facebook_id";
     public static final String USER_INFO_COLUMN_FIRST_NAME = "first_name";
     public static final String USER_INFO_COLUMN_LAST_NAME = "last_name";
@@ -174,6 +173,37 @@ public class DBHelper extends SQLiteOpenHelper {
         return myID;
     }
 
+    /* Prints alarm table in console */
+    public void printFullAlarmTable() {
+        Cursor c = getAllAlarms();
+        while(c.moveToNext()) {
+            int alarmPK = c.getInt(c.getColumnIndex("id"));
+            String ownerID = c.getString(c.getColumnIndex(ALARM_COLUMN_OWNER_ID));
+            String user2ID = c.getString(c.getColumnIndex(ALARM_COLUMN_USER2_ID));
+            String myID = getMyIDFromMeTable();
+            Log.d(TAG, "Alarm(pk=" + alarmPK + "): " +
+                    "ownerID: " + ownerID +
+                    ", user2ID: " + user2ID +
+                    ", myID: " + myID);
+
+        }
+    }
+
+    public long addOrUpdateAlarm(int id, String alarmTime, String owner_fb_id, String user2_fb_id, int isActive) {
+        long pk = -1;
+        if (id == -1) {
+            // add alarm
+            pk = addAlarm(alarmTime, owner_fb_id, user2_fb_id, isActive);
+            Log.d(TAG,"Add alarm" + user2_fb_id);
+        } else {
+            // update field: user2_fb_id, alarmTime
+            updateAlarm(id, alarmTime, user2_fb_id, isActive);
+            pk = (long) id;
+            Log.d(TAG,"Update alarm" + user2_fb_id);
+        }
+        return pk;
+    }
+
     /* addAlarm - add row into alarm table */
     public long addAlarm(String alarmTime, String owner_fb_id, String user2_fb_id, int isActive) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -183,20 +213,6 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("user2_fb_id", user2_fb_id);
         contentValues.put("is_active", isActive);
         long pk = db.insert(ALARM_TABLE_NAME, null, contentValues);
-        return pk;
-    }
-
-
-    public long addOrUpdateAlarm(int id, String alarmTime, String owner_fb_id, String user2_fb_id, int isActive) {
-        long pk = -1;
-        if (id == -1) {
-            // add alarm
-            pk = addAlarm(alarmTime, owner_fb_id, user2_fb_id, isActive);
-        } else {
-            // update field: user2_fb_id, alarmTime
-            updateAlarm(id, alarmTime, user2_fb_id, isActive);
-            pk = (long) id;
-        }
         return pk;
     }
 
@@ -296,7 +312,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String ownerID = res.getString(res.getColumnIndex(ALARM_COLUMN_OWNER_ID));
         String user2ID = res.getString(res.getColumnIndex(ALARM_COLUMN_USER2_ID));
         String myID = getMyIDFromMeTable();
-        Log.d(TAG, ownerID + ", " + user2ID +  ", " + myID);
+        Log.d(TAG, "Alarm("+alarmID+"): "+ownerID + ", " + user2ID +  ", " + myID);
         String buddyName;
         if (myID.equals(ownerID)) {
             buddyName = getFullNameWithID(user2ID);

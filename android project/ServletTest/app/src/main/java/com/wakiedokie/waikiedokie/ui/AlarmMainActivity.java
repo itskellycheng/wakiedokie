@@ -129,22 +129,28 @@ public class AlarmMainActivity extends AppCompatActivity {
             timeTV.setText(timeStr);
             timeTV.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 40f);
             timeTV.setOnClickListener(new View.OnClickListener() {
-                                          @Override
-                                          public void onClick(View view) {
-                                              Intent intent;
-                                              if (alarmStatus == dbHelper.ALARM_TYPE_NOT_SET) {
-                                                  intent = new Intent(AlarmMainActivity.this, AlarmEditTypeActivity.class);
-                                              }
-                                              else {
-                                                  intent = new Intent(AlarmMainActivity.this, AlarmEditTimeActivity.class);
-                                              }
-//                        Intent intent = new Intent(AlarmMainActivity.this, AlarmEditTimeActivity.class);
-                                              intent.putExtra("alarmID", alarmID);
-                                              intent.putExtra("alarmStatus", alarmStatus);
-                                              startActivity(intent);
-                                          }
-                                      }
-            );
+                @Override
+                public void onClick(View view) {
+                    Intent intent = null;
+                    if (alarmStatus == dbHelper.ALARM_PENDING) {
+                        Toast.makeText(getApplicationContext(),
+                                "Please wait for buddy to approve alarm",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    else if (alarmStatus == dbHelper.ALARM_TYPE_NOT_SET) {
+                        intent = new Intent(AlarmMainActivity.this, AlarmEditTypeActivity.class);
+                    }
+                    else {
+                        intent = new Intent(AlarmMainActivity.this, AlarmEditTimeActivity.class);
+                    }
+
+                    if (intent != null) {
+                        intent.putExtra("alarmID", alarmID);
+                        intent.putExtra("alarmStatus", alarmStatus);
+                        startActivity(intent);
+                    }
+                }
+            });
 
 
             RelativeLayout alarmRL = new RelativeLayout(this);
@@ -153,26 +159,46 @@ public class AlarmMainActivity extends AppCompatActivity {
             alarmRL.setLayoutParams(paramsAlarmRL);
             alarmRL.setPadding(10, 10, 10, 10);
 
-            Switch mSwitch = new Switch(AlarmMainActivity.this);
-            RelativeLayout.LayoutParams paramsSwitch = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            paramsSwitch.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            mSwitch.setLayoutParams(paramsSwitch);
-            if (alarmIsActive(alarmID)) {
-                mSwitch.setChecked(true);
-            }
-            else {
-                mSwitch.setChecked(false);
-            }
-            mSwitch.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    toggleAlarm(alarmID, finalCal);
+            /* local alarm */
+            if (alarmStatus == dbHelper.ALARM_LOCAL_ACTIVE ||
+                    alarmStatus == dbHelper.ALARM_LOCAL_INACTIVE) {
+
+                Switch mSwitch = new Switch(AlarmMainActivity.this);
+                RelativeLayout.LayoutParams paramsSwitch = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                paramsSwitch.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                mSwitch.setLayoutParams(paramsSwitch);
+                if (alarmIsActive(alarmID)) {
+                    mSwitch.setChecked(true);
+                } else {
+                    mSwitch.setChecked(false);
                 }
-            });
+                mSwitch.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        toggleAlarm(alarmID, finalCal);
+                    }
+                });
+
+                alarmRL.addView(mSwitch);
+            }
+
+            /* alarm with alarm buddy */
+            else {
+                String buddyName = dbHelper.getBuddyName(alarmID);
+                TextView buddyTV = new TextView(this);
+                RelativeLayout.LayoutParams paramsBuddy = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                paramsBuddy.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                buddyTV.setLayoutParams(paramsBuddy);
+                buddyTV.setText(buddyName);
+                buddyTV.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10f);
+                alarmRL.addView(buddyTV);
+            }
+
             alarmRL.addView(timeTV);
-            alarmRL.addView(mSwitch);
             timeContainer.addView(alarmRL);
         }
     }
