@@ -32,7 +32,7 @@ public class RingQuizActivity extends Activity {
         });
 
         Button btn_answer_2 = (Button) findViewById(R.id.btn_answer_1);
-        btn_answer_1.setOnClickListener(new View.OnClickListener() {
+        btn_answer_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (quizAnswer == 1)
@@ -43,7 +43,7 @@ public class RingQuizActivity extends Activity {
         });
 
         Button btn_answer_3 = (Button) findViewById(R.id.btn_answer_1);
-        btn_answer_1.setOnClickListener(new View.OnClickListener() {
+        btn_answer_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (quizAnswer == 2)

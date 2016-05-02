@@ -25,9 +25,7 @@ import okhttp3.Response;
  */
 public class UploadVideo {
 
-    private static final String IMGUR_CLIENT_ID = "...";
-    private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
-    private static final String SERVER_URL = "http://10.0.0.25:8080/AndroidAppServlet/VideoServlet";
+    private static final String SERVER_URL = "http://10.0.0.25:8080/AndroidAppServlet/VideoUploadServlet";
 
     private final OkHttpClient client = new OkHttpClient();
 
