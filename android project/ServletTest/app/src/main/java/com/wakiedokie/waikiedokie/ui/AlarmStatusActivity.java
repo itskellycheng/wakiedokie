@@ -55,7 +55,7 @@ public class AlarmStatusActivity extends Activity {
             }
         });
 
-        Button btn_turn_off = (Button) findViewById(R.id.btn_turn_off);
+        final Button btn_turn_off = (Button) findViewById(R.id.btn_turn_off);
         btn_turn_off.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
