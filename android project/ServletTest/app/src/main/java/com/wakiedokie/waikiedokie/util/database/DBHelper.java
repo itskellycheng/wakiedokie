@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -21,7 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "MyDBName.db";
 
-    private static final int DATABASE_VERSION = 103;
+    private static final int DATABASE_VERSION = 105;
 
     // user_info Table
     public static final String USER_INFO_TABLE_NAME = "user_info";
@@ -127,6 +128,17 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("SELECT * FROM " + USER_INFO_TABLE_NAME, null);
         return res;
+    }
+
+    /* get all users that you have not yet set an alarm with */
+    public ArrayList<String> getUsersExclude() {
+        ArrayList<String> excludes = new ArrayList<String>();
+        Cursor res = getAllAlarms();
+        while(res.moveToNext()) {
+            String fb_id = res.getString(res.getColumnIndex(ALARM_COLUMN_USER2_ID));
+            excludes.add(fb_id);
+        }
+        return excludes;
     }
 
     /* getFullNameWithID - looks up user table for user with XX ID and returns full name */
@@ -281,6 +293,8 @@ public class DBHelper extends SQLiteOpenHelper {
 //            res.close();
 //        }
     }
+
+
 
     /* getTimeString - get formatted string of time eg. 10:31 AM */
     public String getTimeString(int id) {

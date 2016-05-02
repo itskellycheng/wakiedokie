@@ -58,8 +58,10 @@ public class AlarmSelectBuddyActivity extends Activity {
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         Cursor cursor = dbHelper.getAllUsers();
-        while (cursor.moveToNext()) {
+        ArrayList<String> excludes = dbHelper.getUsersExclude();
 
+        while (cursor.moveToNext()) {
+            boolean already_set_before = false;
             RelativeLayout buddyRL = new RelativeLayout(this);
             buddyRL.setLayoutParams(paramsBlockRL);
             buddyRL.setPadding(10, 10, 10, 10);
@@ -67,6 +69,14 @@ public class AlarmSelectBuddyActivity extends Activity {
             String fName = cursor.getString(cursor.getColumnIndex("first_name"));
             String lName = cursor.getString(cursor.getColumnIndex("last_name"));
             final String id = cursor.getString(cursor.getColumnIndex(dbHelper.USER_INFO_COLUMN_FACEBOOK_ID));
+            for (String exclude : excludes) {
+                if (exclude.equals(id)) {
+                    already_set_before = true;
+                }
+            }
+            if (already_set_before) {
+                continue;
+            }
             final String buddyName = fName + " " + lName;
             Log.d(TAG, buddyName);
 
