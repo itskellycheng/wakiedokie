@@ -31,11 +31,6 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0'
-    compile('org.apache.httpcomponents:httpmime:4.+') {
-        exclude module: "httpclient"
-    }
-    compile('org.apache.httpcomponents:httpcore:4.+') {
-        exclude module: "httpclient"
-    }
+
     compile project(":volley")
 }

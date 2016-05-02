@@ -186,6 +186,18 @@ public class AlarmMainActivity extends AppCompatActivity {
 
             /* alarm with alarm buddy */
             else {
+                // for debugging
+                timeTV.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        Intent intent = new Intent(AlarmMainActivity.this, AlarmEditTypeActivity.class);
+                        intent.putExtra("alarmID", alarmID);
+                        intent.putExtra("alarmStatus", alarmStatus);
+                        startActivity(intent);
+                        return true;
+                    }
+                });
+
                 String buddyName = dbHelper.getBuddyName(alarmID);
                 TextView buddyTV = new TextView(this);
                 RelativeLayout.LayoutParams paramsBuddy = new RelativeLayout.LayoutParams(
