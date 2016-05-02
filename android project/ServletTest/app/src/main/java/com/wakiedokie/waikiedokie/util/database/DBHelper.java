@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "MyDBName.db";
-    private static final int DATABASE_VERSION = 60;
+    private static final int DATABASE_VERSION = 66;
 
     // user_info Table
     public static final String USER_INFO_TABLE_NAME = "user_info";
@@ -68,13 +68,6 @@ public class DBHelper extends SQLiteOpenHelper {
                         "(id INTEGER primary key, owner_fb_id TEXT, user2_fb_id TEXT, alarm_time TEXT, is_active INTEGER, alarm_server_id TEXT NOT NULL DEFAULT '-1')"
         );
 
-
-        // Create run alarm main activity first time table
-//        db.execSQL("DROP TABLE IF EXISTS alarm_main_activity");
-//        db.execSQL(
-//                "create table " + ALARM_MAIN_ACTIVITY_TABLE_NAME +
-//                        "(facebook_id text primary key, first_name text, last_name text)"
-//        );
     }
 
     @Override
@@ -87,7 +80,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean insertInfo(int id, String facebook_id, String first_name, String last_name) {
+    public boolean insertInfo(String facebook_id, String first_name, String last_name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("facebook_id", facebook_id);
@@ -333,6 +326,13 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("UPDATE " + ALARM_TABLE_NAME +
                 " SET IS_ACTIVE = " + status + " WHERE ID = " + id);
+    }
+
+    /* setAlarmStatus - set alarm is_active column */
+    public  void setAlarmStatus(String owner_fb_id, String user2_fb_id, int status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("UPDATE " + ALARM_TABLE_NAME +
+                " SET IS_ACTIVE = " + status + " WHERE owner_fb_id = " + owner_fb_id + " AND user2_fb_id = " + user2_fb_id);
     }
 
     /* deleteAlarm - deletes row in alarm table with alarm id */

@@ -100,7 +100,6 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
             String alarm = ((JSONObject) response).getString("alarm");
             if (alarm.equals("approved")) {
                 alarm_id = ((JSONObject) response).getString("alarm_id");
-                System.out.println("alarm_idididididid= " + alarm_id);
                 user2_name = ((JSONObject) response).getString("user2_name");
                 user2_fb_id = ((JSONObject) response).getString("user2_fb_id");
                 time = ((JSONObject) response).getString("time");
@@ -110,7 +109,7 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
                 dbHelper.printAllAlarms();
                 dbHelper.setAlarmServerId(my_fb_id, user2_fb_id, alarm_id);
                 // 1. update this alarm with 2 fb_ids --> to active.
-                dbHelper.setAlarmToActive(my_fb_id, user2_fb_id);
+                dbHelper.setAlarmStatus(my_fb_id, user2_fb_id, DBHelper.ALARM_TYPE_NOT_SET);
                 System.out.println("After setting server id");
                 dbHelper.printAllAlarms();
 
@@ -214,7 +213,7 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
 
 
         // 1. insert new alarm 2 fb_ids, time, active
-        dbHelper.addAlarm(time, owner_fb_id, my_fb_id, 1);
+        dbHelper.addAlarm(time, owner_fb_id, my_fb_id, DBHelper.ALARM_TYPE_NOT_SET);
         dbHelper.setAlarmServerId(owner_fb_id, my_fb_id, alarm_server_id);
         dbHelper.printAllAlarms();
 

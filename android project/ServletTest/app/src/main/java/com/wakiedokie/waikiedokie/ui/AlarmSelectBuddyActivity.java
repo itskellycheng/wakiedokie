@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.util.database.DBHelper;
+import com.wakiedokie.waikiedokie.util.userio.UserTableHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,8 @@ public class AlarmSelectBuddyActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_buddy);
         dbHelper = new DBHelper(this);
@@ -104,10 +107,8 @@ public class AlarmSelectBuddyActivity extends Activity {
             public void onClick(View view) {
                 Intent intent = new Intent(AlarmSelectBuddyActivity.this, AlarmEditTimeActivity.class);
                 intent.putExtra("alarmID", alarmID);
-//                intent.putExtra("buddy", mBuddy);
-//                intent.putExtra("buddyID", mBuddyID);
-                intent.putExtra("buddy", "Victor");
-                intent.putExtra("buddyID", "12345");
+                intent.putExtra("buddy", mBuddy);
+                intent.putExtra("buddyID", mBuddyID);
                 startActivity(intent);
             }
         });

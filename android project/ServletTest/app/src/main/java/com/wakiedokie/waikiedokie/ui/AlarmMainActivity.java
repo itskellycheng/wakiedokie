@@ -22,6 +22,8 @@ import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.model.User;
 import com.wakiedokie.waikiedokie.util.database.DBHelper;
 import com.wakiedokie.waikiedokie.util.timer.MyTimerTask;
+import com.wakiedokie.waikiedokie.util.userio.UserTableHelper;
+
 import java.util.Timer;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -51,9 +53,10 @@ public class AlarmMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dbHelper = new DBHelper(this);
-        setContentView(R.layout.activity_alarm_main);
 
+        dbHelper = new DBHelper(this);
+
+        setContentView(R.layout.activity_alarm_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("WakieDokie");
@@ -64,6 +67,8 @@ public class AlarmMainActivity extends AppCompatActivity {
         String first_name = result.getString(result.getColumnIndex(DBHelper.USER_INFO_COLUMN_FIRST_NAME));
         String last_name = result.getString(result.getColumnIndex(DBHelper.USER_INFO_COLUMN_LAST_NAME));
         user = new User(facebook_id, first_name, last_name);
+        UserTableHelper utHelper = new UserTableHelper(this);
+        utHelper.sendRequestToServer();
 
         // call this only for the first time this activity is opened
         startTimerTask(user, this);
@@ -83,9 +88,9 @@ public class AlarmMainActivity extends AppCompatActivity {
         fakeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dbHelper.insertInfo(0, "12345CB", "Charlie", "Brown");
-                dbHelper.insertInfo(0, "54321PP", "Peppermint", "Patty");
-                dbHelper.insertInfo(0, "22333SB", "Sally", "Brown");
+                dbHelper.insertInfo("12345CB", "Charlie", "Brown");
+                dbHelper.insertInfo("54321PP", "Peppermint", "Patty");
+                dbHelper.insertInfo("22333SB", "Sally", "Brown");
                 Toast.makeText(getApplicationContext(), "Saved fake users", Toast.LENGTH_SHORT).show();
             }
         });
