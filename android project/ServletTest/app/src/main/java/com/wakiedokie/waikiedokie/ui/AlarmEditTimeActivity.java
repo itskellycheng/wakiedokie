@@ -75,10 +75,8 @@ public class AlarmEditTimeActivity extends Activity {
 
         }
         else {
-            System.out.println("HEEEEEER????");
             int mHour = cal.get(Calendar.HOUR_OF_DAY);
             int mMin = cal.get(Calendar.MINUTE);
-            System.out.println("Hour: " + mHour + "Minute: " + mMin);
 
             alarmTimePicker.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
             alarmTimePicker.setCurrentMinute(cal.get(Calendar.MINUTE));

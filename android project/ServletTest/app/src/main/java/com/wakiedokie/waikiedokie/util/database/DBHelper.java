@@ -21,7 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "MyDBName.db";
 
-    private static final int DATABASE_VERSION = 77;
+    private static final int DATABASE_VERSION = 78;
 
     // user_info Table
     public static final String USER_INFO_TABLE_NAME = "user_info";
@@ -250,6 +250,17 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+
+    public int getAlarmId(String owner_fb_id, String user2_fb_id) {
+        System.out.println("inside getAlarmId()");
+        int alarmID = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " + ALARM_TABLE_NAME + " WHERE owner_fb_id = " + owner_fb_id + " AND user2_fb_id = " + user2_fb_id, null);
+        res.moveToFirst();
+        alarmID = res.getInt(res.getColumnIndex("id"));
+        return alarmID;
+    }
+
     public void printAllAlarms() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("SELECT * FROM " + ALARM_TABLE_NAME, null);
@@ -292,9 +303,6 @@ public class DBHelper extends SQLiteOpenHelper {
             amPm = "PM";
         String timeStr = hour + ":" + minute + " " + amPm;
 
-//        if (!res.isClosed()) {
-//            res.close();
-//        }
         return timeStr;
     }
 

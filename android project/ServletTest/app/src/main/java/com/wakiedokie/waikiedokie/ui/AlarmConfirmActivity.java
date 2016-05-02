@@ -151,20 +151,5 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
         startActivity(intent);
     }
 
-    /* Helper function to make toast that shows how much time till alarm goes off */
-    private void makeCountdownToast(Calendar cal) {
 
-        // Logging stuff
-        Log.d(TAG, "Alarm is set");
-        Calendar now = Calendar.getInstance();
-        Long hours = TimeUnit.MILLISECONDS.toHours(
-                cal.getTimeInMillis()-now.getTimeInMillis());
-        Long minutes = TimeUnit.MILLISECONDS.toMinutes(
-                cal.getTimeInMillis() - now.getTimeInMillis() - TimeUnit.HOURS.toMillis(hours));
-        String hoursStr = Long.toString(hours);
-        String minutesStr = Long.toString(minutes);
-        String toastStr = "Alarm will go off in " + hoursStr + " hrs " + minutesStr + " mins";
-        Toast.makeText(getApplicationContext(), toastStr, Toast.LENGTH_SHORT).show();
-
-    }
 }

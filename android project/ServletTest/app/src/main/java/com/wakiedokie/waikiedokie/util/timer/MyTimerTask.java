@@ -14,6 +14,7 @@ import com.wakiedokie.waikiedokie.model.User;
 import com.wakiedokie.waikiedokie.util.CustomJSONObjectRequest;
 import com.wakiedokie.waikiedokie.util.CustomVolleyRequestQueue;
 import com.wakiedokie.waikiedokie.util.database.DBHelper;
+import com.wakiedokie.waikiedokie.util.pintent.AlarmPIntentHelper;
 
 
 import org.json.JSONException;
@@ -58,8 +59,7 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
             mJSONObject.put("facebook_id", user.getFacebookId());
             mJSONObject.put("first_name", user.getFirstName());
             mJSONObject.put("last_name", user.getLastName());
-            //System.out.println(user.getFacebookId());
-            //System.out.println("JSON object ready to be sent");
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -99,17 +99,21 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
             // 1. check the status of alarm I set before
             String alarm = ((JSONObject) response).getString("alarm");
             if (alarm.equals("approved")) {
-                alarm_id = ((JSONObject) response).getString("alarm_id");
+                alarm_id = ((JSONObject) response).getString("alarm_id"); // server id!! not client local alarmID
                 user2_name = ((JSONObject) response).getString("user2_name");
                 user2_fb_id = ((JSONObject) response).getString("user2_fb_id");
                 time = ((JSONObject) response).getString("time");
                 title = "Request approved!";
                 message = user2_name + " has become your wakie buddy!!" + "Time:" + time;
                 System.out.println("Before setting server id");
-                dbHelper.printAllAlarms();
+//                dbHelper.printAllAlarms();
                 dbHelper.setAlarmServerId(my_fb_id, user2_fb_id, alarm_id);
                 // 1. update this alarm with 2 fb_ids --> to active.
                 dbHelper.setAlarmStatus(my_fb_id, user2_fb_id, DBHelper.ALARM_TYPE_NOT_SET);
+                // 2. add pending intent
+                System.out.println("User2 approved your alarm invitation. Now adding pending intent");
+                int alarmID = dbHelper.getAlarmId(my_fb_id, user2_fb_id);
+                AlarmPIntentHelper.addPendingIntent(activity, alarmID, Long.parseLong(time));
                 System.out.println("After setting server id");
                 dbHelper.printAllAlarms();
 
@@ -121,7 +125,9 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
                     Message.showAlert(activity, title, message);
                 }
 
-                // 2. add pending intent
+
+
+
 
 
 
@@ -212,10 +218,11 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
         }
 
 
-        // 1. insert new alarm 2 fb_ids, time, active
+        // 1. insert new alarm 2 fb_ids, time, type not set
         dbHelper.addAlarm(time, owner_fb_id, my_fb_id, DBHelper.ALARM_TYPE_NOT_SET);
         dbHelper.setAlarmServerId(owner_fb_id, my_fb_id, alarm_server_id);
-        dbHelper.printAllAlarms();
+//        dbHelper.printAllAlarms();
+        int alarmID = dbHelper.numberOfRowsAlarmTable();
 
         // print alarms debug use
         System.out.println("Accepted an alarm invitation. Should add a new alarm to alarm table");
@@ -223,7 +230,8 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
 
 
         // 2, add pending intent
-
+        System.out.println("Accepted an alarm: Now adding pending intent");
+        AlarmPIntentHelper.addPendingIntent(activity, alarmID, Long.parseLong(time));
 
         final CustomJSONObjectRequest jsonRequest = new CustomJSONObjectRequest(Request.Method.POST, SERVER_URL,
                 mJSONObject, this, this);
