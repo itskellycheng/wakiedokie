@@ -46,7 +46,7 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
     public MyTimerTask(Activity activity) {
         this.activity = activity;
         DBHelper mydb = new DBHelper(activity);
-        my_fb_id = mydb.getMyFbId(1);
+        my_fb_id = mydb.getMyIDFromMeTable();
     }
 
     @Override

@@ -68,11 +68,11 @@ public class AlarmMainActivity extends AppCompatActivity {
         String last_name = result.getString(result.getColumnIndex(DBHelper.USER_INFO_COLUMN_LAST_NAME));
         user = new User(facebook_id, first_name, last_name);
         UserTableHelper utHelper = new UserTableHelper(this);
-        utHelper.sendRequestToServer();
+
 
         // call this only for the first time this activity is opened
         startTimerTask(user, this);
-
+        utHelper.sendRequestToServer();
 
         ImageButton imgBtn = (ImageButton) findViewById(R.id.btn_main_add_alarm);
         imgBtn.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +94,8 @@ public class AlarmMainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Saved fake users", Toast.LENGTH_SHORT).show();
             }
         });
+
+        populateTimeContainer();
 
     }
 

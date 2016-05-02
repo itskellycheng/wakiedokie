@@ -17,6 +17,7 @@ import android.widget.Button;
 
 import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.util.database.DBHelper;
+import com.wakiedokie.waikiedokie.util.userio.WakeUpHelper;
 
 import java.io.IOException;
 
@@ -36,62 +37,61 @@ public class AlarmStatusActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status);
+        mMediaPlayer = new MediaPlayer();
+        playSound(this, getAlarmUri(), mMediaPlayer);
         dbHelper = new DBHelper(this);
-        am = (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
+        am = (AlarmManager) getSystemService(Activity.ALARM_SERVICE);
 
         Intent thisIntent = getIntent();
         alarmID = thisIntent.getIntExtra("alarmID", -1);
-
-        Button btn_turn_off = (Button) findViewById(R.id.btn_turn_off);
+        final WakeUpHelper wuHelper = new WakeUpHelper(this, alarmID, mMediaPlayer);
+        final Button btn_turn_off = (Button) findViewById(R.id.btn_turn_off);
         btn_turn_off.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mMediaPlayer.stop();
+                btn_turn_off.setClickable(false);
+
+                // instead of stopping the alarm, send message to server and check response: 1. one is awake 2. both awake
+                wuHelper.sendWakeUpMessageToServer();
+
+
                 if (mMediaPlayer.isPlaying()) {
                     System.out.println("Playing");
-                }
-                else {
-                    System.out.println("Not Playing");
-                }
-
-                if (alarmID < 0) {
-                    Log.d(TAG, "alarmID incorrect");
-                }
-                else {
-                    dbHelper.setAlarmToInactive(alarmID);
-                    int requestCode = PENDING_CODE_OFFSET + alarmID;
-                    Intent alarmRingIntent = new Intent(AlarmStatusActivity.this, AlarmStatusActivity.class);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(AlarmStatusActivity.this,
-                            requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                    pendingIntent.cancel();
-                    am.cancel(pendingIntent);
+                } else {
+                    if (alarmID < 0) {
+                        Log.d(TAG, "alarmID incorrect");
+                    } else {
+                        dbHelper.setAlarmToInactive(alarmID);
+                        int requestCode = PENDING_CODE_OFFSET + alarmID;
+                        Intent alarmRingIntent = new Intent(AlarmStatusActivity.this, AlarmStatusActivity.class);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(AlarmStatusActivity.this,
+                                requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                        pendingIntent.cancel();
+                        am.cancel(pendingIntent);
+                    }
                 }
 
-                Intent intent = new Intent(AlarmStatusActivity.this, AlarmMainActivity.class);
-                startActivity(intent);
             }
         });
 
-        playSound(this, getAlarmUri());
+
     }
 
-    private void playSound(Context context, Uri alert) {
+    private void playSound(Context context, Uri alert, MediaPlayer mMediaPlayer) {
         System.out.println("In playSound");
-        mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
         mMediaPlayer.setLooping(true);
         AudioManager mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-        mAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume/4, 0);
+        mAudioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume / 4, 0);
         try {
             mMediaPlayer.setDataSource(getApplicationContext(), alert);
             System.out.println(alert);
             mMediaPlayer.prepare();
             mMediaPlayer.start();
             if (mMediaPlayer.isPlaying()) {
-                    System.out.println("Playing");
-            }
-            else {
+                System.out.println("Playing");
+            } else {
                 System.out.println("Not Playing");
             }
         } catch (IOException e) {

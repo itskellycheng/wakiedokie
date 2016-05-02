@@ -42,8 +42,6 @@ public class LoginActivityFragment extends Fragment {
         }
 
 
-
-
         @Override
         public void onCancel() {
 

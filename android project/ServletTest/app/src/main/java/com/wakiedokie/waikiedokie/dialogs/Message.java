@@ -49,9 +49,9 @@ public class Message {
         builder.setCancelable(false);
         builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
                 Intent intent= new Intent(activity, activity.getClass());
                 activity.startActivity(intent);
+                dialog.cancel();
             }
 
         });

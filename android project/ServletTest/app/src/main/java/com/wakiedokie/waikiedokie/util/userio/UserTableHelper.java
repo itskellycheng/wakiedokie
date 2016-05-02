@@ -35,7 +35,7 @@ public class UserTableHelper implements Response.Listener,
     public UserTableHelper(Activity activity) {
         this.activity = activity;
         dbHelper = new DBHelper(activity);
-        my_fb_id = dbHelper.getMyFbId(1);
+        my_fb_id = dbHelper.getMyIDFromMeTable();
     }
 
 

@@ -21,7 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "MyDBName.db";
 
-    private static final int DATABASE_VERSION = 78;
+    private static final int DATABASE_VERSION = 103;
 
     // user_info Table
     public static final String USER_INFO_TABLE_NAME = "user_info";
@@ -324,6 +324,41 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return buddyName;
     }
+
+    public String getOwnerFbId(int alarmID) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id=" + alarmID + "", null);
+        res.moveToFirst();
+        String ownerID = res.getString(res.getColumnIndex(ALARM_COLUMN_OWNER_ID));
+        System.out.println("Inside getOwnerFbId: " + ownerID);
+        return ownerID;
+    }
+
+    public String getUser2FbId(int alarmID) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id=" + alarmID + "", null);
+        res.moveToFirst();
+        String user2ID = res.getString(res.getColumnIndex(ALARM_COLUMN_USER2_ID));
+        System.out.println("Inside getUser2FbId: " + user2ID);
+        return user2ID;
+    }
+
+    public boolean imOwnerOfAlarm(int alarmID, String my_fb_id) {
+        System.out.println("Checking owner ship");
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id=" + alarmID + "", null);
+        res.moveToFirst();
+        String ownerID = res.getString(res.getColumnIndex(ALARM_COLUMN_OWNER_ID));
+        if (ownerID.equals(my_fb_id)) {
+            System.out.println("yes. I own this alarm");
+            return true;
+        } else{
+            System.out.println("I am user2 of this alarm");
+            return false;
+        }
+    }
+
+
 
     /* setAlarmToActive - with alarm id, set alarm active column to active (1) */
     public void setAlarmToActive(int id) {
