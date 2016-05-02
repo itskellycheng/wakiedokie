@@ -37,6 +37,9 @@
     <string name="question_intro">Question intro</string>
     <string name="shake_intro">Shake intro</string>
 
+    <!-- quiz answers -->
+    <string name="none_of_above">None of the above</string>
+
 
 
     <!--- ApprovedAlarmDialog -->
