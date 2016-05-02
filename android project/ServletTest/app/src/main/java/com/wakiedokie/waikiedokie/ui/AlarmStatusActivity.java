@@ -27,7 +27,6 @@ import java.io.IOException;
 public class AlarmStatusActivity extends Activity {
     private static final String TAG = "wakiebooboo";
     private MediaPlayer mMediaPlayer;
-    private Ringtone mRingtone;
     private int alarmID;
     private static final int PENDING_CODE_OFFSET = 990000;
     private AlarmManager am;
@@ -44,8 +43,19 @@ public class AlarmStatusActivity extends Activity {
 
         Intent thisIntent = getIntent();
         alarmID = thisIntent.getIntExtra("alarmID", -1);
+
         final WakeUpHelper wuHelper = new WakeUpHelper(this, alarmID, mMediaPlayer);
-        final Button btn_turn_off = (Button) findViewById(R.id.btn_turn_off);
+
+        Button btn_do_task = (Button)findViewById(R.id.btn_do_task);
+        btn_do_task.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AlarmStatusActivity.this, RingShakeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btn_turn_off = (Button) findViewById(R.id.btn_turn_off);
         btn_turn_off.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

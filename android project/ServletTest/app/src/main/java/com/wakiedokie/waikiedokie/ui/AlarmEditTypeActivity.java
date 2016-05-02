@@ -49,6 +49,7 @@ public class AlarmEditTypeActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(AlarmEditTypeActivity.this, SetQuizActivity.class);
+//                Intent intent = new Intent(AlarmEditTypeActivity.this, RingQuizActivity.class);
                 startActivity(intent);
             }
         });
@@ -66,7 +67,7 @@ public class AlarmEditTypeActivity extends Activity {
         btn_shake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AlarmEditTypeActivity.this, AlarmMainActivity.class);
+                Intent intent = new Intent(AlarmEditTypeActivity.this, RingShakeActivity.class);
                 startActivity(intent);
             }
         });

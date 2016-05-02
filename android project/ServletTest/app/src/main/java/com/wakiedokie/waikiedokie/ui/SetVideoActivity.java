@@ -18,6 +18,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.wakiedokie.waikiedokie.R;
+import com.wakiedokie.waikiedokie.util.UploadVideo;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -36,6 +37,9 @@ public class SetVideoActivity extends Activity {
     private VideoView mVideoView;
     private MediaController mediaControls = null;
     private FrameLayout videoContainer;
+    UploadVideo uploadVideo;
+    private String ownerID;
+    private String user2ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,12 @@ public class SetVideoActivity extends Activity {
             public void onClick(View view) {
                 Toast.makeText(SetVideoActivity.this, "Video will play when your buddy's alarm rings",
                         Toast.LENGTH_LONG).show();
+                uploadVideo = new UploadVideo();
+                try {
+                    uploadVideo.run(fileUri.getEncodedPath(), ownerID, user2ID);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 Intent intent = new Intent(SetVideoActivity.this, AlarmMainActivity.class);
                 startActivity(intent);
             }
