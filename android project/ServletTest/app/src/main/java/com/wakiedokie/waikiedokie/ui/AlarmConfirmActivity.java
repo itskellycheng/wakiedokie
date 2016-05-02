@@ -104,7 +104,11 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
                 mQueue.add(jsonRequest);
 
                 // Database update/insert
-                dbHelper.addOrUpdateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), me.getFacebookId(), user2.getFacebookId(), dbHelper.ALARM_TYPE_NOT_SET);
+//                dbHelper.addOrUpdateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), me.getFacebookId(), user2.getFacebookId(), dbHelper.ALARM_PENDING);
+                dbHelper.addOrUpdateAlarm(alarmID, Long.toString(cal.getTimeInMillis()),
+                        dbHelper.getMyIDFromMeTable(), mBuddyID, dbHelper.ALARM_PENDING);
+                Log.d(TAG, mBuddyID);
+                dbHelper.printAllAlarms();
 
 //                int requestCode = PENDING_CODE_OFFSET + alarmID;
 //                Intent alarmRingIntent = new Intent(AlarmConfirmActivity.this, AlarmStatusActivity.class);
