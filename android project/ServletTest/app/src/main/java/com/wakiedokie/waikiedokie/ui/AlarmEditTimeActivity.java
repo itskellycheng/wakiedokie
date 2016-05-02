@@ -49,6 +49,8 @@ public class AlarmEditTimeActivity extends Activity {
         alarmID = thisIntent.getIntExtra("alarmID", -1);
         mBuddy = thisIntent.getStringExtra("buddy");
         mBuddyID = thisIntent.getStringExtra("buddyID");
+        final String returned_calMillis = thisIntent.getStringExtra("calMillis");
+        System.out.println("returned_calMillis: " + returned_calMillis);
 
         buddyTV = (TextView)findViewById(R.id.textview_buddy);
         if (mBuddyID != null) {
@@ -64,11 +66,20 @@ public class AlarmEditTimeActivity extends Activity {
         }
 
         alarmTimePicker = (TimePicker) findViewById(R.id.alarmTimePicker);
+        if (returned_calMillis != null) {
+            cal.setTimeInMillis(Long.parseLong(returned_calMillis));
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmTimePicker.setHour(cal.get(Calendar.HOUR_OF_DAY));
             alarmTimePicker.setMinute(cal.get(Calendar.MINUTE));
+
         }
         else {
+            System.out.println("HEEEEEER????");
+            int mHour = cal.get(Calendar.HOUR_OF_DAY);
+            int mMin = cal.get(Calendar.MINUTE);
+            System.out.println("Hour: " + mHour + "Minute: " + mMin);
+
             alarmTimePicker.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
             alarmTimePicker.setCurrentMinute(cal.get(Calendar.MINUTE));
         }
@@ -77,8 +88,12 @@ public class AlarmEditTimeActivity extends Activity {
         btn_select_buddy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Calendar cal = getCorrectTime();
+
                 Intent intent = new Intent(AlarmEditTimeActivity.this, AlarmSelectBuddyActivity.class);
                 intent.putExtra("alarmID", alarmID); // pass alarmID to pass back
+
+                intent.putExtra("calMillis", Long.toString(cal.getTimeInMillis()));
                 startActivity(intent);
             }
         });

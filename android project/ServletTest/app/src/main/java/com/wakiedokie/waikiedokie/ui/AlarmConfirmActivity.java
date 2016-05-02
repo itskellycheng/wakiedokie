@@ -45,6 +45,7 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
     private String mBuddy;
     private String mBuddyID;
     private String timeStr;
+    private String timeMillis;
     private Calendar cal = Calendar.getInstance();
     private DBHelper dbHelper;
     private AlarmManager am;
@@ -55,25 +56,25 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_alarm);
         dbHelper = new DBHelper(this);
+        final String my_fb_id = dbHelper.getMyFbId(1);
+
         am = (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
+
 
         Intent thisIntent = getIntent();
         alarmID = thisIntent.getIntExtra("alarmID", -1);
         mBuddy = thisIntent.getStringExtra("buddy");
         mBuddyID = thisIntent.getStringExtra("buddyID");
         timeStr = thisIntent.getStringExtra("timeStr");
-        String calStr = thisIntent.getStringExtra("calMillis");
-        cal.setTimeInMillis(Long.parseLong(calStr));
+        timeMillis = thisIntent.getStringExtra("calMillis");
+        cal.setTimeInMillis(Long.parseLong(timeMillis));
 
 
         /* Replace this by getting alarm info from other activities later*/
-        final User me= new User("1151451178206737", "Victor", "Chao");
-        final User user2 = new User("10209500772462847", "Kelly", "Cheng");
-        final String time = "1462126443161";
+//        final User me= new User("1151451178206737", "Victor", "Chao");
+//        final User user2 = new User("10209500772462847", "Kelly", "Cheng");
+//        final String time = "1462126443161";
         final String type = "quiz";
-        dbHelper = new DBHelper(this);
-        final Alarm alarm = new Alarm(me, user2, time, type);
-
         mQueue = CustomVolleyRequestQueue.getInstance(this.getApplicationContext())
                 .getRequestQueue();
 
@@ -88,9 +89,9 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
                 JSONObject mJSONObject = new JSONObject();
 
                 try {
-                    mJSONObject.put("user1_facebook_id", me.getFacebookId());
-                    mJSONObject.put("user2_facebook_id", user2.getFacebookId());
-                    mJSONObject.put("time", time);
+                    mJSONObject.put("user1_facebook_id", my_fb_id);
+                    mJSONObject.put("user2_facebook_id", mBuddyID);
+                    mJSONObject.put("time", timeMillis);
                     mJSONObject.put("type", type);
                     System.out.println("JSON object ready to be sent to SetAlarmRequestServlet");
 
@@ -105,7 +106,7 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
 
                 // Database update/insert
 //                dbHelper.addOrUpdateAlarm(alarmID, Long.toString(cal.getTimeInMillis()), me.getFacebookId(), user2.getFacebookId(), dbHelper.ALARM_PENDING);
-                dbHelper.addOrUpdateAlarm(alarmID, Long.toString(cal.getTimeInMillis()),
+                dbHelper.addOrUpdateAlarm(alarmID, timeMillis,
                         dbHelper.getMyIDFromMeTable(), mBuddyID, dbHelper.ALARM_PENDING);
                 Log.d(TAG, mBuddyID);
                 dbHelper.printAllAlarms();

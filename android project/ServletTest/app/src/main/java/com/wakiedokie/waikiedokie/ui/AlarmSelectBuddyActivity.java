@@ -47,6 +47,9 @@ public class AlarmSelectBuddyActivity extends Activity {
         // alarmID is -1 if not passed in from intent (New alarm)
         Intent thisIntent = getIntent();
         alarmID = thisIntent.getIntExtra("alarmID", -1);
+        final String calMillis = thisIntent.getStringExtra("calMillis");
+        System.out.println("calMillis: " + calMillis);
+
 
         buddyContainer = (LinearLayout) findViewById(R.id.buddy_container);
 
@@ -109,6 +112,9 @@ public class AlarmSelectBuddyActivity extends Activity {
                 intent.putExtra("alarmID", alarmID);
                 intent.putExtra("buddy", mBuddy);
                 intent.putExtra("buddyID", mBuddyID);
+                if (calMillis != null) {
+                    intent.putExtra("calMillis", calMillis);
+                }
                 startActivity(intent);
             }
         });

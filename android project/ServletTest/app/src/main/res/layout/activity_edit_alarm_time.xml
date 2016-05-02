@@ -21,11 +21,11 @@
         <LinearLayout
             android:id="@+id/top_container"
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TimePicker
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/alarmTimePicker" />
 
