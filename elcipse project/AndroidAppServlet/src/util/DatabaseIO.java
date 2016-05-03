@@ -11,9 +11,13 @@ import model.Alarm;
 import model.User;
 
 public class DatabaseIO {
-    private static final String URL = "jdbc:mysql://localhost:3306";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "Asiagodtonegg3be0*";
+//    private static final String URL = "jdbc:mysql://localhost:3306";
+//    private static final String USERNAME = "root";
+//    private static final String PASSWORD = "Asiagodtonegg3be0*";
+	private static final String URL = "jdbc:mysql://127.0.0.1:3306";
+    private static final String USERNAME = "kelly";
+    private static final String PASSWORD = "kelly";
+
 
     /* isConnected */
     public boolean isConnected() {

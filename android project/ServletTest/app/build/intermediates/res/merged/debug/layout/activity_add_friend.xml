@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:id="@+id/list_item_thumbnail"
+                android:src="@drawable/boy"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="35dp"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="43dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/friend_name_1"
+                android:id="@+id/buddy1"
+                android:layout_alignBottom="@+id/list_item_thumbnail"
+                android:layout_centerHorizontal="true" />
+
+            <ImageView
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:id="@+id/imageView2"
+                android:src="@drawable/boy"
+                android:layout_marginTop="35dp"
+                android:layout_below="@+id/list_item_thumbnail"
+                android:layout_alignLeft="@+id/list_item_thumbnail"
+                android:layout_alignStart="@+id/list_item_thumbnail" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/friend_name_2"
+                android:id="@+id/buddy2"
+                android:layout_alignBottom="@+id/imageView2"
+                android:layout_alignLeft="@+id/buddy1"
+                android:layout_alignStart="@+id/buddy1" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkBox"
+                android:layout_above="@+id/imageView2"
+                android:layout_toRightOf="@+id/buddy2"
+                android:layout_toEndOf="@+id/buddy2"
+                android:layout_marginLeft="35dp"
+                android:layout_marginStart="35dp"
+                android:allowUndo="false" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkBox2"
+                android:layout_alignBottom="@+id/buddy2"
+                android:layout_alignLeft="@+id/checkBox"
+                android:layout_alignStart="@+id/checkBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/title_choose_buddy"
+                android:id="@+id/textView7"
+                android:layout_gravity="center_horizontal"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp"
+            android:paddingLeft="30dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/text_chosen_buddy_name"
+                android:id="@+id/textView3"
+                android:background="#d2c5c5" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/text_note"
+                android:id="@+id/textView6"
+                android:layout_marginLeft="35dp"
+                android:layout_marginStart="35dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="38dp" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="bottom">
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_send_request"
+                android:id="@+id/btn_choose_buddy_send_request"
+                android:layout_gravity="bottom" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

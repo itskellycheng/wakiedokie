@@ -18,7 +18,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.wakiedokie.waikiedokie.R;
-import com.wakiedokie.waikiedokie.util.UploadVideo;
+import com.wakiedokie.waikiedokie.integration.remote.UploadVideo;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -33,6 +33,7 @@ public class SetVideoActivity extends Activity {
     public static final int MEDIA_TYPE_VIDEO = 2;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
+    private static final String TAG = "SetVideoActivity";
     private Uri fileUri = null;
     private VideoView mVideoView;
     private MediaController mediaControls = null;
@@ -72,6 +73,7 @@ public class SetVideoActivity extends Activity {
                 uploadVideo = new UploadVideo();
                 try {
                     uploadVideo.run(fileUri.getEncodedPath(), ownerID, user2ID);
+                    Log.d(TAG, "video sent");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
