@@ -1,20 +1,33 @@
 package model;
 
+/**
+ * Alarm model.
+ * 
+ * @author chaovictorshin-deh
+ *
+ */
 public class Alarm {
     private String owner;
     private String user2;
     private String time;
     private String type;
     private String status;
+    private int id;
 
     private String ownerName = "Nope";
     private String user2Name;
 
-    public Alarm(String owner, String user2, String time, String status) {
+    public Alarm(int id, String owner, String user2, String time,
+            String status) {
+        this.id = id;
         this.owner = owner;
         this.user2 = user2;
         this.time = time;
         this.status = status;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getOwner() {

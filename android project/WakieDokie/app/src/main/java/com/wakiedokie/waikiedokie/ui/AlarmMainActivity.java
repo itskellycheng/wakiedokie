@@ -95,7 +95,7 @@ public class AlarmMainActivity extends AppCompatActivity {
             }
         });
 
-        populateTimeContainer();
+//        populateTimeContainer();
 
     }
 

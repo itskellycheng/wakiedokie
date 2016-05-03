@@ -17,7 +17,10 @@ import model.User;
 import util.DatabaseIO;
 
 /**
- * Servlet implementation class UserServlet
+ * This servlet serves response to requests from "AlarmMainActivity".
+ * 
+ * @author chaovictorshin-deh
+ *
  */
 @WebServlet("/UserServlet")
 public class UserServlet extends HttpServlet {
@@ -28,7 +31,6 @@ public class UserServlet extends HttpServlet {
      */
     public UserServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -56,6 +58,11 @@ public class UserServlet extends HttpServlet {
         Alarm alarm_I_received = null;
         JSONParser parser = new JSONParser();
 
+        // for deletion
+        boolean deleted = false;
+        String deleter_name = "";
+        String owner_fb_id = "";
+        String user2_fb_id = "";
         StringBuffer jb = new StringBuffer();
         String line = null;
         try {
@@ -84,7 +91,7 @@ public class UserServlet extends HttpServlet {
              * if user is null : currUser is sending request other than the
              * periodic request
              */
-            if (user != null) {
+            if (user != null && !deleted) {
                 // insert user if not existing
                 dbio.insertUserDb(user);
 
@@ -99,7 +106,19 @@ public class UserServlet extends HttpServlet {
             /* if currUser is responding to a request from an alarm request */
             // check current user's response
             if (obj2.get("I_accepted_new_alarm") != null) {
-                boolean sanityCheck = alarmAcceptOrNotUpdateDB(obj2);
+                alarmAcceptOrNotUpdateDB(obj2);
+            }
+
+            /* check if an user has deleted an set alarm */
+            if (obj2.get("deleted_alarm") != null) {
+                // delete the existing alarm.
+                System.out.println("got request deleted alarm");
+                owner_fb_id = obj2.get("owner_fb_id").toString();
+                user2_fb_id = obj2.get("user2_fb_id").toString();
+                String deleter_fb_id = obj2.get("my_fb_id").toString();
+                deleter_name = dbio.getName(deleter_fb_id);
+                deleted = dbio.deleteAlarm(owner_fb_id, user2_fb_id);
+
             }
 
             // show all users in current database
@@ -116,9 +135,16 @@ public class UserServlet extends HttpServlet {
             response.setContentType("application/json");
             PrintWriter out = response.getWriter();
             JSONObject responseObj = new JSONObject();
+            if (deleted) {
+                notifyAlarmDeleted(responseObj, deleter_name, owner_fb_id,
+                        user2_fb_id);
+                deleted = false;
+            } else {
+                responseObj.put("alarm_deleted_deleter_name", "null");
+                sendAlarmStatusCheck(responseObj, alarm_I_set);
+                sendNewRequestCheck(responseObj, alarm_I_received);
+            }
 
-            sendAlarmStatusCheck(responseObj, alarm_I_set);
-            sendNewRequestCheck(responseObj, alarm_I_received);
             out.print(responseObj);
 
         } catch (IOException e) {
@@ -149,9 +175,10 @@ public class UserServlet extends HttpServlet {
         } else if (alarm.getStatus().equals("false")) {
             responseObj.put("alarm", "false");
         }
-
+        responseObj.put("alarm_id", alarm.getId());
         responseObj.put("time", alarm.getTime());
         responseObj.put("user2_name", alarm.getUser2Name());
+        responseObj.put("user2_fb_id", alarm.getUser2());
 
     }
 
@@ -173,6 +200,7 @@ public class UserServlet extends HttpServlet {
                     alarm.getOwner());
             responseObj.put("new_request_from_others_owner_name",
                     alarm.getOwnerName());
+            responseObj.put("alarm_id", alarm.getId());
             // System.out.println(alarm.getOwner());
         }
 
@@ -194,6 +222,17 @@ public class UserServlet extends HttpServlet {
         // should not reach this line.
         return false;
 
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean notifyAlarmDeleted(JSONObject responseObj,
+            String deleter_name, String owner_fb_id, String user2_fb_id) {
+        responseObj.put("alarm_deleted_deleter_name", deleter_name);
+        responseObj.put("alarm_deleted_owner_fb_id", owner_fb_id);
+        responseObj.put("alarm_deleted_user2_fb_id", user2_fb_id);
+        System.out.println("deleter:" + deleter_name + "owner_fb_id"
+                + owner_fb_id + "user2_fb_id" + user2_fb_id);
+        return true;
     }
 
 }

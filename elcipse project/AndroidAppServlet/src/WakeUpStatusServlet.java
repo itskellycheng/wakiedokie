@@ -15,16 +15,19 @@ import org.json.simple.parser.ParseException;
 import util.DatabaseIO;
 
 /**
- * Servlet that is in response to setting an alarm from "AlarmConfirmActivity".
+ * Servlet to serve response to users who turned off the alarm.
+ * 
+ * @author chaovictorshin-deh
+ *
  */
-@WebServlet("/SetAlarmRequestServlet")
-public class SetAlarmRequestServlet extends HttpServlet {
+@WebServlet("/WakeUpStatusServlet")
+public class WakeUpStatusServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SetAlarmRequestServlet() {
+    public WakeUpStatusServlet() {
         super();
     }
 
@@ -37,7 +40,7 @@ public class SetAlarmRequestServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
         response.getOutputStream()
-                .println("Hurray !! SetAlarmRequestServlet Works");
+                .println("Hurray !! WakeUpStatusServlet Works");
     }
 
     /**
@@ -48,12 +51,21 @@ public class SetAlarmRequestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("SetAlarmRequestServlet: Received POST request");
-
+        System.out.println("WakeUpStatusServlet: Received POST request");
+        String owner_fb_id = "";
+        String user2_fb_id = "";
+        boolean imOwner = false;
         JSONParser parser = new JSONParser();
-
         StringBuffer jb = new StringBuffer();
         String line = null;
+
+        boolean bothAwake = false;
+
+        DatabaseIO dbio = new DatabaseIO();
+        if (!dbio.isConnected()) {
+            System.out.println("Cannot Connect to Server");
+        }
+
         try {
             BufferedReader reader = request.getReader();
             while ((line = reader.readLine()) != null)
@@ -65,18 +77,18 @@ public class SetAlarmRequestServlet extends HttpServlet {
         try {
             Object obj = parser.parse(jb.toString());
             JSONObject obj2 = (JSONObject) obj;
-            String user1_facebook_id = obj2.get("user1_facebook_id").toString();
-            String user2_facebook_id = obj2.get("user2_facebook_id").toString();
-            String time = obj2.get("time").toString();
+            owner_fb_id = obj2.get("waking_up_owner_fb_id").toString();
+            user2_fb_id = obj2.get("waking_up_user2_fb_id").toString();
+            String myRole = obj2.get("waking_up_my_role").toString();
 
-            DatabaseIO dbio = new DatabaseIO();
-            if (!dbio.isConnected()) {
-                System.out.println("Cannot Connect to Server");
+            if (myRole.equals("owner")) {
+                imOwner = true;
+            } else {
+                imOwner = false;
             }
-            dbio.insertAlarmDb(user1_facebook_id, user2_facebook_id, time);
-            // show all users in current database
-            dbio.displayAllAlarms();
-
+            // update wake up status of alarm in db
+            dbio.updateWakeUpStatus(owner_fb_id, user2_fb_id, imOwner);
+            bothAwake = dbio.bothAreAwake(owner_fb_id, user2_fb_id);
         } catch (ParseException pe) {
             System.out.println("position: " + pe.getPosition());
             System.out.println(pe);
@@ -88,7 +100,12 @@ public class SetAlarmRequestServlet extends HttpServlet {
             response.setContentType("application/json");
             PrintWriter out = response.getWriter();
             JSONObject responseObj = new JSONObject();
-            responseObj.put("status", "hello from server");
+
+            if (bothAwake) {
+                responseObj.put("bothAwake", "true");
+            } else {
+                responseObj.put("bothAwake", "false");
+            }
             out.print(responseObj);
 
         } catch (IOException e) {
