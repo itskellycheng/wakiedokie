@@ -123,14 +123,14 @@ public class AlarmMainActivity extends AppCompatActivity {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(Long.parseLong(alarmTime));
             final Calendar finalCal = cal;
-            String hour = Integer.toString(cal.get(Calendar.HOUR));
-            String minute = Integer.toString(cal.get(Calendar.MINUTE));
+            int hour = cal.get(Calendar.HOUR);
+            int minute = cal.get(Calendar.MINUTE);
             String amPm;
             if (cal.get(Calendar.AM_PM) == 0)
                 amPm = "AM";
             else
                 amPm = "PM";
-            String timeStr = hour + ":" + minute + " " + amPm;
+            String timeStr = String.format("%02d:%02d %s", hour, minute, amPm );
 
             TextView timeTV = new TextView(this);
             timeTV.setText(timeStr);

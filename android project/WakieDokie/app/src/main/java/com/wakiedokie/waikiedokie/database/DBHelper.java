@@ -20,7 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "MyDBName.db";
 
-    private static final int DATABASE_VERSION = 117;
+    private static final int DATABASE_VERSION = 123;
 
     // user_info Table
     public static final String USER_INFO_TABLE_NAME = "user_info";
@@ -302,21 +302,29 @@ public class DBHelper extends SQLiteOpenHelper {
         String alarmTime = res.getString(res.getColumnIndex("alarm_time"));
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(Long.parseLong(alarmTime));
-        final Calendar finalCal = cal;
-        String hour = Integer.toString(cal.get(Calendar.HOUR));
-        String minute = Integer.toString(cal.get(Calendar.MINUTE));
-        if (minute.length()==1){
-            minute = "0" + minute;
-        }
+        return getTimeString(alarmTime);
+    }
+
+
+    /* getTimeString - get formatted string of time eg. 10:31 AM */
+    public String getTimeString(String timeMillis) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(Long.parseLong(timeMillis));
+        int mHour = calendar.get(Calendar.HOUR);
+        int mMinute = calendar.get(Calendar.MINUTE);
         String amPm;
-        if (cal.get(Calendar.AM_PM) == 0)
+
+        if (calendar.get(Calendar.AM_PM) == 0)
             amPm = "AM";
         else
             amPm = "PM";
-        String timeStr = hour + ":" + minute + " " + amPm;
 
-        return timeStr;
+        return String.format("%02d:%02d %s", mHour, mMinute, amPm);
     }
+
+
+
+
 
     /* Returns name of buddy */
     public String getBuddyName(int alarmID) {

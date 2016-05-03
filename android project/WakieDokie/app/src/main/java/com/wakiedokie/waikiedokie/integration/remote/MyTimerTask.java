@@ -102,8 +102,9 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
                 user2_name = ((JSONObject) response).getString("user2_name");
                 user2_fb_id = ((JSONObject) response).getString("user2_fb_id");
                 time = ((JSONObject) response).getString("time");
+                String time_format = dbHelper.getTimeString(time);
                 title = "Request approved!";
-                message = user2_name + " has become your wakie buddy!!" + "Time:" + time;
+                message = user2_name + " has become your wakie buddy!!" + "Alarm Time: " + time_format;
                 System.out.println("Before setting server id");
 //                dbHelper.printAllAlarms();
                 dbHelper.setAlarmServerId(my_fb_id, user2_fb_id, alarm_id);
@@ -135,8 +136,9 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
                 user2_name = ((JSONObject) response).getString("user2_name");
                 user2_fb_id = ((JSONObject) response).getString("user2_fb_id");
                 time = ((JSONObject) response).getString("time");
+                String time_format = dbHelper.getTimeString(time);
                 title = "Request denied";
-                message = user2_name + " has declined your request.." + "Time:" + time;
+                message = user2_name + " has DECLINED your request. Alarm at: " + time_format + " is canceled";
                 // 1. delete this alarm from table
                 dbHelper.deleteAlarm(my_fb_id, user2_fb_id);
                 System.out.println("Deleted alarm from local alarm table");
@@ -159,8 +161,9 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
                 owner_fb_id = ((JSONObject) response).getString("new_request_from_others_owner_fb_id");
                 owner_name = ((JSONObject) response).getString("new_request_from_others_owner_name");
                 time =  ((JSONObject) response).getString("new_request_from_others_time");
+                String time_format = dbHelper.getTimeString(time);
                 title = "You Received a New Request!";
-                message = "New Request from: " + owner_name + "Time:"+ time;
+                message = "New Request from: " + owner_name + ". Alarm Time: "+ time_format;
 
                 if(!activity.isFinishing())
                 {
