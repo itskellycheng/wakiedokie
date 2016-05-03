@@ -27,6 +27,7 @@ public class UploadVideo {
 
     private static final String SERVER_URL = Connection.VIDEO_UPLOAD_SERVLET;
 
+
     private final OkHttpClient client = new OkHttpClient();
 
     public void run(String videoPath, String ownerID, String user2ID) throws Exception {
