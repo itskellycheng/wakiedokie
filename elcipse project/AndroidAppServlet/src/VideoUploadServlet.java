@@ -23,8 +23,20 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  */
 @WebServlet("/VideoUploadServlet")
 public class VideoUploadServlet extends HttpServlet{
+	
+	@Override
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        response.getOutputStream()
+                .println("Hurray !! VideoUploadServlet Works");
+    }
+	
+	@Override
 	protected void doPost(HttpServletRequest res, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		System.out.println("VideoUploadServlet: Received POST request");
 	 
 		// Commons file upload classes are specifically instantiated
 		FileItemFactory factory = new DiskFileItemFactory();
@@ -85,12 +97,6 @@ public class VideoUploadServlet extends HttpServlet{
 	 
 	}
 	
-	@Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        response.getOutputStream()
-                .println("Hurray !! VideoUploadServlet Works");
-    }
+	
 
 }

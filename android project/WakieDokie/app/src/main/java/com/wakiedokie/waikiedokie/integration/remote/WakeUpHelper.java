@@ -26,6 +26,7 @@ public class WakeUpHelper implements Response.Listener,
 
     public static final String REQUEST_TAG = "MainVolleyActivity";
     private static final String SERVER_URL = Connection.WAKE_UP_STATUS_SERVLET;
+
     private RequestQueue mQueue;
     private Activity activity;
     private DBHelper dbHelper;

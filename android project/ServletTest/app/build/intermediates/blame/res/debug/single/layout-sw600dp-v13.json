@@ -1,0 +1,98 @@
+[
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/backup_set_quiz.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/backup_set_quiz.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_alarm_shake.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_alarm_shake.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_notification.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_notification.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/content_main.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/content_main.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_set_video.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_set_video.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_add_friend.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_add_friend.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/content_confirm_video.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/content_confirm_video.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_confirm_video.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_confirm_video.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_edit_alarm_time.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_edit_alarm_time.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_select_buddy.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_select_buddy.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_login.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_login.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_edit_alarm_type.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_edit_alarm_type.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_alarm_main.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_alarm_main.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_status.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_status.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_ring_shake.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_ring_shake.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/double_me.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/double_me.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_ring_quiz.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_ring_quiz.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/fragment_login.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/fragment_login.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/design_layout_snackbar.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/exploded-aar/com.android.support/design/23.2.1/res/layout-sw600dp-v13/design_layout_snackbar.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_ring_default.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_ring_default.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/content_alarm_shake.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/content_alarm_shake.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_set_quiz.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_set_quiz.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_ring_video.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_ring_video.xml"
+    },
+    {
+        "merged": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/activity_confirm_alarm.xml",
+        "source": "/Users/kellycheng/Git/wakiedokie/android project/ServletTest/app/src/main/res/layout-sw600dp/activity_confirm_alarm.xml"
+    }
+]
