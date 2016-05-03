@@ -28,7 +28,7 @@ public class MyTimerTask extends TimerTask implements Response.Listener,
         Response.ErrorListener{
 
     public static final String REQUEST_TAG = "MainVolleyActivity";
-    private static final String SERVER_URL = "http://10.0.0.25:8080/AndroidAppServlet/UserServlet";
+    private static final String SERVER_URL = Connection.USER_SERVLET;
     private RequestQueue mQueue;
     private User user;
     private Activity activity;

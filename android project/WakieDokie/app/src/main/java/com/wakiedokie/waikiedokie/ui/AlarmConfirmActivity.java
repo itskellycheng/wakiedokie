@@ -15,6 +15,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.wakiedokie.waikiedokie.R;
+import com.wakiedokie.waikiedokie.integration.remote.Connection;
 import com.wakiedokie.waikiedokie.util.CustomJSONObjectRequest;
 import com.wakiedokie.waikiedokie.util.CustomVolleyRequestQueue;
 import com.wakiedokie.waikiedokie.database.DBHelper;
@@ -32,7 +33,7 @@ public class AlarmConfirmActivity extends Activity implements Response.Listener,
         Response.ErrorListener {
 
     public static final String REQUEST_TAG = "MainVolleyActivity";
-    private static final String SERVER_URL = "http://10.0.0.25:8080/AndroidAppServlet/SetAlarmRequestServlet";
+    private static final String SERVER_URL = Connection.SET_ALARM_SERVLET;
     private RequestQueue mQueue;
 
     private static final int PENDING_CODE_OFFSET = 990000;

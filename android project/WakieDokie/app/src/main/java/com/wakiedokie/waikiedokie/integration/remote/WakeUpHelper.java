@@ -25,7 +25,7 @@ public class WakeUpHelper implements Response.Listener,
         Response.ErrorListener {
 
     public static final String REQUEST_TAG = "MainVolleyActivity";
-    private static final String SERVER_URL = "http://10.0.0.25:8080/AndroidAppServlet/WakeUpStatusServlet";
+    private static final String SERVER_URL = Connection.WAKE_UP_STATUS_SERVLET;
     private RequestQueue mQueue;
     private Activity activity;
     private DBHelper dbHelper;

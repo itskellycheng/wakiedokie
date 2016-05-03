@@ -26,7 +26,7 @@ public class TrackWakeUpHelper extends TimerTask implements Response.Listener,
         Response.ErrorListener {
 
     public static final String REQUEST_TAG = "MainVolleyActivity";
-    private static final String SERVER_URL = "http://10.0.0.25:8080/AndroidAppServlet/TrackWakeUpStatusServlet";
+    private static final String SERVER_URL = Connection.TRACK_WAKE_UP_SERVLET;
 
     private RequestQueue mQueue;
     private Activity activity;
