@@ -62,6 +62,8 @@ public class TrackWakeUpHelper extends TimerTask implements Response.Listener,
                 mMediaPlayer.stop();
                 timer.cancel();
                 dbHelper.deleteAlarm(alarmID);
+
+                sendDeleteAlarmRequest();
                 Intent intent = new Intent(activity, AlarmMainActivity.class);
                 activity.startActivity(intent);
             }
@@ -82,6 +84,26 @@ public class TrackWakeUpHelper extends TimerTask implements Response.Listener,
         try {
             mJSONObject.put("track_wakeup_status_owner_fb_id", owner_fb_id);
             mJSONObject.put("track_wakeup_status_user2_fb_id", user2_fb_id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final CustomJSONObjectRequest jsonRequest = new CustomJSONObjectRequest(Request.Method.POST, SERVER_URL,
+                mJSONObject, this, this);
+        jsonRequest.setTag(REQUEST_TAG);
+        mQueue.add(jsonRequest);
+
+    }
+
+    private void sendDeleteAlarmRequest() {
+        System.out.println("sending request to server to delete alarm ");
+        mQueue = CustomVolleyRequestQueue.getInstance(activity.getApplicationContext())
+                .getRequestQueue();
+        JSONObject mJSONObject = new JSONObject();
+        try {
+            mJSONObject.put("track_wakeup_status_owner_fb_id", owner_fb_id);
+            mJSONObject.put("track_wakeup_status_user2_fb_id", user2_fb_id);
+            mJSONObject.put("delete", "true");
         } catch (JSONException e) {
             e.printStackTrace();
         }

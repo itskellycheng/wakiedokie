@@ -18,6 +18,8 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.wakiedokie.waikiedokie.R;
+import com.wakiedokie.waikiedokie.database.DBHelper;
+import com.wakiedokie.waikiedokie.integration.remote.EditAlarmTypeHelper;
 import com.wakiedokie.waikiedokie.util.UploadVideo;
 
 import java.io.File;
@@ -40,11 +42,22 @@ public class SetVideoActivity extends Activity {
     UploadVideo uploadVideo;
     private String ownerID;
     private String user2ID;
+    private int alarmID;
+    private String my_fb_id;
+    private Activity activity;
+    private DBHelper dbHelper;
+    private EditAlarmTypeHelper eatHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_video);
+        Intent thisIntent = getIntent();
+        alarmID = thisIntent.getIntExtra("alarmID", -1);
+        activity = this;
+        dbHelper = new DBHelper(this);
+        my_fb_id = dbHelper.getMyIDFromMeTable();
+
 
         videoContainer = (FrameLayout)findViewById(R.id.video_container);
 
@@ -75,6 +88,10 @@ public class SetVideoActivity extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                eatHelper = new EditAlarmTypeHelper(activity, alarmID, DBHelper.ALARM_TYPE_VIDEO);
+                eatHelper.sendEditAlarmTypeToServer();
+                dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_VIDEO);
+                dbHelper.printAllAlarms();
                 Intent intent = new Intent(SetVideoActivity.this, AlarmMainActivity.class);
                 startActivity(intent);
             }

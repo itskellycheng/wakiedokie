@@ -20,7 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "MyDBName.db";
 
-    private static final int DATABASE_VERSION = 123;
+    private static final int DATABASE_VERSION = 132;
 
     // user_info Table
     public static final String USER_INFO_TABLE_NAME = "user_info";
@@ -40,6 +40,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final int ALARM_LOCAL_ACTIVE = 1;
     public static final int ALARM_PENDING = 2;
     public static final int ALARM_TYPE_NOT_SET = 3;
+
+    public static final int ALARM_TYPE_DEFAULT = 0;
+    public static final int ALARM_TYPE_QUIZ = 1;
+    public static final int ALARM_TYPE_VIDEO = 2;
+    public static final int ALARM_TYPE_SHAKE = 3;
 
     private static final String TAG = "dbHelperBooboo";
 
@@ -64,7 +69,7 @@ public class DBHelper extends SQLiteOpenHelper {
         );
         // Create alarm table
         db.execSQL("CREATE TABLE IF NOT EXISTS " + ALARM_TABLE_NAME +
-                        "(id INTEGER primary key, owner_fb_id TEXT, user2_fb_id TEXT, alarm_time TEXT, is_active INTEGER, alarm_server_id TEXT NOT NULL DEFAULT '-1')"
+                        "(id INTEGER primary key, owner_fb_id TEXT, user2_fb_id TEXT, alarm_time TEXT, is_active INTEGER, owner_type INTEGER DEFAULT 0, user2_type INTEGER DEFAULT 0, alarm_server_id TEXT NOT NULL DEFAULT '-1')"
         );
 
     }
@@ -228,7 +233,6 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("alarm_time", alarmTime);
         contentValues.put("is_active", isActive);
         long pk = db.insert(ALARM_TABLE_NAME, null, contentValues);
-        db.close();
         return pk;
     }
 
@@ -246,6 +250,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public void editAlarmType(int alarmID, String my_fb_id, int type) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "";
+        if (!imOwnerOfAlarm(alarmID, my_fb_id)) {
+            query = "UPDATE " + ALARM_TABLE_NAME + " SET owner_type = " + type + " WHERE ID = " + alarmID;
+            System.out.println("I'm user2, updating owner's type");
+        } else {
+            query = "UPDATE " + ALARM_TABLE_NAME + " SET user2_type = " + type + " WHERE ID = " + alarmID;
+            System.out.println("I'm owner, updating user2's type");
+        }
+        db.execSQL(query);
+
+    }
+
     /* getAllAlarms - get all data in alarm table */
     public Cursor getAllAlarms() {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -258,6 +276,13 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id=" + id + "", null);
         return res;
+    }
+    public String getServerAlarmId(int alarmID) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id=" + alarmID + "", null);
+        res.moveToFirst();
+        String server_id = res.getString(res.getColumnIndex("alarm_server_id"));
+        return server_id;
     }
 
 
@@ -282,8 +307,11 @@ public class DBHelper extends SQLiteOpenHelper {
             String owner_fb_id = res.getString(res.getColumnIndex("owner_fb_id"));
             String user2_fb_id = res.getString(res.getColumnIndex("user2_fb_id"));
             String alarm_server_id = res.getString(res.getColumnIndex("alarm_server_id"));
+            int owner_type = res.getInt(res.getColumnIndex("owner_type"));
+            int user2_type = res.getInt(res.getColumnIndex("user2_type"));
             int isActive = res.getInt(res.getColumnIndex("is_active"));
             System.out.println("Alarm id: " + alarmId + ", time: " + time + ", alarm_server_id: " + alarm_server_id);
+            System.out.println( "owner type: " + owner_type + "user2 type: " + user2_type);
             System.out.println("Owner_fb_id: " + owner_fb_id + ", user2_fb_id: " + user2_fb_id + ", isActive: " + isActive);
 
         }

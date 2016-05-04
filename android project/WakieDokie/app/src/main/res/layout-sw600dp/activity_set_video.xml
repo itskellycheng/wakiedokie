@@ -15,15 +15,32 @@
         android:id="@+id/video_container"
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/button_capture"
+    <RelativeLayout
+        android:id="@+id/bottom_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-        android:text="Record Again" />
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm Video"
+            android:layout_toRightOf="@+id/button_capture"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/btn_save_video" />
+
+        <Button
+            android:id="@+id/button_capture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="Record Again" />
+
+    </RelativeLayout>
+
 
 
 </RelativeLayout>

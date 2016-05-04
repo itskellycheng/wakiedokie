@@ -9,6 +9,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wakiedokie.waikiedokie.R;
+import com.wakiedokie.waikiedokie.database.DBHelper;
+import com.wakiedokie.waikiedokie.integration.remote.EditAlarmTypeHelper;
 
 import org.w3c.dom.Text;
 
@@ -18,11 +20,20 @@ import org.w3c.dom.Text;
 public class SetQuizActivity extends Activity {
     String preAnswerText = "My answer is: ";
     boolean answerSelected;
-
+    private DBHelper dbHelper;
+    int alarmID;
+    private EditAlarmTypeHelper eatHelper;
+    private Activity activity;
+    private String my_fb_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_quiz);
+        Intent thisIntent = getIntent();
+        alarmID = thisIntent.getIntExtra("alarmID", -1);
+        dbHelper = new DBHelper(this);
+        activity = this;
+        my_fb_id = dbHelper.getMyIDFromMeTable();
 
         answerSelected = false;
 
@@ -60,6 +71,10 @@ public class SetQuizActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if (answerSelected) {
+                    eatHelper = new EditAlarmTypeHelper(activity, alarmID, DBHelper.ALARM_TYPE_QUIZ);
+                    eatHelper.sendEditAlarmTypeToServer();
+                    dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_QUIZ);
+                    dbHelper.printAllAlarms();
                     Intent intent = new Intent(SetQuizActivity.this, AlarmMainActivity.class);
                     startActivity(intent);
                 }

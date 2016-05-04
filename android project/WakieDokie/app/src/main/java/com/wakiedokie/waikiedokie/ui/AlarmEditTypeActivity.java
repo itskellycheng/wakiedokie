@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.database.DBHelper;
+import com.wakiedokie.waikiedokie.integration.remote.EditAlarmTypeHelper;
 
 /**
  * Created by chaovictorshin-deh on 4/14/16.
@@ -19,16 +20,19 @@ public class AlarmEditTypeActivity extends Activity {
     private DBHelper dbHelper;
     int alarmID;
     TextView buddyNameTV;
+    private EditAlarmTypeHelper eatHelper;
+    private Activity activity;
+    private String my_fb_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_alarm_type);
         dbHelper = new DBHelper(this);
-
         Intent thisIntent = getIntent();
         alarmID = thisIntent.getIntExtra("alarmID", -1);
-
+        activity = this;
+        my_fb_id = dbHelper.getMyIDFromMeTable();
         String toastStr = "alarm id is " + alarmID;
         Log.d(TAG,toastStr);
         String buddyName = dbHelper.getBuddyName(alarmID);
@@ -39,6 +43,11 @@ public class AlarmEditTypeActivity extends Activity {
         btn_default.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("btn_default clicked");
+                eatHelper = new EditAlarmTypeHelper(activity, alarmID, DBHelper.ALARM_TYPE_DEFAULT);
+                dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_DEFAULT);
+                eatHelper.sendEditAlarmTypeToServer();
+                dbHelper.printAllAlarms();
                 Intent intent = new Intent(AlarmEditTypeActivity.this, AlarmMainActivity.class);
                 startActivity(intent);
             }
@@ -48,8 +57,9 @@ public class AlarmEditTypeActivity extends Activity {
         btn_quiz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("btn_quiz clicked");
                 Intent intent = new Intent(AlarmEditTypeActivity.this, SetQuizActivity.class);
-//                Intent intent = new Intent(AlarmEditTypeActivity.this, RingQuizActivity.class);
+                intent.putExtra("alarmID", alarmID);
                 startActivity(intent);
             }
         });
@@ -58,7 +68,9 @@ public class AlarmEditTypeActivity extends Activity {
         btn_video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("btn_video clicked");
                 Intent intent = new Intent(AlarmEditTypeActivity.this, SetVideoActivity.class);
+                intent.putExtra("alarmID", alarmID);
                 startActivity(intent);
             }
         });
@@ -67,13 +79,15 @@ public class AlarmEditTypeActivity extends Activity {
         btn_shake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AlarmEditTypeActivity.this, RingShakeActivity.class);
+                System.out.println("btn_shake clicked");
+                eatHelper = new EditAlarmTypeHelper(activity, alarmID, DBHelper.ALARM_TYPE_SHAKE);
+                dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_SHAKE);
+                eatHelper.sendEditAlarmTypeToServer();
+                dbHelper.printAllAlarms();
+                Intent intent = new Intent(AlarmEditTypeActivity.this, AlarmMainActivity.class);
                 startActivity(intent);
             }
         });
-
-
-
 
     }
 }

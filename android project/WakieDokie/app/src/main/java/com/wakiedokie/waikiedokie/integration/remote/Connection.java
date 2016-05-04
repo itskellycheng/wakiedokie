@@ -11,4 +11,5 @@ public class Connection {
     public final static String GET_USER_TABLE_SERVLET = DOMAIN + "/AndroidAppServlet/UserTableIOServlet";
     public final static String TRACK_WAKE_UP_SERVLET =DOMAIN + "/AndroidAppServlet/TrackWakeUpStatusServlet";
     public final static String WAKE_UP_STATUS_SERVLET = DOMAIN + "/AndroidAppServlet/WakeUpStatusServlet";
+    public final static String EDIT_ALARM_TYPE_SERVLET = DOMAIN + "/AndroidAppServlet/EditAlarmTypeServlet";
 }
