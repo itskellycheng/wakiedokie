@@ -23,7 +23,8 @@ import org.json.simple.JSONObject;
  * using multi-part form in POST request
  * 
  * What you need to change for this servlet to work:
- * set filePath to the file path that uploaded video should be served.
+ * Go to Constants class and set VIDEO_FILE_DIRECTORY to file path where you 
+ * want videos to be saved.
  * Max file size that can be uploaded is set to 10MB.
  * 
  */
@@ -46,8 +47,8 @@ public class VideoUploadServlet extends HttpServlet{
 
 	@Override
 	public void init( ){
-		// Get the file location where it would be stored. CHANGE THIS!!!!!
-		filePath = "/Users/kellycheng/Movies/wakieDokie/";
+		// Get the file location where it would be stored.
+		filePath = Constants.VIDEO_FILE_DIRECTORY;
 	}
 	
 	@Override
