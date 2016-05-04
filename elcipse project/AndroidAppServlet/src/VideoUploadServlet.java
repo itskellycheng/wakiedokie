@@ -19,9 +19,13 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.simple.JSONObject;
 
 /***
- * Servlet implementation
+ * VideoUploadServlet - WakieDokie uploads video file to this servlet 
+ * using multi-part form in POST request
  * 
- * class SetAlarmRequestServlet
+ * What you need to change for this servlet to work:
+ * set filePath to the file path that uploaded video should be served.
+ * Max file size that can be uploaded is set to 10MB.
+ * 
  */
 @WebServlet("/VideoUploadServlet")
 public class VideoUploadServlet extends HttpServlet{
@@ -34,107 +38,95 @@ public class VideoUploadServlet extends HttpServlet{
                 .println("Hurray !! VideoUploadServlet Works");
     }
 	
+	private boolean isMultipart;
+	private String filePath;
+	private int maxFileSize = 10 * 1024 * 1024;
+	private int maxMemSize = 4 * 1024;
+	private File file ;
+
 	@Override
-	protected void doPost(HttpServletRequest res, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void init( ){
+		// Get the file location where it would be stored. CHANGE THIS!!!!!
+		filePath = "/Users/kellycheng/Movies/wakieDokie/";
+	}
+	
+	@Override
+	public void doPost(HttpServletRequest request, 
+			HttpServletResponse response)
+					throws ServletException, java.io.IOException {
 		
 		System.out.println("VideoUploadServlet: Received POST request");
 		
-		boolean isMultipart = ServletFileUpload.isMultipartContent(res);
-	    if( isMultipart ){
-	    	System.out.println("hurray! is Multipart");
-	    }
-	    else {
-	    	System.out.println("Booboo, not Multipart");
-	    }
-	 
-		// Commons file upload classes are specifically instantiated
-		FileItemFactory factory = new DiskFileItemFactory();
-	 
+		// Check that we have a file upload request
+		isMultipart = ServletFileUpload.isMultipartContent(request);
+		response.setContentType("text/html");
+		java.io.PrintWriter out = response.getWriter( );
+		if( !isMultipart ){
+			System.out.println("Booboo, not Multipart");
+			out.println("<html>");
+			out.println("<head>");
+			out.println("<title>Servlet upload</title>");  
+			out.println("</head>");
+			out.println("<body>");
+			out.println("<p>No file uploaded</p>"); 
+			out.println("</body>");
+			out.println("</html>");
+			return;
+		}
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+		// maximum size that will be stored in memory
+		factory.setSizeThreshold(maxMemSize);
+		// Location to save data that is larger than maxMemSize.
+		factory.setRepository(new File(filePath));
+
+		// Create a new file upload handler
 		ServletFileUpload upload = new ServletFileUpload(factory);
-		ServletOutputStream out = null;
-	 
-		try {
-			System.out.println("Parsing request...");
-			// Parse the incoming HTTP request
-			// Commons takes over incoming request at this point
-			// Get an iterator for all the data that was sent
-			List items = upload.parseRequest(res);
-			System.out.println("Request parsed");
-			Iterator iter = items.iterator();
-	 
-			System.out.println("list has" + items.size() + items);
-			// Set a response content type
-//			response.setContentType("text/html");
-	 
-			// Setup the output stream for the return XML data
-//			out = response.getOutputStream();
-	 
-			// Iterate through the incoming request data
-			while (iter.hasNext()) {
-				System.out.println("VideoUploadServlet: Iterate through the incoming request data");
-				// Get the current item in the iteration
-				FileItem item = (FileItem) iter.next();
-	 
-				// If the current item is an HTML form field
-				if (item.isFormField()) {
-					// Return an XML node with the field name and value
-					System.out.println("this is a form data " + item.getFieldName());
-	 
-					// If the current item is file data
-				} else {
-					// Specify where on disk to write the file
-					// Using a servlet init param to specify location on disk
-					// Write the file data to disk
-					// TODO: Place restrictions on upload data
-					File disk = new File("/Users/kellycheng/Movies/"+item.getName());
-					item.write(disk);
-	 
-					// Return an XML node with the file name and size (in bytes)
-					//out.println(getServletContext().getRealPath("/WEB_INF"));
-					System.out.println("this is a file with name: " + item.getName());
+		// maximum file size to be uploaded.
+		upload.setSizeMax( maxFileSize );
+
+		try{ 
+			// Parse the request to get file items.
+			List fileItems = upload.parseRequest(request);
+
+			// Process the uploaded file items
+			Iterator i = fileItems.iterator();
+
+			out.println("<html>");
+			out.println("<head>");
+			out.println("<title>Servlet upload</title>");  
+			out.println("</head>");
+			out.println("<body>");
+			while ( i.hasNext () ) 
+			{
+				FileItem fi = (FileItem)i.next();
+				if ( !fi.isFormField () )	
+				{
+					// Get the uploaded file parameters
+					String fieldName = fi.getFieldName();
+					String fileName = fi.getName();
+					String contentType = fi.getContentType();
+					boolean isInMemory = fi.isInMemory();
+					long sizeInBytes = fi.getSize();
+					// Write the file
+					System.out.println("Writing file...");
+//					file = new File("/Users/kellycheng/Movies/"+ fileName);
+					if( fileName.lastIndexOf("/") >= 0 ){
+						file = new File( filePath + 
+								fileName.substring( fileName.lastIndexOf("/"))) ;
+					}else{
+						file = new File( filePath + 
+								fileName.substring(fileName.lastIndexOf("/")+1)) ;
+					}
+					fi.write( file ) ;
+					out.println("Uploaded Filename: " + fileName + "<br>");
 				}
 			}
-	 
-			System.out.println("======End of VideoUploadServlet try block=======");
-			// Close off the response XML data and stream
-	 
-//			out.close();
-			// Rudimentary handling of any exceptions
-			// TODO: Something useful if an error occurs
-		} catch (FileUploadException fue) {
-			System.out.println("======VideoUploadServlet Exception=====");
-			fue.printStackTrace();
-		} catch (IOException ioe) {
-			System.out.println("======VideoUploadServlet Exception=====");
-			ioe.printStackTrace();
-		} catch (Exception e) {
-			System.out.println("======VideoUploadServlet Exception=====");
-			e.printStackTrace();
+			out.println("</body>");
+			out.println("</html>");
+		}catch(Exception ex) {
+			System.out.println(ex);
 		}
-		
-		// Sending Response from server
-        try {
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.setContentType("application/json");
-            PrintWriter responseOut = response.getWriter();
-            JSONObject responseObj = new JSONObject();
-            responseObj.put("status", "hello from server");
-            responseOut.print(responseObj);
-
-        } catch (IOException e) {
-
-            try {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().print(e.getMessage());
-                response.getWriter().close();
-            } catch (IOException ioe) {
-            }
-
-        }
-	 
 	}
-	
 	
 
 }
