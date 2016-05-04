@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <Button
+        android:text="Proceed"
+        android:id="@+id/btn_video_proceed"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom = "true">
+    </Button>
 
     <VideoView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/ring_video_view"
-        android:layout_gravity="center_horizontal" />
+        android:layout_above="@+id/btn_video_proceed"
+        android:layout_centerHorizontal="true" />
 
-</LinearLayout>
+</RelativeLayout>

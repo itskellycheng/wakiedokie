@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.MediaController;
 import android.os.Bundle;
 import android.view.View;
@@ -19,27 +18,52 @@ import android.widget.Button;
 import android.widget.VideoView;
 
 import com.wakiedokie.waikiedokie.R;
+import com.wakiedokie.waikiedokie.database.DBHelper;
 import com.wakiedokie.waikiedokie.integration.remote.Connection;
+import com.wakiedokie.waikiedokie.integration.remote.EditAlarmTypeHelper;
 
 /**
  * Created by chaovictorshin-deh on 4/14/16.
  */
 public class RingVideoActivity extends Activity {
+    private final String TAG = "RingVideoActivity";
     ProgressDialog pDialog;
     VideoView videoView;
+    Button btnProceed;
     String myVideoFileName;
     private long enqueue;
     private DownloadManager dm;
+    private int alarmID;
+    private String serverAlarmID;
+    DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ring_video);
 
-        videoView = (VideoView)findViewById(R.id.ring_video_view);
+        Intent thisIntent = getIntent();
+        alarmID = thisIntent.getIntExtra("alarmID", -1);
+        dbHelper = new DBHelper(this);
+        serverAlarmID = dbHelper.getServerAlarmId(alarmID);
 
-        myVideoFileName = "VID_20160503_214813.mp4";
-        String VideoURL = Connection.DOMAIN + Connection.VIDEO_STREAM_SERVLET + myVideoFileName;
+        videoView = (VideoView)findViewById(R.id.ring_video_view);
+        btnProceed = (Button)findViewById(R.id.btn_video_proceed);
+        btnProceed.setVisibility(View.GONE);
+        btnProceed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RingVideoActivity.this, AlarmStatusActivity.class);
+                intent.putExtra("alarmID", alarmID);
+                startActivity(intent);
+            }
+        });
+
+
+//        myVideoFileName = "VID_20160503_214813.mp4";
+        myVideoFileName = "WAKIE_VID_"+ serverAlarmID + ".mp4";
+        String videoURL = Connection.VIDEO_DOWNLOAD_SERVLET + myVideoFileName;
+        Log.d(TAG,"videoURL is " + videoURL);
 
 //        String vidAddress = "http://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4";
 //        String vidAddress = "http://10.0.0.169:8081/AndroidAppServlet/video/VID_20160503_214813.mp4";
@@ -48,9 +72,13 @@ public class RingVideoActivity extends Activity {
 //        videoView.start();
 
         dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+//        DownloadManager.Request request = new DownloadManager.Request(
+//                Uri.parse("http://128.237.134.42:8081/AndroidAppServlet/video/VID_20160503_214813.mp4"));
         DownloadManager.Request request = new DownloadManager.Request(
-                Uri.parse("http://10.0.0.169:8081/AndroidAppServlet/video/VID_20160503_214813.mp4"));
+                Uri.parse(videoURL));
         enqueue = dm.enqueue(request);
+
+
 
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
@@ -72,6 +100,7 @@ public class RingVideoActivity extends Activity {
                             String uriString = c
                                     .getString(c
                                             .getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                            Log.d(TAG, "video uri is " + uriString);
                             Uri vidUri = Uri.parse(uriString);
                             try {
                                 // Start the MediaController
@@ -85,6 +114,14 @@ public class RingVideoActivity extends Activity {
                                 e.printStackTrace();
                             }
                             videoView.setVideoURI(vidUri);
+                            videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                public void onCompletion(MediaPlayer mp) {
+                                    Log.d(TAG, "video finished playing");
+                                    btnProceed.setVisibility(View.VISIBLE);
+
+
+                                }
+                            });
                             videoView.start();
                         }
                     }

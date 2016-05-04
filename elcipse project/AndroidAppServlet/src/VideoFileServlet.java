@@ -15,7 +15,7 @@ public class VideoFileServlet extends HttpServlet{
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
-		System.out.println("VideoFileServlet: GET request");
+		System.out.println("==========VideoFileServlet: GET request=========");
         String filename = URLDecoder.decode(request.getPathInfo().substring(1), "UTF-8");
         File file = new File(Constants.VIDEO_SAVE_DIRECTORY, filename);
         String fileSize = String.valueOf(file.length());
