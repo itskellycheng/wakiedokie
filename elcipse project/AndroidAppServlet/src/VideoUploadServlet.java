@@ -48,7 +48,7 @@ public class VideoUploadServlet extends HttpServlet{
 	@Override
 	public void init( ){
 		// Get the file location where it would be stored.
-		filePath = Constants.VIDEO_FILE_DIRECTORY;
+		filePath = Constants.VIDEO_SAVE_DIRECTORY;
 	}
 	
 	@Override

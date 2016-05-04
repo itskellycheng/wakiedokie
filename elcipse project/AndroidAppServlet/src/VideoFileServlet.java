@@ -15,11 +15,18 @@ public class VideoFileServlet extends HttpServlet{
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
+		System.out.println("VideoFileServlet: GET request");
         String filename = URLDecoder.decode(request.getPathInfo().substring(1), "UTF-8");
-        File file = new File(Constants.VIDEO_FILE_DIRECTORY, filename);
+        File file = new File(Constants.VIDEO_SAVE_DIRECTORY, filename);
+        String fileSize = String.valueOf(file.length());
         response.setHeader("Content-Type", getServletContext().getMimeType(filename));
+        response.setHeader("Accept-Ranges", "bytes");
         response.setHeader("Content-Length", String.valueOf(file.length()));
-        response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
+        response.setHeader("Cache-Control", "max-age=21600");
+        
+//        response.setHeader("Content-Range", "bytes " + "0-" + fileSize + "/" + fileSize);
+//        response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
+//        response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT );
         Files.copy(file.toPath(), response.getOutputStream());
     }
 }

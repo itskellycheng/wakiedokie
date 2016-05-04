@@ -5,7 +5,7 @@ package com.wakiedokie.waikiedokie.integration.remote;
  * Created by chaovictorshin-deh on 5/2/16.
  */
 public class Connection {
-    public final static String DOMAIN = "http://10.0.0.25:8080";
+    public final static String DOMAIN = "http://10.0.0.169:8081";
     public final static String USER_SERVLET = DOMAIN + "/AndroidAppServlet/UserServlet";
     public final static String SET_ALARM_SERVLET = DOMAIN + "/AndroidAppServlet/SetAlarmRequestServlet";
     public final static String GET_USER_TABLE_SERVLET = DOMAIN + "/AndroidAppServlet/UserTableIOServlet";
@@ -13,4 +13,5 @@ public class Connection {
     public final static String WAKE_UP_STATUS_SERVLET = DOMAIN + "/AndroidAppServlet/WakeUpStatusServlet";
     public final static String EDIT_ALARM_TYPE_SERVLET = DOMAIN + "/AndroidAppServlet/EditAlarmTypeServlet";
     public final static String VIDEO_UPLOAD_SERVLET = DOMAIN + "/AndroidAppServlet/VideoUploadServlet";
+    public final static String VIDEO_STREAM_SERVLET = DOMAIN + "/AndroidAppServlet/video/";
 }
