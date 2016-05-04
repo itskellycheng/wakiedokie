@@ -20,7 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "MyDBName.db";
 
-    private static final int DATABASE_VERSION = 158;
+    private static final int DATABASE_VERSION = 165;
 
     // user_info Table
     public static final String USER_INFO_TABLE_NAME = "user_info";
@@ -120,11 +120,12 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id = " + alarmID, null);
         res.moveToFirst();
         int type;
-        if (ownership) {
+//        if (ownership) {
             type = res.getInt(res.getColumnIndex("owner_type"));
-        } else {
-            type = res.getInt(res.getColumnIndex("user2_type"));
-        }
+            System.out.println("in get my alarm type: type is " + type );
+//        } else {
+//            type = res.getInt(res.getColumnIndex("user2_type"));
+//        }
         System.out.println("My alarm type is: " + type);
         return type;
     }
@@ -269,14 +270,15 @@ public class DBHelper extends SQLiteOpenHelper {
     public void editAlarmType(int alarmID, String my_fb_id, int type) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "";
-        if (!imOwnerOfAlarm(alarmID, my_fb_id)) {
+//        if (imOwnerOfAlarm(alarmID, my_fb_id)) {
             query = "UPDATE " + ALARM_TABLE_NAME + " SET owner_type = " + type + " WHERE ID = " + alarmID;
-            System.out.println("I'm user2, updating owner's type");
-            System.out.println("type: " + type);
-        } else {
-            query = "UPDATE " + ALARM_TABLE_NAME + " SET user2_type = " + type + " WHERE ID = " + alarmID;
-            System.out.println("I'm owner, updating user2's type" + type);
-        }
+        System.out.println("in edit alarm type: type is " + type );
+//            System.out.println("I'm user2, updating owner's type");
+//            System.out.println("type: " + type);
+//        } else {
+//            query = "UPDATE " + ALARM_TABLE_NAME + " SET user2_type = " + type + " WHERE ID = " + alarmID;
+//            System.out.println("I'm owner, updating user2's type" + type);
+//        }
         db.execSQL(query);
 
     }

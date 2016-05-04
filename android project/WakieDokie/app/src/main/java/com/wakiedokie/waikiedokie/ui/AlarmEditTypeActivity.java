@@ -45,7 +45,7 @@ public class AlarmEditTypeActivity extends Activity {
             public void onClick(View view) {
                 System.out.println("btn_default clicked");
                 eatHelper = new EditAlarmTypeHelper(activity, alarmID, DBHelper.ALARM_TYPE_DEFAULT);
-                dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_DEFAULT);
+//                dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_DEFAULT);
                 eatHelper.sendEditAlarmTypeToServer();
                 dbHelper.printAllAlarms();
                 Intent intent = new Intent(AlarmEditTypeActivity.this, AlarmMainActivity.class);
@@ -59,7 +59,7 @@ public class AlarmEditTypeActivity extends Activity {
             public void onClick(View view) {
                 System.out.println("btn_quiz clicked");
                 eatHelper = new EditAlarmTypeHelper(activity, alarmID, DBHelper.ALARM_TYPE_QUIZ);
-                dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_QUIZ);
+//                dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_QUIZ);
                 Intent intent = new Intent(AlarmEditTypeActivity.this, SetQuizActivity.class);
                 intent.putExtra("alarmID", alarmID);
                 startActivity(intent);
@@ -72,7 +72,7 @@ public class AlarmEditTypeActivity extends Activity {
             public void onClick(View view) {
                 System.out.println("btn_video clicked");
                 eatHelper = new EditAlarmTypeHelper(activity, alarmID, DBHelper.ALARM_TYPE_VIDEO);
-                dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_VIDEO);
+//                dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_VIDEO);
                 Intent intent = new Intent(AlarmEditTypeActivity.this, SetVideoActivity.class);
 //                Intent intent = new Intent(AlarmEditTypeActivity.this, RingVideoActivity.class);
                 intent.putExtra("alarmID", alarmID);
@@ -86,7 +86,7 @@ public class AlarmEditTypeActivity extends Activity {
             public void onClick(View view) {
                 System.out.println("btn_shake clicked");
                 eatHelper = new EditAlarmTypeHelper(activity, alarmID, DBHelper.ALARM_TYPE_SHAKE);
-                dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_SHAKE);
+//                dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_SHAKE);
                 eatHelper.sendEditAlarmTypeToServer();
                 dbHelper.printAllAlarms();
                 Intent intent = new Intent(AlarmEditTypeActivity.this, AlarmMainActivity.class);

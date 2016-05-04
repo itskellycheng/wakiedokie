@@ -49,67 +49,14 @@ public class AlarmStatusActivity extends Activity {
         alarmID = thisIntent.getIntExtra("alarmID", -1);
 
         wuHelper = new WakeUpHelper(this, alarmID, mMediaPlayer);
-        gatHelper = new GetAlarmTypeHelper(this, alarmID);
+        final Button btn_turn_off = (Button) findViewById(R.id.btn_turn_off);
+        final Button btn_do_task = (Button)findViewById(R.id.btn_do_task);
+        gatHelper = new GetAlarmTypeHelper(this, alarmID, btn_do_task, btn_turn_off, wuHelper);
         gatHelper.getMyAlarmTypeFromServer();
 
-        final int type = dbHelper.getMyAlarmType(alarmID);
-
-        final Button btn_do_task = (Button)findViewById(R.id.btn_do_task);
-        if (type == DBHelper.ALARM_TYPE_DEFAULT) {
-            btn_do_task.setVisibility(View.INVISIBLE);
-        }
-        btn_do_task.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (type == DBHelper.ALARM_TYPE_QUIZ){
-                    Intent intent = new Intent(AlarmStatusActivity.this, RingQuizActivity.class);
-                    intent.putExtra("alarmID", alarmID);
-                    startActivity(intent);
-                } else if (type == DBHelper.ALARM_TYPE_VIDEO) {
-                    Intent intent = new Intent(AlarmStatusActivity.this, RingVideoActivity.class);
-                    intent.putExtra("alarmID", alarmID);
-                    startActivity(intent);
-                } else if (type == DBHelper.ALARM_TYPE_SHAKE) {
-                    Intent intent = new Intent(AlarmStatusActivity.this, RingShakeActivity.class);
-                    intent.putExtra("alarmID", alarmID);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(activity, "Error in type", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        final Button btn_turn_off = (Button) findViewById(R.id.btn_turn_off);
-        if (type != DBHelper.ALARM_TYPE_DEFAULT) {
-            btn_turn_off.setVisibility(View.INVISIBLE);
-        }
-        btn_turn_off.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                btn_turn_off.setClickable(false);
-
-                // instead of stopping the alarm, send message to server and check response: 1. one is awake 2. both awake
-                wuHelper.sendWakeUpMessageToServer();
 
 
-                if (mMediaPlayer.isPlaying()) {
-                    System.out.println("Playing");
-                } else {
-                    if (alarmID < 0) {
-                        Log.d(TAG, "alarmID incorrect");
-                    } else {
-                        dbHelper.setAlarmToInactive(alarmID);
-                        int requestCode = PENDING_CODE_OFFSET + alarmID;
-                        Intent alarmRingIntent = new Intent(AlarmStatusActivity.this, AlarmStatusActivity.class);
-                        PendingIntent pendingIntent = PendingIntent.getActivity(AlarmStatusActivity.this,
-                                requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                        pendingIntent.cancel();
-                        am.cancel(pendingIntent);
-                    }
-                }
 
-            }
-        });
 
     }
 

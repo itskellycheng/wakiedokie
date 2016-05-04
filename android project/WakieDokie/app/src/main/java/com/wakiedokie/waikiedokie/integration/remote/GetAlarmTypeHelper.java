@@ -1,14 +1,24 @@
 package com.wakiedokie.waikiedokie.integration.remote;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.database.DBHelper;
 import com.wakiedokie.waikiedokie.ui.AlarmMainActivity;
+import com.wakiedokie.waikiedokie.ui.AlarmStatusActivity;
+import com.wakiedokie.waikiedokie.ui.RingQuizActivity;
+import com.wakiedokie.waikiedokie.ui.RingShakeActivity;
+import com.wakiedokie.waikiedokie.ui.RingVideoActivity;
 import com.wakiedokie.waikiedokie.util.CustomJSONObjectRequest;
 import com.wakiedokie.waikiedokie.util.CustomVolleyRequestQueue;
 
@@ -31,14 +41,21 @@ public class GetAlarmTypeHelper implements Response.Listener,
     private int alarmID;
     private boolean imOwnerOfAlarm;
     private String alarm_server_id;
+    Button btn_do_task;
+    Button btn_turn_off;
+    private WakeUpHelper wuHelper;
 
-    public GetAlarmTypeHelper(Activity activity, int alarmID) {
+
+    public GetAlarmTypeHelper(Activity activity, int alarmID, Button btn_do_task, Button btn_turn_off, WakeUpHelper wuHelper) {
         this.activity = activity;
         dbHelper = new DBHelper(activity);
         my_fb_id = dbHelper.getMyIDFromMeTable();
         this.alarmID = alarmID;
         imOwnerOfAlarm = dbHelper.imOwnerOfAlarm(alarmID, my_fb_id);
         alarm_server_id = dbHelper.getServerAlarmId(alarmID);
+        this.btn_do_task = btn_do_task;
+        this.btn_turn_off = btn_turn_off;
+        this.wuHelper = wuHelper;
     }
 
     public void getMyAlarmTypeFromServer() {
@@ -73,25 +90,66 @@ public class GetAlarmTypeHelper implements Response.Listener,
 
     @Override
     public void onResponse(Object response) {
-        String type ="";
+        String type_str ="";
         try {
-            type = ((JSONObject) response).getString("type");
-            System.out.println("Get my Alarm type from server: my type is " + type);
+            type_str = ((JSONObject) response).getString("type");
+            System.out.println("Get my Alarm type from server: my type is " + type_str);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        dbHelper.editAlarmType(alarmID, my_fb_id, alarmTypeInt(type));
+        final int type = alarmTypeInt(type_str);
+
+
+        if (type == DBHelper.ALARM_TYPE_DEFAULT) {
+            btn_do_task.setVisibility(View.INVISIBLE);
+        }
+        btn_do_task.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (type == DBHelper.ALARM_TYPE_QUIZ){
+                    Intent intent = new Intent(activity, RingQuizActivity.class);
+                    intent.putExtra("alarmID", alarmID);
+                    activity.startActivity(intent);
+                } else if (type == DBHelper.ALARM_TYPE_VIDEO) {
+                    Intent intent = new Intent(activity, RingVideoActivity.class);
+                    intent.putExtra("alarmID", alarmID);
+                    activity.startActivity(intent);
+                } else if (type == DBHelper.ALARM_TYPE_SHAKE) {
+                    Intent intent = new Intent(activity, RingShakeActivity.class);
+                    intent.putExtra("alarmID", alarmID);
+                    activity.startActivity(intent);
+                } else {
+                    Toast.makeText(activity, "Error in type", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        if (type != DBHelper.ALARM_TYPE_DEFAULT) {
+            btn_turn_off.setVisibility(View.INVISIBLE);
+        }
+        btn_turn_off.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btn_turn_off.setClickable(false);
+
+                // instead of stopping the alarm, send message to server and check response: 1. one is awake 2. both awake
+                wuHelper.sendWakeUpMessageToServer();
+
+
+            }
+        });
+
     }
 
     private int alarmTypeInt(String type_str) {
         if (type_str.equals("default")) {
-            return 0;
+            return DBHelper.ALARM_TYPE_DEFAULT;
         } else if (type_str.equals("quiz")) {
-            return 1;
+            return DBHelper.ALARM_TYPE_QUIZ;
         } else if (type_str.equals("video")) {
-            return 2;
+            return DBHelper.ALARM_TYPE_VIDEO;
         } else if (type_str.equals("shake")){
-            return 3;
+            return DBHelper.ALARM_TYPE_SHAKE;
         }
         return -1;
     }
