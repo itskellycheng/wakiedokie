@@ -23,6 +23,7 @@ import com.wakiedokie.waikiedokie.integration.remote.Connection;
 import com.wakiedokie.waikiedokie.integration.remote.EditAlarmTypeHelper;
 
 /**
+ * RingVideoActivity - Uses download manager to download video from server and plays it.
  * Created by chaovictorshin-deh on 4/14/16.
  */
 public class RingVideoActivity extends Activity {
