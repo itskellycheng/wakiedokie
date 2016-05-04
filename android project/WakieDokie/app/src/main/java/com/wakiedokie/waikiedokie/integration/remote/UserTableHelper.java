@@ -21,6 +21,7 @@ public class UserTableHelper implements Response.Listener,
         Response.ErrorListener {
     public static final String REQUEST_TAG = "MainVolleyActivity";
     private static final String SERVER_URL = Connection.GET_USER_TABLE_SERVLET;
+
     private RequestQueue mQueue;
     private Activity activity;
     private DBHelper dbHelper;

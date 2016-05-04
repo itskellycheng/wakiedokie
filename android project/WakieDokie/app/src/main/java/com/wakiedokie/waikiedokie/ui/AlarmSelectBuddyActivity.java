@@ -66,9 +66,11 @@ public class AlarmSelectBuddyActivity extends Activity {
             String fName = cursor.getString(cursor.getColumnIndex("first_name"));
             String lName = cursor.getString(cursor.getColumnIndex("last_name"));
             final String id = cursor.getString(cursor.getColumnIndex(dbHelper.USER_INFO_COLUMN_FACEBOOK_ID));
-            for (String exclude : excludes) {
-                if (exclude.equals(id)) {
-                    already_set_before = true;
+            if (!excludes.isEmpty()){
+                for (String exclude : excludes) {
+                    if (exclude.equals(id)) {
+                        already_set_before = true;
+                    }
                 }
             }
             if (already_set_before) {
