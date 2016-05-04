@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.json.simple.JSONObject;
 
 /***
  * Servlet implementation
@@ -37,6 +39,14 @@ public class VideoUploadServlet extends HttpServlet{
 			throws ServletException, IOException {
 		
 		System.out.println("VideoUploadServlet: Received POST request");
+		
+		boolean isMultipart = ServletFileUpload.isMultipartContent(res);
+	    if( isMultipart ){
+	    	System.out.println("hurray! is Multipart");
+	    }
+	    else {
+	    	System.out.println("Booboo, not Multipart");
+	    }
 	 
 		// Commons file upload classes are specifically instantiated
 		FileItemFactory factory = new DiskFileItemFactory();
@@ -45,12 +55,15 @@ public class VideoUploadServlet extends HttpServlet{
 		ServletOutputStream out = null;
 	 
 		try {
+			System.out.println("Parsing request...");
 			// Parse the incoming HTTP request
 			// Commons takes over incoming request at this point
 			// Get an iterator for all the data that was sent
 			List items = upload.parseRequest(res);
+			System.out.println("Request parsed");
 			Iterator iter = items.iterator();
 	 
+			System.out.println("list has" + items.size() + items);
 			// Set a response content type
 //			response.setContentType("text/html");
 	 
@@ -59,13 +72,14 @@ public class VideoUploadServlet extends HttpServlet{
 	 
 			// Iterate through the incoming request data
 			while (iter.hasNext()) {
+				System.out.println("VideoUploadServlet: Iterate through the incoming request data");
 				// Get the current item in the iteration
 				FileItem item = (FileItem) iter.next();
 	 
 				// If the current item is an HTML form field
 				if (item.isFormField()) {
 					// Return an XML node with the field name and value
-//					out.println("this is a form data " + item.getFieldName() + "<br>");
+					System.out.println("this is a form data " + item.getFieldName());
 	 
 					// If the current item is file data
 				} else {
@@ -82,18 +96,42 @@ public class VideoUploadServlet extends HttpServlet{
 				}
 			}
 	 
+			System.out.println("======End of VideoUploadServlet try block=======");
 			// Close off the response XML data and stream
 	 
 //			out.close();
 			// Rudimentary handling of any exceptions
 			// TODO: Something useful if an error occurs
 		} catch (FileUploadException fue) {
+			System.out.println("======VideoUploadServlet Exception=====");
 			fue.printStackTrace();
 		} catch (IOException ioe) {
+			System.out.println("======VideoUploadServlet Exception=====");
 			ioe.printStackTrace();
 		} catch (Exception e) {
+			System.out.println("======VideoUploadServlet Exception=====");
 			e.printStackTrace();
 		}
+		
+		// Sending Response from server
+        try {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json");
+            PrintWriter responseOut = response.getWriter();
+            JSONObject responseObj = new JSONObject();
+            responseObj.put("status", "hello from server");
+            responseOut.print(responseObj);
+
+        } catch (IOException e) {
+
+            try {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().print(e.getMessage());
+                response.getWriter().close();
+            } catch (IOException ioe) {
+            }
+
+        }
 	 
 	}
 	

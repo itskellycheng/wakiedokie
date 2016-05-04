@@ -12,6 +12,9 @@ import android.util.Log;
 import java.io.File;
 import java.io.IOException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -45,10 +48,26 @@ public class UploadVideo {
                 .post(requestBody)
                 .build();
 
-        Response response = client.newCall(request).execute();
-        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+        client.newCall(request).enqueue(new Callback() {
+            @Override public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
 
-        System.out.println(response.body().string());
+            @Override public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                Headers responseHeaders = response.headers();
+                for (int i = 0, size = responseHeaders.size(); i < size; i++) {
+                    System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                }
+
+                System.out.println(response.body().string());
+            }
+        });
+//        Response response = client.newCall(request).execute();
+//        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+//        System.out.println(response.body().string());
     }
 
 //    private void uploadVideo(String videoPath) {

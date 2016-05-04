@@ -72,6 +72,9 @@ public class SetVideoActivity extends Activity {
                         Toast.LENGTH_LONG).show();
                 uploadVideo = new UploadVideo();
                 try {
+                    //hardcode for testing
+                    ownerID = "iamtheowner";
+                    user2ID = "iamuser2";
                     uploadVideo.run(fileUri.getEncodedPath(), ownerID, user2ID);
                     Log.d(TAG, "video sent");
                 } catch (Exception e) {
