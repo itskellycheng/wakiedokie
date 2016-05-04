@@ -14,7 +14,8 @@ public class DatabaseTestDriver {
         String other_fb_id = "10209500772462847";
         DatabaseIO dbIO = new DatabaseIO();
         System.out.println(dbIO.bothAreAwake(my_fb_id, other_fb_id));
-        dbIO.deleteAlarm(my_fb_id, other_fb_id);
+        // dbIO.deleteAlarm(my_fb_id, other_fb_id);
+        System.out.println(dbIO.getAlarmType("10", "false"));
         // int id = dbIO.insertAlarmDb(my_fb_id, other_fb_id,
         // "123123123123123123");
         // System.out.println(id);

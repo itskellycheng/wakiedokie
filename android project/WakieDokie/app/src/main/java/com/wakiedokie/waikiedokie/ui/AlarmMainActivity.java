@@ -41,7 +41,7 @@ import java.util.Calendar;
 
 public class AlarmMainActivity extends AppCompatActivity {
     private static boolean RUN_ONCE = true;
-
+    private static int TASK_PERIOD = 5000;
     private User user;
     private int numShowingAlarms;
 
@@ -294,7 +294,7 @@ public class AlarmMainActivity extends AppCompatActivity {
             MyTimerTask mTimerTask = new MyTimerTask(user, this);
             Timer timer = new Timer();
             // scheduling the task at fixed rate delay
-            timer.scheduleAtFixedRate(mTimerTask, 500, 15000);
+            timer.scheduleAtFixedRate(mTimerTask, 500, TASK_PERIOD);
         }
 
     }

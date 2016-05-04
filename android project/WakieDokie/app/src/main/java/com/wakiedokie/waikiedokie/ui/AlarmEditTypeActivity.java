@@ -58,6 +58,8 @@ public class AlarmEditTypeActivity extends Activity {
             @Override
             public void onClick(View view) {
                 System.out.println("btn_quiz clicked");
+                eatHelper = new EditAlarmTypeHelper(activity, alarmID, DBHelper.ALARM_TYPE_QUIZ);
+                dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_QUIZ);
                 Intent intent = new Intent(AlarmEditTypeActivity.this, SetQuizActivity.class);
                 intent.putExtra("alarmID", alarmID);
                 startActivity(intent);
@@ -69,8 +71,10 @@ public class AlarmEditTypeActivity extends Activity {
             @Override
             public void onClick(View view) {
                 System.out.println("btn_video clicked");
-//                Intent intent = new Intent(AlarmEditTypeActivity.this, SetVideoActivity.class);
-                Intent intent = new Intent(AlarmEditTypeActivity.this, RingVideoActivity.class);
+                eatHelper = new EditAlarmTypeHelper(activity, alarmID, DBHelper.ALARM_TYPE_VIDEO);
+                dbHelper.editAlarmType(alarmID, my_fb_id, DBHelper.ALARM_TYPE_VIDEO);
+                Intent intent = new Intent(AlarmEditTypeActivity.this, SetVideoActivity.class);
+//                Intent intent = new Intent(AlarmEditTypeActivity.this, RingVideoActivity.class);
                 intent.putExtra("alarmID", alarmID);
                 startActivity(intent);
             }

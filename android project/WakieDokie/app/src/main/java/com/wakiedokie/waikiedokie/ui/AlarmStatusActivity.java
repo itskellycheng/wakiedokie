@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.database.DBHelper;
+import com.wakiedokie.waikiedokie.integration.remote.GetAlarmTypeHelper;
 import com.wakiedokie.waikiedokie.integration.remote.WakeUpHelper;
 
 import java.io.IOException;
@@ -32,7 +33,8 @@ public class AlarmStatusActivity extends Activity {
     private AlarmManager am;
     private DBHelper dbHelper;
     private Activity activity;
-    WakeUpHelper wuHelper;
+    private WakeUpHelper wuHelper;
+    private GetAlarmTypeHelper gatHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,8 @@ public class AlarmStatusActivity extends Activity {
         alarmID = thisIntent.getIntExtra("alarmID", -1);
 
         wuHelper = new WakeUpHelper(this, alarmID, mMediaPlayer);
+        gatHelper = new GetAlarmTypeHelper(this, alarmID);
+        gatHelper.getMyAlarmTypeFromServer();
 
         final int type = dbHelper.getMyAlarmType(alarmID);
 
@@ -63,6 +67,7 @@ public class AlarmStatusActivity extends Activity {
                     startActivity(intent);
                 } else if (type == DBHelper.ALARM_TYPE_VIDEO) {
                     Intent intent = new Intent(AlarmStatusActivity.this, RingVideoActivity.class);
+                    intent.putExtra("alarmID", alarmID);
                     startActivity(intent);
                 } else if (type == DBHelper.ALARM_TYPE_SHAKE) {
                     Intent intent = new Intent(AlarmStatusActivity.this, RingShakeActivity.class);

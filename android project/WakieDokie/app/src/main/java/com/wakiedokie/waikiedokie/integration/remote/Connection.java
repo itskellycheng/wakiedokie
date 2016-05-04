@@ -16,4 +16,6 @@ public class Connection {
     public final static String EDIT_ALARM_TYPE_SERVLET = DOMAIN + "/AndroidAppServlet/EditAlarmTypeServlet";
     public final static String VIDEO_UPLOAD_SERVLET = DOMAIN + "/AndroidAppServlet/VideoUploadServlet";
     public final static String VIDEO_DOWNLOAD_SERVLET = DOMAIN + "/AndroidAppServlet/video/";
+    public final static String GET_ALARM_TYPE_SERVLET = DOMAIN + "/AndroidAppServlet/GetAlarmTypeServlet";
+
 }

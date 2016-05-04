@@ -18,13 +18,9 @@ import model.User;
  *
  */
 public class DatabaseIO {
-//    private static final String URL = "jdbc:mysql://localhost:3306";
-//    private static final String USERNAME = "root";
-//    private static final String PASSWORD = "Asiagodtonegg3be0*";
-	private static final String URL = "jdbc:mysql://127.0.0.1:3306";
-    private static final String USERNAME = "kelly";
-    private static final String PASSWORD = "kelly";
-
+    private static final String URL = "jdbc:mysql://localhost:3306";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "Asiagodtonegg3be0*";
 
     /* isConnected */
     public boolean isConnected() {
@@ -205,6 +201,93 @@ public class DatabaseIO {
         }
 
         return id;
+
+    }
+
+    /* get alarm type */
+    public String getAlarmType(String alarm_id, String ownership) {
+        String my_type = "";
+        Connection myConnection = null;
+        PreparedStatement myPreparedStatement = null;
+        ResultSet myResultSet = null;
+        String query_command;
+
+        try {
+            myConnection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            if (myConnection != null) {
+                System.out.println(
+                        "bothAreAwake: Connected to Database Successfully");
+            }
+
+            query_command = "SELECT * FROM wakiedokie.alarm WHERE id = ?;";
+
+            myPreparedStatement = myConnection.prepareStatement(query_command);
+            myPreparedStatement.setString(1, alarm_id);
+
+            // 3. Execute SQL query
+            myResultSet = myPreparedStatement.executeQuery();
+
+            if (!myResultSet.next()) {
+                System.out.println("alarm not found");
+            }
+
+            if (ownership.equals("true")) {
+                my_type = myResultSet.getString("type_user1");
+                System.out.println("I'm owner. getting my type.");
+            } else {
+                my_type = myResultSet.getString("type_user2");
+                System.out.println("I'm not owner. getting my type.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(myConnection);
+            closePreparedStatement(myPreparedStatement);
+            closeResultSet(myResultSet);
+        }
+
+        return my_type;
+
+    }
+
+    /* update alarm type of a user */
+    public void editAlarmType(String alarm_id, String ownership, String type) {
+        Connection myConnection = null;
+        PreparedStatement myPreparedStatement = null;
+        int id = Integer.parseInt(alarm_id);
+
+        try {
+            myConnection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            if (myConnection != null) {
+                System.out.println(
+                        "editAlarmType: Connected to Database Successfully");
+            }
+
+            // 2. Create a statement and Query command
+            String query_command = "";
+            if (ownership.equals("true")) {
+                query_command = "UPDATE wakiedokie.alarm SET type_user2 = ?  WHERE id = ?;";
+                System.out.println("owner is updating user2_type");
+            } else {
+                query_command = "UPDATE wakiedokie.alarm SET type_user1 = ?  WHERE id = ?;";
+                System.out.println("user2 is updating user1_type");
+            }
+
+            myPreparedStatement = myConnection.prepareStatement(query_command);
+            myPreparedStatement.setString(1, type);
+            myPreparedStatement.setInt(2, id);
+            System.out.println("type: " + type);
+            System.out.println("server_alarm_id: " + id);
+            // 3. Execute SQL query
+            myPreparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(myConnection);
+            closePreparedStatement(myPreparedStatement);
+        }
 
     }
 
