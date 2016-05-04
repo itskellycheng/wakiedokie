@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.wakiedokie.waikiedokie.R;
 import com.wakiedokie.waikiedokie.database.DBHelper;
@@ -30,11 +31,13 @@ public class AlarmStatusActivity extends Activity {
     private static final int PENDING_CODE_OFFSET = 990000;
     private AlarmManager am;
     private DBHelper dbHelper;
-
+    private Activity activity;
+    WakeUpHelper wuHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status);
+        activity = this;
         mMediaPlayer = new MediaPlayer();
         playSound(this, getAlarmUri(), mMediaPlayer);
         dbHelper = new DBHelper(this);
@@ -43,18 +46,38 @@ public class AlarmStatusActivity extends Activity {
         Intent thisIntent = getIntent();
         alarmID = thisIntent.getIntExtra("alarmID", -1);
 
-        final WakeUpHelper wuHelper = new WakeUpHelper(this, alarmID, mMediaPlayer);
+        wuHelper = new WakeUpHelper(this, alarmID, mMediaPlayer);
 
-        Button btn_do_task = (Button)findViewById(R.id.btn_do_task);
+        final int type = dbHelper.getMyAlarmType(alarmID);
+
+        final Button btn_do_task = (Button)findViewById(R.id.btn_do_task);
+        if (type == DBHelper.ALARM_TYPE_DEFAULT) {
+            btn_do_task.setVisibility(View.INVISIBLE);
+        }
         btn_do_task.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AlarmStatusActivity.this, RingShakeActivity.class);
-                startActivity(intent);
+                if (type == DBHelper.ALARM_TYPE_QUIZ){
+                    Intent intent = new Intent(AlarmStatusActivity.this, RingQuizActivity.class);
+                    intent.putExtra("alarmID", alarmID);
+                    startActivity(intent);
+                } else if (type == DBHelper.ALARM_TYPE_VIDEO) {
+                    Intent intent = new Intent(AlarmStatusActivity.this, RingVideoActivity.class);
+                    startActivity(intent);
+                } else if (type == DBHelper.ALARM_TYPE_SHAKE) {
+                    Intent intent = new Intent(AlarmStatusActivity.this, RingShakeActivity.class);
+                    intent.putExtra("alarmID", alarmID);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(activity, "Error in type", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         final Button btn_turn_off = (Button) findViewById(R.id.btn_turn_off);
+        if (type != DBHelper.ALARM_TYPE_DEFAULT) {
+            btn_turn_off.setVisibility(View.INVISIBLE);
+        }
         btn_turn_off.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,6 +106,30 @@ public class AlarmStatusActivity extends Activity {
             }
         });
 
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String toastStr = "Yay! You've finished your task!! Now Try everything you can to wake up your buddy";
+        Toast.makeText(getApplicationContext(), toastStr, Toast.LENGTH_LONG).show();
+        wuHelper.sendWakeUpMessageToServer();
+
+        if (mMediaPlayer.isPlaying()) {
+            System.out.println("Playing");
+        } else {
+            if (alarmID < 0) {
+                Log.d(TAG, "alarmID incorrect");
+            } else {
+                dbHelper.setAlarmToInactive(alarmID);
+                int requestCode = PENDING_CODE_OFFSET + alarmID;
+                Intent alarmRingIntent = new Intent(AlarmStatusActivity.this, AlarmStatusActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(AlarmStatusActivity.this,
+                        requestCode, alarmRingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                pendingIntent.cancel();
+                am.cancel(pendingIntent);
+            }
+        }
 
     }
 

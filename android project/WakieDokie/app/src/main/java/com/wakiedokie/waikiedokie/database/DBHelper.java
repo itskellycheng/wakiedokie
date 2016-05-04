@@ -20,7 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "MyDBName.db";
 
-    private static final int DATABASE_VERSION = 132;
+    private static final int DATABASE_VERSION = 137;
 
     // user_info Table
     public static final String USER_INFO_TABLE_NAME = "user_info";
@@ -111,6 +111,22 @@ public class DBHelper extends SQLiteOpenHelper {
 //        }
         return fb_id;
 
+    }
+
+    public int getMyAlarmType(int alarmID) {
+        String my_fb_id = getMyIDFromMeTable();
+        boolean ownership = imOwnerOfAlarm(alarmID, my_fb_id);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id = " + alarmID, null);
+        res.moveToFirst();
+        int type;
+        if (!ownership) {
+            type = res.getInt(res.getColumnIndex("owner_type"));
+        } else {
+            type = res.getInt(res.getColumnIndex("user2_type"));
+        }
+        System.out.println("My alarm type is: " + type);
+        return type;
     }
 
     public int numberOfRows() {

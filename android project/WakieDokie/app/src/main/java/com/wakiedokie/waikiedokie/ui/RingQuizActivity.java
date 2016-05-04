@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.wakiedokie.waikiedokie.R;
+import com.wakiedokie.waikiedokie.integration.remote.WakeUpHelper;
 
 /**
  * Created by chaovictorshin-deh on 4/14/16.
@@ -16,12 +17,15 @@ import com.wakiedokie.waikiedokie.R;
 public class RingQuizActivity extends Activity {
     int quizAnswer;
     final static String TAG = "RingQuizActivity";
+    private int alarmID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ring_quiz);
-
+        Intent thisIntent = getIntent();
+        alarmID = thisIntent.getIntExtra("alarmID", -1);
+        System.out.println("inside RingQuizActivity. Alarm ID:" + alarmID);
         quizAnswer = 0;
 
         Button btn_answer_1 = (Button) findViewById(R.id.btn_answer_1);
@@ -71,6 +75,7 @@ public class RingQuizActivity extends Activity {
         Toast.makeText(getApplicationContext(), toastStr, Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(RingQuizActivity.this, AlarmStatusActivity.class);
+        intent.putExtra("alarmID", alarmID);
         startActivity(intent);
     }
 }

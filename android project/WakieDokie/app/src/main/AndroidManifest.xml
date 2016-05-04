@@ -60,6 +60,7 @@
 
         <activity
             android:name=".ui.AlarmStatusActivity"
+            android:launchMode="singleTask"
             android:label="@string/app_name" >
         </activity>
 

@@ -22,12 +22,17 @@ public class RingShakeActivity extends Activity {
     private float mAccelLast; // last acceleration including gravity
     private long mShakeFirstTimestamp;
     private static final int SHAKE_TIME_TO_STOP = 1000;
+    private int alarmID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ring_shake);
 
+        Intent thisIntent = getIntent();
+        alarmID = thisIntent.getIntExtra("alarmID", -1);
+
+        System.out.println("inside RingShakeActivity. Alarm ID:" + alarmID);
         /* do this in onCreate */
         mSensorManager = (SensorManager) getSystemService(this.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
@@ -82,6 +87,7 @@ public class RingShakeActivity extends Activity {
         Toast.makeText(getApplicationContext(),"Shake successful!", Toast.LENGTH_LONG).show();
 
         Intent intent = new Intent(RingShakeActivity.this, AlarmStatusActivity.class);
+        intent.putExtra("alarmID", alarmID);
         startActivity(intent);
     }
 
