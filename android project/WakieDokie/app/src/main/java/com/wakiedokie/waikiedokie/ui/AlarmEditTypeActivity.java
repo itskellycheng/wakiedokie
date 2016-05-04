@@ -69,7 +69,8 @@ public class AlarmEditTypeActivity extends Activity {
             @Override
             public void onClick(View view) {
                 System.out.println("btn_video clicked");
-                Intent intent = new Intent(AlarmEditTypeActivity.this, SetVideoActivity.class);
+//                Intent intent = new Intent(AlarmEditTypeActivity.this, SetVideoActivity.class);
+                Intent intent = new Intent(AlarmEditTypeActivity.this, RingVideoActivity.class);
                 intent.putExtra("alarmID", alarmID);
                 startActivity(intent);
             }

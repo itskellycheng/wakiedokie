@@ -48,15 +48,18 @@ public class SetVideoActivity extends Activity {
     private Activity activity;
     private DBHelper dbHelper;
     private EditAlarmTypeHelper eatHelper;
+    private String serverAlarmID;
+    private String videoFileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_video);
+        dbHelper = new DBHelper(this);
         Intent thisIntent = getIntent();
         alarmID = thisIntent.getIntExtra("alarmID", -1);
+        serverAlarmID = dbHelper.getServerAlarmId(alarmID);
         activity = this;
-        dbHelper = new DBHelper(this);
         my_fb_id = dbHelper.getMyIDFromMeTable();
 
 
@@ -166,12 +169,12 @@ public class SetVideoActivity extends Activity {
     }
 
     /** Create a file Uri for saving an image or video */
-    private static Uri getOutputMediaFileUri(int type){
+    private Uri getOutputMediaFileUri(int type){
         return Uri.fromFile(getOutputMediaFile(type));
     }
 
     /** Create a File for saving an image or video */
-    private static File getOutputMediaFile(int type){
+    private File getOutputMediaFile(int type){
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
 
@@ -195,8 +198,11 @@ public class SetVideoActivity extends Activity {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "IMG_"+ timeStamp + ".jpg");
         } else if(type == MEDIA_TYPE_VIDEO) {
+            if (serverAlarmID.equals("-1")) {
+                Toast.makeText(this, "WARNING: serverAlarmID is -1", Toast.LENGTH_SHORT).show();
+            }
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "VID_"+ timeStamp + ".mp4");
+                    "WAKIE_VID_"+ serverAlarmID + ".mp4");
         } else {
             return null;
         }

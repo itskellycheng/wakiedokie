@@ -293,6 +293,8 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id=" + id + "", null);
         return res;
     }
+
+    /* getServerAlarmId - takes local alarmID and returns server side alarm id (which is unique) */
     public String getServerAlarmId(int alarmID) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from " + ALARM_TABLE_NAME + " where id=" + alarmID + "", null);
