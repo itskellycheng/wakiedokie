@@ -60,10 +60,11 @@ public class RingShakeActivity extends Activity {
                     mShakeFirstTimestamp = now;
                 }
                 else if (mShakeFirstTimestamp + SHAKE_TIME_TO_STOP > now) {
-                    handleShakeEvent();
+
                 }
                 Toast toast = Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG);
                 toast.show();
+                handleShakeEvent();
             }
         }
 

@@ -6,7 +6,7 @@ package com.wakiedokie.waikiedokie.integration.remote;
  */
 public class Connection {
 
-    public final static String DOMAIN = "http://128.237.218.172:8080";
+    public final static String DOMAIN = "http://10.0.0.25:8080";
 
     public final static String USER_SERVLET = DOMAIN + "/AndroidAppServlet/UserServlet";
     public final static String SET_ALARM_SERVLET = DOMAIN + "/AndroidAppServlet/SetAlarmRequestServlet";
