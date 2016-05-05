@@ -72,7 +72,6 @@ public class GetAlarmTypeServlet extends HttpServlet {
             if (!dbio.isConnected()) {
                 System.out.println("Cannot Connect to Server");
             }
-            dbio.editAlarmType(alarm_id, ownership, type);
             // show all users in current database
             dbio.displayAllAlarms();
 
